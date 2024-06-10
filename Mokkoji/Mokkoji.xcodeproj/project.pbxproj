@@ -15,6 +15,10 @@
 		4A9E41402C16843A00DE424A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E413F2C16843A00DE424A /* User.swift */; };
 		4A9E41422C16843F00DE424A /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41412C16843F00DE424A /* Plan.swift */; };
 		4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41432C16844C00DE424A /* MapInfo.swift */; };
+		4A9E41472C1687A300DE424A /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9E41462C1687A300DE424A /* KakaoSDK */; };
+		4A9E414A2C1687E100DE424A /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9E41492C1687E100DE424A /* FirebaseAuth */; };
+		4A9E414C2C1687E100DE424A /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9E414B2C1687E100DE424A /* FirebaseFirestore */; };
+		4A9E414E2C1687E100DE424A /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9E414D2C1687E100DE424A /* FirebaseFirestoreSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +40,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A9E41472C1687A300DE424A /* KakaoSDK in Frameworks */,
+				4A9E414A2C1687E100DE424A /* FirebaseAuth in Frameworks */,
+				4A9E414C2C1687E100DE424A /* FirebaseFirestore in Frameworks */,
+				4A9E414E2C1687E100DE424A /* FirebaseFirestoreSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +107,12 @@
 			dependencies = (
 			);
 			name = Mokkoji;
+			packageProductDependencies = (
+				4A9E41462C1687A300DE424A /* KakaoSDK */,
+				4A9E41492C1687E100DE424A /* FirebaseAuth */,
+				4A9E414B2C1687E100DE424A /* FirebaseFirestore */,
+				4A9E414D2C1687E100DE424A /* FirebaseFirestoreSwift */,
+			);
 			productName = Mokkoji;
 			productReference = 4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */;
 			productType = "com.apple.product-type.application";
@@ -127,6 +141,10 @@
 				Base,
 			);
 			mainGroup = 4A187ED72C0F06EE00F5C2EE;
+			packageReferences = (
+				4A9E41452C1687A300DE424A /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				4A9E41482C1687E100DE424A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 4A187EE12C0F06EE00F5C2EE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -375,6 +393,48 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4A9E41452C1687A300DE424A /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.22.2;
+			};
+		};
+		4A9E41482C1687E100DE424A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.27.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4A9E41462C1687A300DE424A /* KakaoSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4A9E41452C1687A300DE424A /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDK;
+		};
+		4A9E41492C1687E100DE424A /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4A9E41482C1687E100DE424A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		4A9E414B2C1687E100DE424A /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4A9E41482C1687E100DE424A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		4A9E414D2C1687E100DE424A /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4A9E41482C1687E100DE424A /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestoreSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4A187ED82C0F06EE00F5C2EE /* Project object */;
 }
