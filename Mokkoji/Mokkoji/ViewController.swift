@@ -12,24 +12,156 @@ import KakaoSDKUser
 import FirebaseAuth
 import FirebaseFirestore
 
+extension UIView {
+    func addSubviews(_ views: [UIView]) {
+        for view in views {
+            self.addSubview(view)
+        }
+    }
+}
+
 class ViewController: UIViewController {
 
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
-        
+    
+    private lazy var logoImage: UIImageView = {
+        var logoImage = UIImageView(image: UIImage(systemName: "hand.point.up.left.and.text.fill"))
+        logoImage.backgroundColor = .lightGray
+        logoImage.translatesAutoresizingMaskIntoConstraints = false
+        return logoImage
+    }()
+    
+    private lazy var emailTextField: UITextField = {
+        var emailTextField = UITextField()
+        emailTextField.placeholder = "Email"
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        return emailTextField
+    }()
+    
+    private lazy var passwordTextField: UITextField = {
+        var passwordTextField = UITextField()
+        passwordTextField.placeholder = "password"
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        return passwordTextField
+    }()
+    
+    private lazy var loginButton: UIButton = {
+        var loginButton = UIButton()
+        loginButton.setTitle("로그인", for: .normal)
+        loginButton.setTitleColor(.black, for: .normal)
+        loginButton.layer.cornerRadius = 10
+        loginButton.layer.borderWidth = 1
+        loginButton.layer.borderColor = UIColor.lightGray.cgColor
+        loginButton.translatesAutoresizingMaskIntoConstraints = false
+        return loginButton
+    }()
+    
+    private lazy var searchEmailButton: UIButton = {
+        var searchEmail = UIButton()
+        searchEmail.setTitle("아이디 찾기", for: .normal)
+        searchEmail.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        searchEmail.backgroundColor = .white
+        searchEmail.setTitleColor(.lightGray, for: .normal)
+        searchEmail.translatesAutoresizingMaskIntoConstraints = false
+        return searchEmail
+    }()
+    
+    private lazy var searchPasswordButton: UIButton = {
+        var searchPassword = UIButton()
+        searchPassword.setTitle("비밀번호 찾기", for: .normal)
+        searchPassword.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        searchPassword.backgroundColor = .white
+        searchPassword.setTitleColor(.lightGray, for: .normal)
+        searchPassword.translatesAutoresizingMaskIntoConstraints = false
+        return searchPassword
+    }()
+    
+    private lazy var signInLabel: UILabel = {
+        var signInLabel = UILabel()
+        signInLabel.text = "계정이 없으신가요?"
+        signInLabel.font = UIFont.systemFont(ofSize: 15)
+        signInLabel.textColor = .lightGray
+        signInLabel.translatesAutoresizingMaskIntoConstraints = false
+        return signInLabel
+    }()
+    
+    private lazy var signInButton: UIButton = {
+        var signInButton = UIButton()
+        signInButton.setTitle("회원가입", for: .normal)
+        signInButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        signInButton.backgroundColor = .white
+        signInButton.setTitleColor(.lightGray, for: .normal)
+        signInButton.translatesAutoresizingMaskIntoConstraints = false
+        return signInButton
+    }()
+    
+    private lazy var signUpWithSNSLeadingLine: UIView = {
+        var signUpWithSNSLeadingLine = UIView()
+        signUpWithSNSLeadingLine.backgroundColor = .black
+        signUpWithSNSLeadingLine.translatesAutoresizingMaskIntoConstraints = false
+        return signUpWithSNSLeadingLine
+    }()
+    
+    private lazy var signUpWithSNSTrailingLine: UIView = {
+        var signUpWithSNSTrailingLine = UIView()
+        signUpWithSNSTrailingLine.backgroundColor = .black
+        signUpWithSNSTrailingLine.translatesAutoresizingMaskIntoConstraints = false
+        return signUpWithSNSTrailingLine
+    }()
+    
+    private lazy var signUpWithSNSLabel: UILabel = {
+        var signUpWithSNSLabel = UILabel()
+        signUpWithSNSLabel.text = "Sign Up With SNS"
+        signUpWithSNSLabel.font = UIFont.systemFont(ofSize: 15)
+        signUpWithSNSLabel.translatesAutoresizingMaskIntoConstraints = false
+        return signUpWithSNSLabel
+    }()
+    
     private lazy var kakaoLoginButton: UIButton = {
         var kakaoLoginButton = UIButton()
         kakaoLoginButton.translatesAutoresizingMaskIntoConstraints = false
-        kakaoLoginButton.setImage(UIImage(named: "kakao_login_medium_narrow"), for: .normal)
+        kakaoLoginButton.setImage(UIImage(named: "kakao_login_large_wide"), for: .normal)
         return kakaoLoginButton
     }()
     
     private lazy var kakaoLogoutButton: UIButton = {
         var kakaoLogoutButton = UIButton()
         kakaoLogoutButton.translatesAutoresizingMaskIntoConstraints = false
+        kakaoLogoutButton.backgroundColor = .red
         kakaoLogoutButton.setTitle("Logout", for: .normal)
         kakaoLogoutButton.setTitleColor(.systemBlue, for: .normal)
         return kakaoLogoutButton
+    }()
+    
+    private lazy var searchStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.spacing = 20
+        return stackView
+    }()
+    
+    private lazy var signInStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.spacing = 20
+        return stackView
+    }()
+    
+    private lazy var signUpSNSLabelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fillEqually
+        stackView.spacing = 10
+        return stackView
     }()
     
     //MARK: - viewDidLoad
@@ -41,24 +173,82 @@ class ViewController: UIViewController {
         kakaoLoginButton.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
         kakaoLogoutButton.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
         
-        view.addSubview(kakaoLoginButton)
-        view.addSubview(kakaoLogoutButton)
+        view.addSubviews([logoImage,
+                          emailTextField,
+                          passwordTextField,
+                          loginButton,
+                          searchStackView,
+                          signInStackView,
+                          signUpSNSLabelStackView,
+                          kakaoLoginButton,
+                          kakaoLogoutButton
+                         ])
         
+        searchStackView.addArrangedSubview(searchEmailButton)
+        searchStackView.addArrangedSubview(searchPasswordButton)
+        signInStackView.addArrangedSubview(signInLabel)
+        signInStackView.addArrangedSubview(signInButton)
+        signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSLeadingLine)
+        signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSLabel)
+        signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSTrailingLine)
+
         NSLayoutConstraint.activate([
-            // kakaoLoginButton Constraints
-            kakaoLoginButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: view.bounds.height  * 0.35),
-            kakaoLoginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            kakaoLoginButton.widthAnchor.constraint(equalToConstant: 200),
-            kakaoLoginButton.heightAnchor.constraint(equalToConstant: 50),
+            // logoImage Constraints
+            logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            logoImage.widthAnchor.constraint(equalToConstant: 200),
+            logoImage.heightAnchor.constraint(equalToConstant: 200),
             
-            //LogoutButton Constraints
-            kakaoLogoutButton.topAnchor.constraint(equalTo: kakaoLoginButton.bottomAnchor, constant: 20),
-            kakaoLogoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            kakaoLogoutButton.widthAnchor.constraint(equalToConstant: 200),
-            kakaoLogoutButton.heightAnchor.constraint(equalToConstant: 50)
+            // emailTextField Constraints
+            emailTextField.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 20),
+            emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // passwordTextField Constraints
+            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 10),
+            passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // loginButton Constraints
+            loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10),
+            loginButton.heightAnchor.constraint(equalToConstant: 50),
+            loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // searchStackView Constraints
+            searchStackView.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 20),
+            searchStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            searchStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // signInStackView Constraints
+            signInStackView.topAnchor.constraint(equalTo: searchStackView.bottomAnchor, constant: 10),
+            signInStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            signInStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // signUpSNSLabelStackView Constraints
+            signUpWithSNSLeadingLine.widthAnchor.constraint(equalToConstant: 15),
+            signUpWithSNSLeadingLine.heightAnchor.constraint(equalToConstant: 2),
+            signUpWithSNSTrailingLine.widthAnchor.constraint(equalToConstant: 15),
+            signUpWithSNSTrailingLine.heightAnchor.constraint(equalToConstant: 2),
+            signUpSNSLabelStackView.topAnchor.constraint(equalTo: signInStackView.bottomAnchor, constant: 30),
+            signUpSNSLabelStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            signUpSNSLabelStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // kakaoLoginButton Constraints
+            kakaoLoginButton.heightAnchor.constraint(equalToConstant: 50),
+            kakaoLoginButton.topAnchor.constraint(equalTo: signUpSNSLabelStackView.bottomAnchor, constant: 50),
+            kakaoLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            kakaoLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
+            // kakaoLogoutButton Constraints
+            kakaoLogoutButton.heightAnchor.constraint(equalToConstant: 50),
+            kakaoLogoutButton.topAnchor.constraint(equalTo: kakaoLoginButton.bottomAnchor, constant: 50),
+            kakaoLogoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            kakaoLogoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
     }
 
+    //MARK: - Methods
     func setUserInfo() {
         UserApi.shared.me {(user, error) in
             if let error = error {
@@ -76,8 +266,8 @@ class ViewController: UIViewController {
                         print("Error checking email duplication: \(error.localizedDescription)")
                         return
                     }
-                    if let signInMethods = signInMethods, !signInMethods.isEmpty {
-                        // 이미 사용자가 존재하는 경우 로그인 시도 (가입된 사용자가 있어도 넘어오지 않음 why..?)
+                    if let signInMethods = signInMethods {
+                        // 이미 사용자가 존재하는 경우 로그인 시도 (가입된 사용자가 있어도 넘어오지 않음 why..? signInMethods 계속 nil..)
                         Auth.auth().signIn(withEmail: (user?.kakaoAccount?.email)!,
                                            password: "\(String(describing: user?.id))"
                         ) { authResult, error in
@@ -85,7 +275,19 @@ class ViewController: UIViewController {
                                 print("FB: 이미 사용자가 존재하는 경우 로그인 시도 signin failed error: \(error.localizedDescription)")
                             } else {
                                 print("FB: 이미 사용자가 존재하는 경우 로그인 시도 signin success")
-                                
+                                self.fetchUserFromFirestore(userId: String((user?.id)!)) { user in
+                                    if let user = user {
+                                        UserInfo.shared.user = user
+                                        print("이미 사용자가 존재하는 경우 currentUser 정보 : \(UserInfo.shared.user)")
+                                        //TODO: 다음뷰 표시
+//                                        let TestViewController = TestViewController()
+//                                        TestViewController.modalPresentationStyle = .fullScreen
+//                                        self.present(TestViewController, animated: true)
+                                        
+                                    } else {
+                                        print("User 데이터가 없습니다. ")
+                                    }
+                                }
                             }
                         }
                     } else {
@@ -102,11 +304,14 @@ class ViewController: UIViewController {
                                         print("FB: 이메일이 이미 사용 중일 때, 로그인 시도 signin failed error: \(error.localizedDescription)")
                                     } else {
                                         print("FB: 이메일이 이미 사용 중일 때, 로그인 시도 signin success")
-                                        //TODO: FireStore의 User정보 가져온 후 User데이터 다음뷰로 넘겨주기.
-                                        self.fetchUserFromFirestore(userId: String(UserInfo.shared.user!.id)) { user in
+                                        self.fetchUserFromFirestore(userId: String((user?.id)!)) { user in
                                             if let user = user {
                                                 UserInfo.shared.user = user
                                                 print("fetch 이후 currentUser 정보 : \(UserInfo.shared.user)")
+                                                //TODO: 다음뷰 표시
+//                                                let TestViewController = TestViewController()
+//                                                TestViewController.modalPresentationStyle = .fullScreen
+//                                                self.present(TestViewController, animated: true)
                                             } else {
                                                 print("User 데이터가 없습니다. ")
                                             }
@@ -131,7 +336,10 @@ class ViewController: UIViewController {
                                                     
                                     // Firestore에 사용자 정보 저장
                                     self.saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
-                                    //TODO: user데이터 를 다음 뷰에 넘겨주기.
+                                    //TODO: 다음뷰 표시
+//                                    let TestViewController = TestViewController()
+//                                    TestViewController.modalPresentationStyle = .fullScreen
+//                                    self.present(TestViewController, animated: true)
                                 }
                                 
                             }
