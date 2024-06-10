@@ -121,9 +121,6 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
-    func deleteCheckBox() {
-        
-    }
         
 
     //체크박스 생성
@@ -137,9 +134,10 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     //선택한 셀을 tap하면 이동
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 && indexPath.row == 0 {
-            let PmDetailView = PmDetailViewController()
-            navigationController?.pushViewController(PmDetailView, animated: true)
+            let pmDetailViewController = PmDetailViewController()
+            navigationController?.pushViewController(pmDetailViewController, animated: true)
         }
+
     }
 
     // 섹션 수 설정

@@ -46,9 +46,6 @@ class CustomTableViewCell: UITableViewCell {
             dateLabel.trailingAnchor.constraint(equalTo: profileimage.leadingAnchor, constant: -8),
             dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
-        
-        
-        
     }
     
     required init?(coder: NSCoder) {
