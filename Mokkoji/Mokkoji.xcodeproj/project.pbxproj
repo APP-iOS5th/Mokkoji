@@ -49,7 +49,6 @@
 		3B605C062C168BDB00D3603C /* ListView */ = {
 			isa = PBXGroup;
 			children = (
-				3B605C102C16B7C700D3603C /* Model */,
 				3B605C072C168C1000D3603C /* View */,
 			);
 			path = ListView;
@@ -58,17 +57,10 @@
 		3B605C072C168C1000D3603C /* View */ = {
 			isa = PBXGroup;
 			children = (
+				3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */,
 				3B605C0E2C168E7200D3603C /* PmListViewController.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		3B605C102C16B7C700D3603C /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		4A187ED72C0F06EE00F5C2EE = {

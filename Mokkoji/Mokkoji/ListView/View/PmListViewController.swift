@@ -64,6 +64,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         cell.titleLabel.text = "title"
         cell.dateLabel.text = "Date"
+        cell.profileimage.image
         return cell
     }
     
