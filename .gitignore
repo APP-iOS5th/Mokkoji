@@ -121,4 +121,7 @@ iOSInjectionProject/
 # Ignore the config file with API keys
 Config.xcconfig
 
+# Ignore GoogleServiceInfo file
+GoogleService-Info.plist
+
 # End of https://www.toptal.com/developers/gitignore/api/xcode,swift,swiftpackagemanager,macos
