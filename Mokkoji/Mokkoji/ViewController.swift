@@ -16,9 +16,7 @@ class ViewController: UIViewController {
 
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
-    
-    var currentUser = User(id: 1, name: "", email: "", profileImageUrl: URL(string: "https://naver.com")!, plan: [], friendList: [])
-    
+        
     private lazy var kakaoLoginButton: UIButton = {
         var kakaoLoginButton = UIButton()
         kakaoLoginButton.translatesAutoresizingMaskIntoConstraints = false
@@ -69,7 +67,7 @@ class ViewController: UIViewController {
                 print("setUserInfo nickname: \(user?.kakaoAccount?.profile?.nickname ?? "no nickname")")
                 print("setUserInfo email: \(user?.kakaoAccount?.email ?? "no email")")
                 print("setUserInfo profileImageUrl: \(String(describing: user?.kakaoAccount?.profile?.profileImageUrl))")
-                self.currentUser.id = (user?.id!)!
+                UserInfo.shared.user?.id = (user?.id!)!
                 
                 //TODO: - fetchSignInMethods deprecated, 이메일로 확인하는것은 보안에 문제가됨.
                 // Firebase에 사용자 등록 전에 이미 가입된 사용자인지 확인
@@ -79,7 +77,7 @@ class ViewController: UIViewController {
                         return
                     }
                     if let signInMethods = signInMethods, !signInMethods.isEmpty {
-                        // 이미 사용자가 존재하는 경우 로그인 시도
+                        // 이미 사용자가 존재하는 경우 로그인 시도 (가입된 사용자가 있어도 넘어오지 않음 why..?)
                         Auth.auth().signIn(withEmail: (user?.kakaoAccount?.email)!,
                                            password: "\(String(describing: user?.id))"
                         ) { authResult, error in
@@ -105,10 +103,10 @@ class ViewController: UIViewController {
                                     } else {
                                         print("FB: 이메일이 이미 사용 중일 때, 로그인 시도 signin success")
                                         //TODO: FireStore의 User정보 가져온 후 User데이터 다음뷰로 넘겨주기.
-                                        self.fetchUserFromFirestore(userId: String(self.currentUser.id)) { user in
+                                        self.fetchUserFromFirestore(userId: String(UserInfo.shared.user!.id)) { user in
                                             if let user = user {
-                                                self.currentUser = user
-                                                print("fetch 이후 currentUser 정보 : \(self.currentUser)")
+                                                UserInfo.shared.user = user
+                                                print("fetch 이후 currentUser 정보 : \(UserInfo.shared.user)")
                                             } else {
                                                 print("User 데이터가 없습니다. ")
                                             }
@@ -119,22 +117,24 @@ class ViewController: UIViewController {
                                 print("FB: 이메일이 사용중이지 않을때 signup failed error: \(error.localizedDescription)")
                             } else {
                                 print("FB: 이메일이 사용중이지 않을때 signup success")
+                                
+                                //사용자 정보 저장
+                                if let nickname = user?.kakaoAccount?.profile?.nickname,
+                                   let email = user?.kakaoAccount?.email,
+                                   let profileImageUrl = user?.kakaoAccount?.profile?.profileImageUrl,
+                                   let userId = user?.id {
+                                    
+                                    let user = User(id: userId, name: nickname, email: email, profileImageUrl: profileImageUrl)
+                                    UserInfo.shared.user = user
+                                    
+                                    print("이메일이 사용중이지 않을때 사용자 정보 저장: \(UserInfo.shared.user)")
+                                                    
+                                    // Firestore에 사용자 정보 저장
+                                    self.saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
+                                    //TODO: user데이터 를 다음 뷰에 넘겨주기.
+                                }
+                                
                             }
-                        }
-                        
-                        //사용자 정보 저장
-                        if let nickname = user?.kakaoAccount?.profile?.nickname,
-                           let email = user?.kakaoAccount?.email,
-                           let profileImageUrl = user?.kakaoAccount?.profile?.profileImageUrl,
-                           let userId = user?.id {
-                            
-                            let user = User(id: userId, name: nickname, email: email, profileImageUrl: profileImageUrl)
-                            
-                            print("FBS \(user)")
-                                            
-                            // Firestore에 사용자 정보 저장
-                            self.saveUserToFirestore(user: user, userId: String(userId))
-                            //TODO: user데이터 를 다음 뷰에 넘겨주기.
                         }
                     }
                 }

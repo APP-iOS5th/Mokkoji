@@ -20,6 +20,7 @@
 		4A9E414C2C1687E100DE424A /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9E414B2C1687E100DE424A /* FirebaseFirestore */; };
 		4A9E414E2C1687E100DE424A /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9E414D2C1687E100DE424A /* FirebaseFirestoreSwift */; };
 		4A9E41502C168CEE00DE424A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4A9E414F2C168CEE00DE424A /* GoogleService-Info.plist */; };
+		4A9E41522C16B40D00DE424A /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41512C16B40D00DE424A /* UserInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		4A9E41412C16843F00DE424A /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		4A9E41432C16844C00DE424A /* MapInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapInfo.swift; sourceTree = "<group>"; };
 		4A9E414F2C168CEE00DE424A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4A9E41512C16B40D00DE424A /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 		4A187EE22C0F06EE00F5C2EE /* Mokkoji */ = {
 			isa = PBXGroup;
 			children = (
+				4A9E41512C16B40D00DE424A /* UserInfo.swift */,
 				4A9E413E2C16842A00DE424A /* Model */,
 				4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */,
 				4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */,
@@ -180,6 +183,7 @@
 				4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */,
 				4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */,
 				4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */,
+				4A9E41522C16B40D00DE424A /* UserInfo.swift in Sources */,
 				4A9E41422C16843F00DE424A /* Plan.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
