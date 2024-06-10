@@ -44,6 +44,13 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         print("Edit button tapped")
         
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 && indexPath.row == 0 {
+            let PmDetailView = PmDetailViewController()
+            navigationController?.pushViewController(PmDetailView, animated: true)
+        }
+    }
 
     // 섹션 수 설정
     func numberOfSections(in tableView: UITableView) -> Int {
