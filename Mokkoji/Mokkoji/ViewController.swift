@@ -128,13 +128,19 @@ class ViewController: UIViewController {
         return kakaoLoginButton
     }()
     
-    //TODO: Test를 위해 넣어둠
+    private lazy var appleLoginButton: UIButton = {
+        var appleLoginButton = UIButton()
+        appleLoginButton.translatesAutoresizingMaskIntoConstraints = false
+        appleLoginButton.setImage(UIImage(named: "appleid_button"), for: .normal)
+        return appleLoginButton
+    }()
+    
+    //TODO: Test를 위해 넣어둠 googleLoginButton 들어갈 예정
     private lazy var kakaoLogoutButton: UIButton = {
         var kakaoLogoutButton = UIButton()
         kakaoLogoutButton.translatesAutoresizingMaskIntoConstraints = false
-        kakaoLogoutButton.backgroundColor = .red
         kakaoLogoutButton.setTitle("Logout", for: .normal)
-        kakaoLogoutButton.setTitleColor(.systemBlue, for: .normal)
+        kakaoLogoutButton.setTitleColor(.black, for: .normal)
         return kakaoLogoutButton
     }()
     
@@ -184,6 +190,7 @@ class ViewController: UIViewController {
                           signInStackView,
                           signUpSNSLabelStackView,
                           kakaoLoginButton,
+                          appleLoginButton,
                           kakaoLogoutButton
                          ])
         
@@ -243,13 +250,19 @@ class ViewController: UIViewController {
             
             // kakaoLoginButton Constraints
             kakaoLoginButton.heightAnchor.constraint(equalToConstant: 50),
-            kakaoLoginButton.topAnchor.constraint(equalTo: signUpSNSLabelStackView.bottomAnchor, constant: 50),
+            kakaoLoginButton.topAnchor.constraint(equalTo: signUpSNSLabelStackView.bottomAnchor, constant: 30),
             kakaoLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             kakaoLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
+            // kakaoLoginButton Constraints
+            appleLoginButton.heightAnchor.constraint(equalToConstant: 50),
+            appleLoginButton.topAnchor.constraint(equalTo: kakaoLoginButton.bottomAnchor, constant: 10),
+            appleLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            appleLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            
             // kakaoLogoutButton Constraints
             kakaoLogoutButton.heightAnchor.constraint(equalToConstant: 50),
-            kakaoLogoutButton.topAnchor.constraint(equalTo: kakaoLoginButton.bottomAnchor, constant: 50),
+            kakaoLogoutButton.topAnchor.constraint(equalTo: appleLoginButton.bottomAnchor, constant: 10),
             kakaoLogoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             kakaoLogoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
