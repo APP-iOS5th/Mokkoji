@@ -8,9 +8,10 @@
 import Foundation
 
 struct User: Codable {
+    var id: Int64
     var name: String
     var email: String
     var profileImageUrl: URL
-    var plan: [Plan]
+    var plan: [Plan]?
     var friendList: [User]?
 }
