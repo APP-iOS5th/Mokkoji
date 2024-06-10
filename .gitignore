@@ -118,4 +118,7 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+# Ignore the config file with API keys
+Config.xcconfig
+
 # End of https://www.toptal.com/developers/gitignore/api/xcode,swift,swiftpackagemanager,macos
