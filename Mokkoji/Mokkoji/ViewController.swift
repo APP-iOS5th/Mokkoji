@@ -88,8 +88,11 @@ class ViewController: UIViewController {
     
     private lazy var signInButton: UIButton = {
         var signInButton = UIButton()
-        signInButton.setTitle("회원가입", for: .normal)
         signInButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        let title = "회원가입"
+        let attributedTitle = NSMutableAttributedString(string: title)
+        attributedTitle.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: title.count))
+        signInButton.setAttributedTitle(attributedTitle, for: .normal)
         signInButton.backgroundColor = .white
         signInButton.setTitleColor(.lightGray, for: .normal)
         signInButton.translatesAutoresizingMaskIntoConstraints = false
@@ -125,6 +128,7 @@ class ViewController: UIViewController {
         return kakaoLoginButton
     }()
     
+    //TODO: Test를 위해 넣어둠
     private lazy var kakaoLogoutButton: UIButton = {
         var kakaoLogoutButton = UIButton()
         kakaoLogoutButton.translatesAutoresizingMaskIntoConstraints = false
@@ -150,7 +154,7 @@ class ViewController: UIViewController {
         stackView.axis = .horizontal
         stackView.alignment = .center
         stackView.distribution = .fill
-        stackView.spacing = 20
+        stackView.spacing = 10
         return stackView
     }()
     
@@ -159,8 +163,7 @@ class ViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.distribution = .fillEqually
-        stackView.spacing = 10
+        stackView.distribution = .equalCentering
         return stackView
     }()
     
@@ -184,8 +187,12 @@ class ViewController: UIViewController {
                           kakaoLogoutButton
                          ])
         
+        let searchStackViewLeftSpacer = UIView()
+        let signInStackViewLeftSpacer = UIView()
+        searchStackView.addArrangedSubview(searchStackViewLeftSpacer)
         searchStackView.addArrangedSubview(searchEmailButton)
         searchStackView.addArrangedSubview(searchPasswordButton)
+        signInStackView.addArrangedSubview(signInStackViewLeftSpacer)
         signInStackView.addArrangedSubview(signInLabel)
         signInStackView.addArrangedSubview(signInButton)
         signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSLeadingLine)
@@ -226,9 +233,9 @@ class ViewController: UIViewController {
             signInStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             // signUpSNSLabelStackView Constraints
-            signUpWithSNSLeadingLine.widthAnchor.constraint(equalToConstant: 15),
+            signUpWithSNSLeadingLine.widthAnchor.constraint(equalToConstant: 100),
             signUpWithSNSLeadingLine.heightAnchor.constraint(equalToConstant: 2),
-            signUpWithSNSTrailingLine.widthAnchor.constraint(equalToConstant: 15),
+            signUpWithSNSTrailingLine.widthAnchor.constraint(equalToConstant: 100),
             signUpWithSNSTrailingLine.heightAnchor.constraint(equalToConstant: 2),
             signUpSNSLabelStackView.topAnchor.constraint(equalTo: signInStackView.bottomAnchor, constant: 30),
             signUpSNSLabelStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -266,8 +273,8 @@ class ViewController: UIViewController {
                         print("Error checking email duplication: \(error.localizedDescription)")
                         return
                     }
-                    if let signInMethods = signInMethods {
-                        // 이미 사용자가 존재하는 경우 로그인 시도 (가입된 사용자가 있어도 넘어오지 않음 why..? signInMethods 계속 nil..)
+                    if signInMethods != nil {
+                        // 이미 사용자가 존재하는 경우 로그인 시도
                         Auth.auth().signIn(withEmail: (user?.kakaoAccount?.email)!,
                                            password: "\(String(describing: user?.id))"
                         ) { authResult, error in
@@ -377,7 +384,7 @@ class ViewController: UIViewController {
         if UserApi.isKakaoTalkLoginAvailable() { //카카오톡 앱이 있는경우 loginWithKakaoTalk
             UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
                 if let error = error {
-                    print("Error during KakaoTalk login: \(error.localizedDescription)")
+                    print("KakaoTalk Login Error: \(error.localizedDescription)")
                 } else {
                     print("loginWithKakaoTalk() success.")
                     self.setUserInfo()
@@ -386,7 +393,7 @@ class ViewController: UIViewController {
         } else { //카카오톡이 설치되어 있지 않은 경우 웹으로 연결 loginWithKakaoAccount
             UserApi.shared.loginWithKakaoAccount { (oauthToken, error) in
                 if let error = error {
-                    print("Error during web login: \(error.localizedDescription)")
+                    print("KakaoTalk Web Login Error: \(error.localizedDescription)")
                 } else {
                     print("loginWithKakaoAccount() success.")
                     self.setUserInfo()
@@ -421,7 +428,7 @@ class ViewController: UIViewController {
         do {
             try userRef.setData(from: user)
         } catch let error {
-            print("Error writing user to Firestore: \(error)")
+            print("Firestore Writing Error: \(error)")
         }
     }
     
@@ -433,14 +440,22 @@ class ViewController: UIViewController {
                     let user = try document.data(as: User.self)
                     completion(user)
                 } catch let error {
-                    print("Error decoding user: \(error)")
+                    print("User Decoding Error: \(error)")
                     completion(nil)
                 }
             } else {
-                print("User does not exist in Firestore")
+                print("Firestore에 User가 존재하지 않음.")
                 completion(nil)
             }
         }
     }
 }
 
+//MARK: - TextField Delegate Methods
+extension ViewController: UITextFieldDelegate {
+    //textFieldDidChangeSelection
+    
+    //textFieldDidBeginEditing
+    
+    //textFieldDidEndEditing
+}
