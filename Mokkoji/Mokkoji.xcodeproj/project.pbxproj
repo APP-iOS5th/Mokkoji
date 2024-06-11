@@ -12,6 +12,7 @@
 		3B605C142C16C2C200D3603C /* PmDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C132C16C2C200D3603C /* PmDetailViewController.swift */; };
 		3B605C162C16E28000D3603C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C152C16E28000D3603C /* MapViewController.swift */; };
 		3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 3B605C182C16E3A300D3603C /* KakaoMapsSDK-SPM */; };
+		3B605C1E2C16F07200D3603C /* PmDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */; };
 		4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */; };
 		4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */; };
 		4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE72C0F06EE00F5C2EE /* ViewController.swift */; };
@@ -27,6 +28,7 @@
 		3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		3B605C132C16C2C200D3603C /* PmDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmDetailViewController.swift; sourceTree = "<group>"; };
 		3B605C152C16E28000D3603C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmDetailViewCell.swift; sourceTree = "<group>"; };
 		4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mokkoji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,12 +65,37 @@
 		3B605C072C168C1000D3603C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */,
-				3B605C0E2C168E7200D3603C /* PmListViewController.swift */,
-				3B605C132C16C2C200D3603C /* PmDetailViewController.swift */,
-				3B605C152C16E28000D3603C /* MapViewController.swift */,
+				3B605C1A2C16EF7300D3603C /* ListView */,
+				3B605C1B2C16EF8200D3603C /* DetailView */,
+				3B605C1C2C16EF9800D3603C /* MapView */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		3B605C1A2C16EF7300D3603C /* ListView */ = {
+			isa = PBXGroup;
+			children = (
+				3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */,
+				3B605C0E2C168E7200D3603C /* PmListViewController.swift */,
+			);
+			path = ListView;
+			sourceTree = "<group>";
+		};
+		3B605C1B2C16EF8200D3603C /* DetailView */ = {
+			isa = PBXGroup;
+			children = (
+				3B605C132C16C2C200D3603C /* PmDetailViewController.swift */,
+				3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */,
+			);
+			path = DetailView;
+			sourceTree = "<group>";
+		};
+		3B605C1C2C16EF9800D3603C /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				3B605C152C16E28000D3603C /* MapViewController.swift */,
+			);
+			path = MapView;
 			sourceTree = "<group>";
 		};
 		4A187ED72C0F06EE00F5C2EE = {
@@ -192,6 +219,7 @@
 				3B605C142C16C2C200D3603C /* PmDetailViewController.swift in Sources */,
 				4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */,
 				4A9E41402C16843A00DE424A /* User.swift in Sources */,
+				3B605C1E2C16F07200D3603C /* PmDetailViewCell.swift in Sources */,
 				3B605C162C16E28000D3603C /* MapViewController.swift in Sources */,
 				3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */,
 				4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */,
