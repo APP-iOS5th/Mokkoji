@@ -146,6 +146,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         return tableView
     }()
     
+    var tableViewHeightConstraint: NSLayoutConstraint?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -176,16 +178,16 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
             titleText.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
-            titleText.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
-            titleText.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
-        
+            titleText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            titleText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            
             bodyText.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 5),
-            bodyText.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
-            bodyText.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
+            bodyText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            bodyText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
             dateField.topAnchor.constraint(equalTo: bodyText.bottomAnchor, constant: 5),
-            dateField.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
-            dateField.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
+            dateField.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            dateField.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
             profileImage.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 5),
             profileImage.widthAnchor.constraint(equalToConstant: 50),
@@ -197,23 +199,30 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             inviteButton.heightAnchor.constraint(equalToConstant: 30),
             
             stackView.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
-            stackView.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
+            stackView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
             addMapButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 15),
-            addMapButton.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
-            addMapButton.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
+            addMapButton.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            addMapButton.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
             mapView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor, constant: 15),
-            mapView.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
-            mapView.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
+            mapView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            mapView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             mapView.heightAnchor.constraint(equalToConstant: 300),
             
             tableView.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 15),
-//            tableView.bottomAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor)
+            tableView.bottomAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
         ])
+        
+        /// tableView의 동적 높이 설정
+        tableViewHeightConstraint = tableView.heightAnchor.constraint(equalToConstant: 0)
+        tableViewHeightConstraint?.isActive = true
+        /// tableVIew의 contentSize 관찰 시작
+        tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
+        tableViewHeightConstraint?.constant = tableView.contentSize.height
         
         // TODO: - 친구 초대를 통해 선택된 user의 profileUrl을 전달받아 이미지를 그림
 //        let user =
@@ -225,7 +234,17 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
 //                self.profileImage.image = UIImage(systemName: "person.circle.fill")
 //            }
 //        }
+        
+    }
+        
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "contentSize", let tableView = object as? UITableView {
+            tableViewHeightConstraint?.constant = tableView.contentSize.height
+        }
+    }
 
+    deinit {
+        tableView.removeObserver(self, forKeyPath: "contentSize")
     }
     
     override func viewWillAppear(_ animated: Bool) {
