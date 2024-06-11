@@ -7,6 +7,28 @@
 
 import UIKit
 
+extension UIImageView {
+    /// 이미지 로딩 후 completion 클로저 실행
+    func loadImage(from url: URL, completion: ((UIImage?) -> Void)? = nil) {
+        /// URLSession을 사용한 비동기적 이미지 다운로드
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil, let downloadedImage = UIImage(data: data) else {
+                DispatchQueue.main.async {
+                    completion?(nil)
+                }
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.image = downloadedImage
+                completion?(downloadedImage)
+            }
+        }
+        
+        task.resume()
+    }
+}
+
 class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     lazy var titleText: UITextField = {
@@ -59,7 +81,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
 
     lazy var profileImage: UIImageView = {
         let imageView = UIImageView()
-        
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -127,6 +148,9 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             dateField.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             dateField.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
+            profileImage.widthAnchor.constraint(equalToConstant: 50),
+            profileImage.heightAnchor.constraint(equalToConstant: 50),
+            
             stackView.topAnchor.constraint(equalTo: dateField.bottomAnchor),
             stackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
@@ -146,6 +170,16 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20)
         ])
         
+        // TODO: - 친구 초대를 통해 선택된 user의 profileUrl을 전달받아 이미지를 그림
+//        let user =
+//        profileImage.loadImage(from: user.profileImageUrl) { [weak self] image in
+//            if let image = image {
+//                print("Success image loading")
+//            } else {
+//                print("Fail image loading")
+//                self.profileImage.image = UIImage(systemName: "person.circle.fill")
+//            }
+//        }
 
     }
     
