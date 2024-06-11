@@ -18,7 +18,10 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         super.viewDidLoad()
 
         view.backgroundColor = .white
+        
         self.navigationItem.title = "약속 리스트"
+        
+        let tabBarCtr = UITabBarController()
 
         // 왼쪽에 Add 버튼 추가
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
@@ -37,6 +40,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
 
         // isSelectArray 초기화
         initializeSelectArray()
+        
     }
 
     func initializeSelectArray() {

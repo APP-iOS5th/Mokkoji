@@ -18,8 +18,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: windowScene)
         let navigationController = UINavigationController(rootViewController: PmListViewController())
+        let profilController =  UINavigationController(rootViewController: MapViewController())
         
-        window.rootViewController = navigationController
+        let tabBarController = UITabBarController()
+        tabBarController.setViewControllers([navigationController, profilController], animated: true)
+        
+        if let items = tabBarController.tabBar.items {
+            items[0].selectedImage = UIImage(systemName: "star.fill")
+            items[0].image = UIImage(systemName: "star")
+            items[0].title = "약속 리스트"
+            
+            items[1].selectedImage = UIImage(systemName: "person.fill")
+            items[1].image = UIImage(systemName: "person")
+            items[1].title = "프로필"
+        }
+        window.rootViewController = tabBarController
         self.window = window
         window.makeKeyAndVisible()
     }
