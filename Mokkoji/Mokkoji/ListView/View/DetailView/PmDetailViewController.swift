@@ -68,4 +68,10 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
         cell.clockImage.image = UIImage(systemName: "clock.fill")
         return cell
     }
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 && indexPath.row == 0 {
+            let informationViewController = InformationViewController()
+            navigationController?.pushViewController(informationViewController, animated: true)
+        }
+    }
 }

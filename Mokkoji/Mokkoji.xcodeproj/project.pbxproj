@@ -13,6 +13,7 @@
 		3B605C162C16E28000D3603C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C152C16E28000D3603C /* MapViewController.swift */; };
 		3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 3B605C182C16E3A300D3603C /* KakaoMapsSDK-SPM */; };
 		3B605C1E2C16F07200D3603C /* PmDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */; };
+		3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */; };
 		4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */; };
 		4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */; };
 		4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE72C0F06EE00F5C2EE /* ViewController.swift */; };
@@ -29,6 +30,7 @@
 		3B605C132C16C2C200D3603C /* PmDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmDetailViewController.swift; sourceTree = "<group>"; };
 		3B605C152C16E28000D3603C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmDetailViewCell.swift; sourceTree = "<group>"; };
+		3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
 		4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mokkoji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -84,8 +86,9 @@
 		3B605C1B2C16EF8200D3603C /* DetailView */ = {
 			isa = PBXGroup;
 			children = (
-				3B605C132C16C2C200D3603C /* PmDetailViewController.swift */,
 				3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */,
+				3B605C132C16C2C200D3603C /* PmDetailViewController.swift */,
+				3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */,
 			);
 			path = DetailView;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 				4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */,
 				3B605C0F2C168E7200D3603C /* PmListViewController.swift in Sources */,
 				4A9E41422C16843F00DE424A /* Plan.swift in Sources */,
+				3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
