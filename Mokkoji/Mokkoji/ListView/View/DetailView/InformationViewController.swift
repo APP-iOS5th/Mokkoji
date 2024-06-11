@@ -39,15 +39,17 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
         view.addSubview(sharedBtn)
         
         NSLayoutConstraint.activate([
+            //promissTitle 제약조건
             promissTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
             promissTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
             promissTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 8),
             
+            //tableView 제약조건
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.topAnchor.constraint(equalTo: promissTitle.bottomAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
+            //sharedBtn 제약조건
             sharedBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             sharedBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
             sharedBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -500),
@@ -73,8 +75,9 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
         return cell
     }
     
+    //공유 메소드
     @objc func sharedFuntion() {
-        
+        print("공유!!!")
     }
 
 }
