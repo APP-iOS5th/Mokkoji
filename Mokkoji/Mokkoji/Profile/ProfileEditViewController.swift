@@ -37,19 +37,18 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         return mailLabel
     }()
     
-    // 원래는 UIImagePickerController인데 어떻게 사용해야될지 감이 안옴... ㅠㅜ
     private lazy var profileEditImage: UIImageView = {
         let imageEdit = UIImageView()
-        imageEdit.image = UIImage(named: "sponge")
+        imageEdit.image = UIImage(systemName: "person.circle")
         imageEdit.isUserInteractionEnabled = true
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
         imageEdit.addGestureRecognizer(tapGestureRecognizer)
         
         imageEdit.clipsToBounds = true
         imageEdit.layer.borderWidth = 2
-        imageEdit.layer.borderColor = UIColor.black.cgColor
+        imageEdit.layer.borderColor = UIColor.white.cgColor
         imageEdit.layer.cornerRadius = 150
-        imageEdit.backgroundColor = .red
+        imageEdit.backgroundColor = .white
         
         return imageEdit
         

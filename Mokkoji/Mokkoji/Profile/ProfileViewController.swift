@@ -9,71 +9,10 @@ import UIKit
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var friends = ["a1", "b2", "c3", "d4", "e5", "f6", "g7", "h8", "i9", "j10", "k11", "l12"]
+    var friends = ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1", "k1", "l1"]
     var myName: String = "육현서"
     var myMail: String = "h@naver.com"
 //    var myImage: UIImage? = UIImage(named: "sponge")
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        self.view.backgroundColor = .white
-        
-        // MARK: - 네비게이션 바 타이틀 & 설정 버튼
-        self.navigationItem.title = "PROFILE"
-        self.navigationController?.navigationBar.prefersLargeTitles = true
-        self.navigationItem.largeTitleDisplayMode = .always
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: #selector(tapButtonProfileEdit))
-        
-        // MARK: - 테이블 뷰
-        friendsTableView.dataSource = self
-        friendsTableView.delegate = self
-        friendsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
-        
-        view.addSubview(profileImageView)
-        view.addSubview(nameLabel)
-        view.addSubview(mailLabel)
-        view.addSubview(logoutButton)
-        view.addSubview(addFriendButton)
-        view.addSubview(deleteFriendButton)
-        view.addSubview(friendsTableView)
-
-        profileImageView.translatesAutoresizingMaskIntoConstraints = false
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        mailLabel.translatesAutoresizingMaskIntoConstraints = false
-        addFriendButton.translatesAutoresizingMaskIntoConstraints = false
-        deleteFriendButton.translatesAutoresizingMaskIntoConstraints = false
-        friendsTableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            profileImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30),
-            profileImageView.widthAnchor.constraint(equalToConstant: 100),
-            profileImageView.heightAnchor.constraint(equalToConstant: 100),
-            
-            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
-            nameLabel.leadingAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.leadingAnchor, constant: 130),
-            
-            mailLabel.topAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.topAnchor, constant: 30),
-            mailLabel.leadingAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.leadingAnchor, constant: 130),
-            
-            logoutButton.topAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.topAnchor, constant: 120),
-            logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoutButton.widthAnchor.constraint(equalToConstant: 320),
-            logoutButton.heightAnchor.constraint(equalToConstant: 40),
-            
-            addFriendButton.topAnchor.constraint(equalTo: logoutButton.safeAreaLayoutGuide.topAnchor, constant: 50),
-            addFriendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -120),
-            
-            deleteFriendButton.topAnchor.constraint(equalTo: logoutButton.safeAreaLayoutGuide.topAnchor, constant: 49),
-            deleteFriendButton.trailingAnchor.constraint(equalTo: addFriendButton.safeAreaLayoutGuide.trailingAnchor, constant: 80),
-            
-            friendsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 230),
-            friendsTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            friendsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            friendsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
     
     // MARK: - 프로필 사진
     let profileImageView: UIImageView = {
@@ -152,6 +91,67 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         return tableView
     }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.view.backgroundColor = .white
+        
+        // MARK: - 네비게이션 바 타이틀 & 설정 버튼
+        self.navigationItem.title = "PROFILE"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.largeTitleDisplayMode = .always
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: #selector(tapButtonProfileEdit))
+        
+        // MARK: - 테이블 뷰
+        friendsTableView.dataSource = self
+        friendsTableView.delegate = self
+        friendsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
+        
+        view.addSubview(profileImageView)
+        view.addSubview(nameLabel)
+        view.addSubview(mailLabel)
+        view.addSubview(logoutButton)
+        view.addSubview(addFriendButton)
+        view.addSubview(deleteFriendButton)
+        view.addSubview(friendsTableView)
+
+        profileImageView.translatesAutoresizingMaskIntoConstraints = false
+        logoutButton.translatesAutoresizingMaskIntoConstraints = false
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        mailLabel.translatesAutoresizingMaskIntoConstraints = false
+        addFriendButton.translatesAutoresizingMaskIntoConstraints = false
+        deleteFriendButton.translatesAutoresizingMaskIntoConstraints = false
+        friendsTableView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            profileImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30),
+            profileImageView.widthAnchor.constraint(equalToConstant: 100),
+            profileImageView.heightAnchor.constraint(equalToConstant: 100),
+            
+            nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+            nameLabel.leadingAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.leadingAnchor, constant: 130),
+            
+            mailLabel.topAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.topAnchor, constant: 30),
+            mailLabel.leadingAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.leadingAnchor, constant: 130),
+            
+            logoutButton.topAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.topAnchor, constant: 120),
+            logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoutButton.widthAnchor.constraint(equalToConstant: 320),
+            logoutButton.heightAnchor.constraint(equalToConstant: 40),
+            
+            addFriendButton.topAnchor.constraint(equalTo: logoutButton.safeAreaLayoutGuide.topAnchor, constant: 50),
+            addFriendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -120),
+            
+            deleteFriendButton.topAnchor.constraint(equalTo: logoutButton.safeAreaLayoutGuide.topAnchor, constant: 49),
+            deleteFriendButton.trailingAnchor.constraint(equalTo: addFriendButton.safeAreaLayoutGuide.trailingAnchor, constant: 80),
+            
+            friendsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 230),
+            friendsTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            friendsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            friendsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+    }
     
     // MARK: - 프로필 편집 페이지로 이동
     @objc private func tapButtonProfileEdit() {

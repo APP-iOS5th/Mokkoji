@@ -9,7 +9,8 @@ import UIKit
 
 class AddFriendViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
-    var allFriends = ["a1", "b2", "c3", "d4", "e5", "f6", "g7", "h8", "i9", "j10", "k11", "l12"]
+    var addFriendName = "김00"
+    var allFriends = ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2", "i2", "j2", "k2", "l2"]
     var filteredFriends = [String]()
     
     private lazy var friendSearchBar: UISearchBar = {
@@ -55,7 +56,7 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
             friendSearchTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             friendSearchTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             friendSearchTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        
+            
         ])
     }
     
@@ -79,6 +80,26 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.imageView?.image = UIImage(systemName: "person.circle")
         return cell
     }
+    
+    // MARK: - 셀 클릭하면 오류남..?
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let alertController = UIAlertController(title: "Add Friend", message: "\(addFriendName)을 친구목록에 추가 하시겠습니까?", preferredStyle: .alert)
+
+        let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
+            // Handle Yes button tap
+            print("Yes")
+        }
+
+        let noAction = UIAlertAction(title: "No", style: .cancel) { _ in
+           // self.dismiss(animated: true)
+            print("No")
+        }
+
+        alertController.addAction(yesAction)
+        alertController.addAction(noAction)
+
+        present(alertController, animated: true, completion: nil)
+    }
 }
-
-
