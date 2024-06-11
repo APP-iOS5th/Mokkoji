@@ -264,6 +264,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     func addMapButtonTapped() {
-        
+        let mapViewController = MapViewController()
+        show(mapViewController, sender: nil)
     }
 }
