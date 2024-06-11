@@ -25,6 +25,8 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     var latitude: Double?
     var longitude: Double?
+    
+    var mapInpos: [MapInfo] = []
 
     required init?(coder aDecoder: NSCoder) {
         _observerAdded = false
@@ -65,7 +67,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         } else {
             print("Error: mapContainer is nil")
         }
-
         
         //KMController 생성.
         mapController!.delegate = self
@@ -84,6 +85,10 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         mapContainer?.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mapContainer!)
         
+        
+        mapInpos = [MapInfo(placeLatitude: 37.3941, placeLongitude: 127.1107, placeName: "판교역")]
+        mapInpos.append(MapInfo(placeLatitude: 37.3941, placeLongitude: 127.1107, placeName: "판교역"))
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -144,7 +149,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     func addViews() {
         //여기에서 그릴 View(KakaoMap, Roadview)들을 추가한다.
-        let defaultPosition: MapPoint = MapPoint(longitude: 126.826153, latitude: 37.493912)
+        let defaultPosition: MapPoint = MapPoint(longitude: mapInpos[0].placeLongitude, latitude: mapInpos[0].placeLatitude)
         //지도(KakaoMap)를 그리기 위한 viewInfo를 생성
         let mapviewInfo: MapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: defaultPosition, defaultLevel: 13)
         

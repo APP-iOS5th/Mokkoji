@@ -30,7 +30,7 @@ class CustomTableViewCell: UITableViewCell {
         // 제약 조건 설정
         NSLayoutConstraint.activate([
             // iconImageView 설정
-            profileimage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -200),
+            profileimage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -100),
             profileimage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             profileimage.widthAnchor.constraint(equalToConstant: 40),
             profileimage.heightAnchor.constraint(equalToConstant: 40),
