@@ -29,7 +29,16 @@ extension UIImageView {
     }
 }
 
-class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate {
+    
+    let mapViewController = MapViewController()
+    var mapInfoList: [MapInfo] = []
+    
+    lazy var mainContainer: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
     
     lazy var titleText: UITextField = {
         let textField = UITextField()
@@ -122,7 +131,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     lazy var mapView: UIImageView = {
         let imageView = UIImageView()
-
+        imageView.image = UIImage(systemName: "map")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -131,7 +140,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(AddPlanInfoTableViewCell.self, forCellReuseIdentifier: "addPlanInfoCell")
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -145,57 +153,66 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.navigationItem.title = "약속 추가"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
         
+        mapViewController.delegate = self
+        
         stackView.addArrangedSubview(profileImage)
         stackView.addArrangedSubview(inviteButton)
         stackView.addArrangedSubview(spacerView)
         
-        self.view.addSubview(titleText)
-        self.view.addSubview(bodyText)
-        self.view.addSubview(dateField)
-        self.view.addSubview(stackView)
-        self.view.addSubview(addMapButton)
-        self.view.addSubview(mapView)
-        self.view.addSubview(tableView)
+        self.view.addSubview(mainContainer)
+        
+        mainContainer.addSubview(titleText)
+        mainContainer.addSubview(bodyText)
+        mainContainer.addSubview(dateField)
+        mainContainer.addSubview(stackView)
+        mainContainer.addSubview(addMapButton)
+        mainContainer.addSubview(mapView)
+        mainContainer.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            titleText.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            titleText.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            titleText.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            mainContainer.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            mainContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            
+            titleText.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
+            titleText.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
+            titleText.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
         
             bodyText.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 5),
-            bodyText.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            bodyText.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            bodyText.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
+            bodyText.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
             
             dateField.topAnchor.constraint(equalTo: bodyText.bottomAnchor, constant: 5),
-            dateField.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            dateField.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            dateField.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
+            dateField.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
             
             profileImage.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 5),
             profileImage.widthAnchor.constraint(equalToConstant: 50),
             profileImage.heightAnchor.constraint(equalToConstant: 50),
             
             inviteButton.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 5),
-            inviteButton.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 10),
+            inviteButton.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor),
             inviteButton.widthAnchor.constraint(equalToConstant: 70),
             inviteButton.heightAnchor.constraint(equalToConstant: 30),
             
             stackView.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
-            stackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            stackView.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
             
             addMapButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 15),
-            addMapButton.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            addMapButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            addMapButton.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
+            addMapButton.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
             
-            mapView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor),
-            mapView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            mapView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            mapView.heightAnchor.constraint(equalToConstant: 200),
+            mapView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor, constant: 15),
+            mapView.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
+            mapView.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
+            mapView.heightAnchor.constraint(equalToConstant: 300),
             
-            tableView.topAnchor.constraint(equalTo: mapView.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20)
+            tableView.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 15),
+//            tableView.bottomAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor)
         ])
         
         // TODO: - 친구 초대를 통해 선택된 user의 profileUrl을 전달받아 이미지를 그림
@@ -227,8 +244,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // TODO: - 장소 수로 변경
-        5
+        return mapInfoList.count
         
     }
     
@@ -241,8 +257,15 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
     }
     
+    // MARK: - SelectedPlaceListDelegate
+    func didAppendPlace(places: [MapInfo]) {
+        self.mapInfoList = places
+        tableView.reloadData()
+    }
+    
     // MARK: - Methods
     @objc func saveButtonTapped() {
+        // TODO: - Plan 데이터 저장
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -264,7 +287,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     func addMapButtonTapped() {
-        let mapViewController = MapViewController()
         show(mapViewController, sender: nil)
     }
 }

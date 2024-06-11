@@ -31,6 +31,10 @@ extension UIColor {
     }
 }
 
+protocol SelectedPlaceListDelegate {
+    func didAppendPlace(places: [MapInfo])
+}
+
 class MapViewController: UIViewController, MapControllerDelegate, CLLocationManagerDelegate, SearchResultsSelectionDelegate {
 
     /// 카카오 지도 불러오기
@@ -52,6 +56,10 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     var searchController: UISearchController!
     let searchResultsViewController = SearchResultsViewController()
     
+    
+    var delegate: SelectedPlaceListDelegate?
+    var selectedPlaces: [MapInfo] = []
+    
     init() {
         _observerAdded = false
         _auth = false
@@ -72,6 +80,8 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
         
         /// 카카오 지도 API 연결
         guard let nativeAppKey = Bundle.main.nativeAppKey else {
@@ -178,10 +188,8 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
 
     func addViews() {
         /// 여기에서 그릴 View(KakaoMap, Roadview)들을 추가
-        if mapController?.getView("mapview") is KakaoMap {
-            mapController?.removeView("mapview")
-        }
         /// 초기 화면 위치(현재 위치)를 받아 지도(KakaoMap)를 그리기 위한 viewInfo를 생성
+        // TODO: - 현재 위치는 검색된 위치와 다르게 표시, 검색된 위치부터 1 표시
         if let location = locationManager.location {
             let latitude: Double? = location.coordinate.latitude
             let longitude: Double? = location.coordinate.longitude
@@ -223,9 +231,15 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     }
     
     // MARK: - SearchResultsSelectionDelegate
-    func didSelectPlace(longitude: Double, latitude: Double) {
+    func didSelectPlace(place: MapInfo) {
+        selectedPlaces.append(place)
         /// 장소 지도 뷰 생성
-        createPosition(longitude: longitude, latitude: latitude)
+        if let x = Double(place.placeLongitude),
+           let y = Double(place.placeLatitude) {
+            createPosition(longitude: x, latitude: y)
+        } else {
+            print("Invalid coordinates")
+        }
         /// Poi 생성
         createPois()
         /// Route 생성
@@ -286,6 +300,11 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         /// 지도(KakaoMap)를 그리기 위한 viewInfo를 생성
         let mapviewInfo: MapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: position, defaultLevel: 15)
         mapController?.addView(mapviewInfo)
+    }
+    
+    @objc func doneTapped() {
+        delegate?.didAppendPlace(places: selectedPlaces)
+        self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Poi Methods

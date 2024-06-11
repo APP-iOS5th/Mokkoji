@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SearchResultsSelectionDelegate {
-    func didSelectPlace(longitude: Double, latitude:Double)
+    func didSelectPlace(place: MapInfo)
 }
 
 class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UITableViewDelegate, UITableViewDataSource {
@@ -58,13 +58,8 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPlace = results[indexPath.row]
-        if let x = Double(selectedPlace.placeLongitude),
-           let y = Double(selectedPlace.placeLatitude) {
-            delegate?.didSelectPlace(longitude: x, latitude: y)
-            dismiss(animated: true)
-        } else {
-            print("Invalid coordinates")
-        }
+        delegate?.didSelectPlace(place: selectedPlace)
+        dismiss(animated: true)
     }
     
     // MARK: - UITableViewDataSource
