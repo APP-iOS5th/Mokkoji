@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = UIWindow(windowScene: windowScene)
         
         // MARK: - 초기 뷰컨트롤러 셋팅
-        /// NavigationControlÒler 1 - Plan
+        /// NavigationController 1 - Plan
         let planListViewController = PlanListViewController()
         let firstNavigationController = UINavigationController(rootViewController: planListViewController)
         firstNavigationController.tabBarItem = UITabBarItem(title: "Plan", image: UIImage(systemName: "star.fill"), tag: 0)
