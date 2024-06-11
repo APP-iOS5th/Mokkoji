@@ -40,7 +40,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
 
         // 임시 데이터
         plans = [
-            Plan(uuid: UUID(), order: 1, title: "Meeting", body: "Discuss project", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "만교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
             Plan(uuid: UUID(), order: 2, title: "Lunch", body: "Team lunch", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
             Plan(uuid: UUID(), order: 3, title: "Call", body: "Client call", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
         ]

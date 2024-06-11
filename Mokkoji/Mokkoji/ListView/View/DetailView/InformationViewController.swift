@@ -11,7 +11,9 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
 
     let tableView = UITableView()
     let promissTitle = UILabel()
-    
+    var plans: [Plan] = []
+    var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,10 +54,15 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
             //sharedBtn 제약조건
             sharedBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             sharedBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
-            sharedBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -500),
+            sharedBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -400),
             sharedBtn.heightAnchor.constraint(equalToConstant: 50),
 
         ])
+        plans = [
+            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "판교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 2, title: "재밌다", body: "카카오", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 3, title: "투어", body: "네이버", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+        ]
 
     }
 
@@ -65,15 +72,26 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell  = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PmDetailViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PmDetailViewCell
         
-        // titleLabel, dateLabel 및 clockImage 설정
-        cell.titleLabel.text = "title \(indexPath.row)"
-        cell.bodyLabel.text = "만나는 장소"
-        cell.dateLabel.text = "09:00"
-        cell.clockImage.image = UIImage(systemName: "clock.fill")
+        // selectedPlan을 사용하여 데이터 출력
+        if let plan = selectedPlan {
+            // titleLabel, bodyLabel 및 timeLabel 설정
+            cell.titleLabel.text = plan.title
+            cell.bodyLabel.text = plan.body
+            
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm"
+            let formattedDate = timeFormatter.string(from: plan.time)
+            cell.timeLabel.text = formattedDate
+            
+            cell.clockImage.image = UIImage(systemName: "clock.fill")
+        }
+        
         return cell
     }
+
+
     
     //공유 메소드
     @objc func sharedFuntion() {

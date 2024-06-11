@@ -11,7 +11,7 @@ class PmDetailViewCell: UITableViewCell {
 
     let titleLabel = UILabel()
     let bodyLabel = UILabel()
-    let dateLabel = UILabel()
+    let timeLabel = UILabel()
     let clockImage = UIImageView(image: UIImage(systemName: "clock.fill"))
     
    
@@ -25,8 +25,8 @@ class PmDetailViewCell: UITableViewCell {
         bodyLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(bodyLabel)
         
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(dateLabel)
+        timeLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(timeLabel)
         
         clockImage.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(clockImage)
@@ -38,10 +38,10 @@ class PmDetailViewCell: UITableViewCell {
             clockImage.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
             clockImage.widthAnchor.constraint(equalToConstant: 20),
             clockImage.heightAnchor.constraint(equalToConstant: 20),
-            clockImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -300),
+            clockImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -200),
             
-            dateLabel.leadingAnchor.constraint(equalTo: clockImage.trailingAnchor, constant: 16),
-            dateLabel.topAnchor.constraint(equalTo: clockImage.topAnchor),
+            timeLabel.leadingAnchor.constraint(equalTo: clockImage.trailingAnchor, constant: 16),
+            timeLabel.topAnchor.constraint(equalTo: clockImage.topAnchor),
 
             // titleLabel 설정
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
