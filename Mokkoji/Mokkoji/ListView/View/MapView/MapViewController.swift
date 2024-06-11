@@ -149,7 +149,11 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         let mapviewInfo: MapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: defaultPosition, defaultLevel: 13)
         
         //KakaoMap 추가.
-        mapController?.addView(mapviewInfo)
+        if let mapController = mapController {
+            mapController.addView(mapviewInfo)
+        } else {
+            print("Error: mapController is nil")
+        }
     }
     
     //addView 성공 이벤트 delegate. 추가적으로 수행할 작업을 진행한다.
