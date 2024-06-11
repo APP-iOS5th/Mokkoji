@@ -14,6 +14,7 @@ class AddPlanViewController: UIViewController {
         self.view.backgroundColor = .white
         
         self.navigationItem.title = "약속 추가"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTapped))
 
         
     }
@@ -32,6 +33,10 @@ class AddPlanViewController: UIViewController {
         self.navigationController?.navigationBar.prefersLargeTitles = false
     }
     
+    // MARK: - Methods
+    @objc func doneButtonTapped() {
+        self.navigationController?.popViewController(animated: true)
+    }
 
     
 }
