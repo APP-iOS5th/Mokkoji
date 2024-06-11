@@ -9,14 +9,16 @@ import UIKit
 
 class ProfileEditViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    private lazy var profileEditName: UITextField = {
+    var onSave: ((String, String, UIImage) -> Void)?
+    
+    private lazy var profileEditName: UITextField! = {
         let textfield = UITextField()
         textfield.placeholder = "Name"
         
         return textfield
     }()
     
-    private lazy var profileEditMail: UITextField = {
+    private lazy var profileEditMail: UITextField! = {
         let textfield = UITextField()
         textfield.placeholder = "E-mail"
         
@@ -37,7 +39,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         return mailLabel
     }()
     
-    private lazy var profileEditImage: UIImageView = {
+    private lazy var profileEditImage: UIImageView! = {
         let imageEdit = UIImageView()
         imageEdit.image = UIImage(systemName: "person.circle")
         imageEdit.isUserInteractionEnabled = true
@@ -45,6 +47,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         imageEdit.addGestureRecognizer(tapGestureRecognizer)
         
         imageEdit.clipsToBounds = true
+        imageEdit.contentMode = .scaleAspectFill
         imageEdit.layer.borderWidth = 2
         imageEdit.layer.borderColor = UIColor.white.cgColor
         imageEdit.layer.cornerRadius = 150
@@ -81,9 +84,9 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
             profileEditMail.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 400),
             profileEditMail.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 110),
             profileEditNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 350),
-            profileEditNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            profileEditNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             profileEditMailLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 400),
-            profileEditMailLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
+            profileEditMailLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             profileEditImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             profileEditImage.widthAnchor.constraint(equalToConstant: 300),
             profileEditImage.heightAnchor.constraint(equalToConstant: 300),
@@ -103,8 +106,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true)
     }
-    
-    
+
     // MARK: - Methods
     @objc func imageTapped() {
         let imagePickerController = UIImagePickerController()
@@ -119,7 +121,13 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         dismiss(animated: true)
     }
     
+    // MARK: - 구현방식 맞는지 확인 필요
     @objc func tapSaveButton() {
-        print("저장 버튼")
+        guard let text = profileEditName.text, 
+              let text2 = profileEditMail.text,
+              let image1 = profileEditImage.image
+        else { return }
+        onSave?(text, text2, image1)
+        dismiss(animated: true, completion: nil)
     }
 }

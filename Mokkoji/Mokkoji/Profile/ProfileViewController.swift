@@ -10,19 +10,36 @@ import UIKit
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var friends = ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1", "k1", "l1"]
-    var myName: String = "육현서"
-    var myMail: String = "h@naver.com"
+    //var myName: String = "육현서"
+    var myMail: String? {
+        didSet {
+            mailCheck.text = myMail
+        }
+    }
+    
+    var myName: String? {
+        didSet {
+            nameCheck.text = myName
+        }
+    }
+    
+    var myImage: UIImage? {
+        didSet {
+            profileImageView.image = myImage
+        }
+    }
 //    var myImage: UIImage? = UIImage(named: "sponge")
     
     // MARK: - 프로필 사진
-    let profileImageView: UIImageView = {
+    let profileImageView: UIImageView! = {
         let image = UIImageView()
     
         image.image = UIImage(systemName: "person.circle")
-        //image.clipsToBounds = true
-        //image.layer.borderWidth = 2
-        //image.layer.borderColor = UIColor.black.cgColor
-        //image.layer.cornerRadius = 50
+        image.clipsToBounds = true
+        image.layer.borderWidth = 2
+        image.contentMode = .scaleAspectFill
+        image.layer.borderColor = UIColor.white.cgColor
+        image.layer.cornerRadius = 50
        
         return image
        }()
@@ -41,19 +58,37 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return button
     }()
     
-    // MARK: - 이름 확인 라벨 (기능 없음)
     private lazy var nameLabel: UILabel = {
+        let nameL = UILabel()
+        nameL.text = "Name: "
+            
+        return nameL
+    }()
+    
+    // MARK: - 이름 확인 라벨 (기능 없음)
+    private lazy var nameCheck: UILabel! = {
        let nameLabel = UILabel()
+        nameLabel.text = "사용자 이름"
+        nameLabel.numberOfLines = 2
+        nameLabel.lineBreakMode = .byWordWrapping
         
-        nameLabel.text = "Name: \(myName)"
         return nameLabel
     }()
     
-    // MARK: - 이메일 확인 라벨 (기능 없음)
     private lazy var mailLabel: UILabel = {
+        let mailL = UILabel()
+        mailL.text = "E-mail: "
+            
+        return mailL
+    }()
+    
+    // MARK: - 이메일 확인 라벨 (기능 없음)
+    private lazy var mailCheck: UILabel! = {
        let mailLabel = UILabel()
+        mailLabel.text = "사용자 이메일"
+        mailLabel.numberOfLines = 2
+        mailLabel.lineBreakMode = .byWordWrapping
         
-        mailLabel.text = "E-mail: \(myMail)"
         return mailLabel
     }()
     
@@ -66,6 +101,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         return plusButton
     }()
+    
     
     private lazy var deleteFriendButton: UIButton = {
         let deleteButton = UIButton()
@@ -109,7 +145,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         view.addSubview(profileImageView)
         view.addSubview(nameLabel)
+        view.addSubview(nameCheck)
         view.addSubview(mailLabel)
+        view.addSubview(mailCheck)
         view.addSubview(logoutButton)
         view.addSubview(addFriendButton)
         view.addSubview(deleteFriendButton)
@@ -118,7 +156,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        nameCheck.translatesAutoresizingMaskIntoConstraints = false
         mailLabel.translatesAutoresizingMaskIntoConstraints = false
+        mailCheck.translatesAutoresizingMaskIntoConstraints = false
         addFriendButton.translatesAutoresizingMaskIntoConstraints = false
         deleteFriendButton.translatesAutoresizingMaskIntoConstraints = false
         friendsTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -132,8 +172,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
             nameLabel.leadingAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.leadingAnchor, constant: 130),
             
+            nameCheck.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+            nameCheck.leadingAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.trailingAnchor, constant: 5),
+            nameCheck.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            
             mailLabel.topAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.topAnchor, constant: 30),
             mailLabel.leadingAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.leadingAnchor, constant: 130),
+            
+            mailCheck.topAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.topAnchor, constant: 30),
+            mailCheck.leadingAnchor.constraint(equalTo: mailLabel.safeAreaLayoutGuide.trailingAnchor, constant: 5),
+            mailCheck.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
             logoutButton.topAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.topAnchor, constant: 120),
             logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -153,10 +201,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         ])
     }
     
-    // MARK: - 프로필 편집 페이지로 이동
+    // MARK: - 프로필 편집 페이지로 이동 + edit에서 저장한 name, email(아직), image(아직) 불러오기
     @objc private func tapButtonProfileEdit() {
         let profileEditViewController = ProfileEditViewController()
         let navController = UINavigationController(rootViewController: profileEditViewController)
+        
+        profileEditViewController.onSave = { [weak self] text, text2, image1 in
+            self?.myName = text
+            self?.myMail = text2
+            self?.myImage = image1
+        }
         present(navController, animated: true)
     }
     
@@ -192,9 +246,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return cell
     }
     
-    // MARK: - 친구 삭제 (저장은 안됨)
+    // MARK: - 친구 삭제 (저장은 안됨) ? -> 버튼 안눌러도 삭제가 됨..? 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-            indexPath.row > -1
+        indexPath.row > -1
     }
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         indexPath.row > -1 ? .delete : .none
