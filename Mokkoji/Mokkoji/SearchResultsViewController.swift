@@ -67,6 +67,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         var config = cell.defaultContentConfiguration()
         config.text = results[indexPath.row].placeName
+        // TODO: - 도로명 주소 추가하기
         cell.contentConfiguration = config
        
         return cell

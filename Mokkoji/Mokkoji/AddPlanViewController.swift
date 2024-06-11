@@ -271,9 +271,11 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // TODO: - 커스텀 셀을 생성하여 장소 리스트에 재사용
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        var config = cell.defaultContentConfiguration()
+        config.text = "\(indexPath.row + 1) \(mapInfoList[indexPath.row].placeName)"
+        cell.contentConfiguration = config
         
         return cell
-        
     }
     
     // MARK: - SelectedPlaceListDelegate
