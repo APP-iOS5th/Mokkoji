@@ -258,7 +258,9 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func inviteButtonTapped() {
-        
+        let addFriendTableViewController = AddFriendTableViewController()
+        let navigationController = UINavigationController(rootViewController: addFriendTableViewController)
+        present(navigationController, animated: true)
     }
 
     func addMapButtonTapped() {
