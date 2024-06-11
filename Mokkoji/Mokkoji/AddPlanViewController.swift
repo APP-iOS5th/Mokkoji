@@ -60,7 +60,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let datePicker = UIDatePicker()
         datePicker.preferredDatePickerStyle = .inline
         datePicker.datePickerMode = .date
-        datePicker.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 400)
+        datePicker.backgroundColor = .systemGray6
+        datePicker.minimumDate = Date() /// 오늘부터 선택 가능
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         
         datePicker.addAction(UIAction { [weak self] _ in
@@ -108,7 +109,13 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     lazy var addMapButton: UIButton = {
         let button = UIButton()
-        
+        button.setTitle("장소 추가", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .black
+        button.layer.cornerRadius = 7
+        button.addAction(UIAction { [weak self] _ in
+            self?.addMapButtonTapped()
+        }, for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -172,11 +179,11 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             inviteButton.widthAnchor.constraint(equalToConstant: 70),
             inviteButton.heightAnchor.constraint(equalToConstant: 30),
             
-            stackView.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 10),
+            stackView.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
             stackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
-            addMapButton.topAnchor.constraint(equalTo: stackView.bottomAnchor),
+            addMapButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 15),
             addMapButton.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             addMapButton.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
@@ -254,5 +261,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
     }
 
-    
+    func addMapButtonTapped() {
+        
+    }
 }
