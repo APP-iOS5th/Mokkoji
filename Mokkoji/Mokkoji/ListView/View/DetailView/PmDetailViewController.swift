@@ -63,7 +63,8 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
         
         // titleLabel, dateLabel 및 clockImage 설정
         cell.titleLabel.text = "title \(indexPath.row)"
-        cell.dateLabel.text = "Date \(indexPath.row)"
+        cell.bodyLabel.text = "만나는 장소"
+        cell.dateLabel.text = "09:00"
         cell.clockImage.image = UIImage(systemName: "clock.fill")
         return cell
     }

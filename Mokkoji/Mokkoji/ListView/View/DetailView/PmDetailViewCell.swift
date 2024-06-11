@@ -10,8 +10,10 @@ import UIKit
 class PmDetailViewCell: UITableViewCell {
 
     let titleLabel = UILabel()
+    let bodyLabel = UILabel()
     let dateLabel = UILabel()
     let clockImage = UIImageView(image: UIImage(systemName: "clock.fill"))
+    
    
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -19,6 +21,9 @@ class PmDetailViewCell: UITableViewCell {
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(titleLabel)
+        
+        bodyLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(bodyLabel)
         
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(dateLabel)
@@ -28,22 +33,27 @@ class PmDetailViewCell: UITableViewCell {
 
         // 제약 조건 설정
         NSLayoutConstraint.activate([
-            clockImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -200),
-            clockImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            clockImage.widthAnchor.constraint(equalToConstant: 40),
-            clockImage.heightAnchor.constraint(equalToConstant: 40),
+            // clockImage 설정
+            clockImage.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 8),
+            clockImage.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor),
+            clockImage.widthAnchor.constraint(equalToConstant: 20),
+            clockImage.heightAnchor.constraint(equalToConstant: 20),
+            clockImage.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -300),
             
+            dateLabel.leadingAnchor.constraint(equalTo: clockImage.trailingAnchor, constant: 16),
+            dateLabel.topAnchor.constraint(equalTo: clockImage.topAnchor),
+
             // titleLabel 설정
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            titleLabel.trailingAnchor.constraint(equalTo: clockImage.leadingAnchor, constant: -8),
-            
+
             // dateLabel 설정
-            dateLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            dateLabel.trailingAnchor.constraint(equalTo: clockImage.leadingAnchor, constant: -8),
-            dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            bodyLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            bodyLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
+            bodyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            bodyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
+
 
 
 
