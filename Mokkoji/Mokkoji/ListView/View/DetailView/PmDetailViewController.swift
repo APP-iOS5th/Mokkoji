@@ -40,7 +40,7 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
             // 첫 번째 셀에만 맵 뷰 추가
             let mapViewController = MapViewController(nibName: nil, bundle: nil)
             self.addChild(mapViewController)
-            cell.configureMap(mapViewController: mapViewController, mapSize: CGSize(width: 200, height: 200)) // 원하는 맵의 크기를 전달
+            cell.configureMap(mapViewController: mapViewController) // 원하는 맵의 크기를 전달
             mapViewController.didMove(toParent: self)
             
             return cell
@@ -59,9 +59,9 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 250
 
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 250 // 대략적인 높이
     }
 
 }

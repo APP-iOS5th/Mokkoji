@@ -79,20 +79,22 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         
         latitude = locationManager.location?.coordinate.latitude
         longitude = locationManager.location?.coordinate.longitude
-        
-        
+        // mapContainer 초기화 및 추가
+        mapContainer = KMViewContainer(frame: .zero)
+        mapContainer?.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(mapContainer!)
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        addObservers()
+        super.viewWillAppear(animated)
+        addViews() // 맵을 추가하는 메서드 호출
         _appear = true
         
         if mapController?.isEngineActive == false {
             mapController?.activateEngine()
         }
     }
-    
     override func viewDidAppear(_ animated: Bool) {
         
     }
