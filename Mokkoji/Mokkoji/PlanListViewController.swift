@@ -14,6 +14,7 @@ class PlanListViewController: UIViewController {
         self.view.backgroundColor = .white
         
         self.navigationItem.title = "약속 리스트"
+        self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
     }
     
