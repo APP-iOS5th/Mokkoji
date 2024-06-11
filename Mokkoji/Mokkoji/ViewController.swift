@@ -29,78 +29,117 @@ class ViewController: UIViewController {
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
     
+    //MARK: - UIComponents
     private lazy var logoImage: UIImageView = {
-        var logoImage = UIImageView(image: UIImage(systemName: "hand.point.up.left.and.text.fill"))
-        logoImage.backgroundColor = .lightGray
-        logoImage.translatesAutoresizingMaskIntoConstraints = false
-        return logoImage
+        var imageView = UIImageView(image: UIImage(systemName: "hand.point.up.left.and.text.fill"))
+        imageView.backgroundColor = .lightGray
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }()
     
     private lazy var emailTextField: UITextField = {
-        var emailTextField = UITextField()
-        emailTextField.placeholder = "Email"
-        emailTextField.translatesAutoresizingMaskIntoConstraints = false
-        return emailTextField
+        var textField = UITextField()
+        textField.placeholder = "Email"
+        let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
+        textField.leftViewMode = .always
+        textField.leftView = leftPadding
+        textField.backgroundColor = .systemGray4
+        textField.layer.cornerRadius = 5
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
     }()
     
     private lazy var passwordTextField: UITextField = {
-        var passwordTextField = UITextField()
-        passwordTextField.placeholder = "password"
-        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
-        return passwordTextField
+        var textField = UITextField()
+        textField.placeholder = "password"
+        let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
+        textField.leftViewMode = .always
+        textField.leftView = leftPadding
+        textField.backgroundColor = .systemGray4
+        textField.layer.cornerRadius = 5
+        textField.isSecureTextEntry = true
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
+    
+    private lazy var clearAllPasswordButton: UIButton = {
+        var button = UIButton()
+        button.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
+        button.tintColor = .black
+        button.backgroundColor = .systemGray4
+        button.isHidden = true
+        button.addTarget(self, action: #selector(clearAllPasswordButtonTapped), for: .touchUpInside)
+        button.layer.zPosition = 1000
+        button.layer.cornerRadius = 15
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private lazy var hiddenToggleButton: UIButton = {
+        var button = UIButton()
+        button.setImage(UIImage(systemName: "eye.fill"), for: .normal)
+        button.tintColor = .black
+        button.backgroundColor = .systemGray4
+        button.isHidden = true
+        button.addTarget(self, action: #selector(hiddenToggleButtonTapped), for: .touchUpInside)
+        button.layer.zPosition = 1000
+        button.layer.cornerRadius = 15
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private lazy var loginButton: UIButton = {
-        var loginButton = UIButton()
-        loginButton.setTitle("로그인", for: .normal)
-        loginButton.setTitleColor(.black, for: .normal)
-        loginButton.layer.cornerRadius = 10
-        loginButton.layer.borderWidth = 1
-        loginButton.layer.borderColor = UIColor.lightGray.cgColor
-        loginButton.translatesAutoresizingMaskIntoConstraints = false
-        return loginButton
+        var button = UIButton()
+        button.setTitle("로그인", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private lazy var searchEmailButton: UIButton = {
-        var searchEmail = UIButton()
-        searchEmail.setTitle("아이디 찾기", for: .normal)
-        searchEmail.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        searchEmail.backgroundColor = .white
-        searchEmail.setTitleColor(.lightGray, for: .normal)
-        searchEmail.translatesAutoresizingMaskIntoConstraints = false
-        return searchEmail
+        var button = UIButton()
+        button.setTitle("아이디 찾기", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        button.backgroundColor = .white
+        button.setTitleColor(.lightGray, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
     private lazy var searchPasswordButton: UIButton = {
-        var searchPassword = UIButton()
-        searchPassword.setTitle("비밀번호 찾기", for: .normal)
-        searchPassword.titleLabel?.font = UIFont.systemFont(ofSize: 15)
-        searchPassword.backgroundColor = .white
-        searchPassword.setTitleColor(.lightGray, for: .normal)
-        searchPassword.translatesAutoresizingMaskIntoConstraints = false
-        return searchPassword
+        var button = UIButton()
+        button.setTitle("비밀번호 찾기", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+        button.backgroundColor = .white
+        button.setTitleColor(.lightGray, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
     }()
     
-    private lazy var signInLabel: UILabel = {
-        var signInLabel = UILabel()
-        signInLabel.text = "계정이 없으신가요?"
-        signInLabel.font = UIFont.systemFont(ofSize: 15)
-        signInLabel.textColor = .lightGray
-        signInLabel.translatesAutoresizingMaskIntoConstraints = false
-        return signInLabel
+    private lazy var signUpLabel: UILabel = {
+        var label = UILabel()
+        label.text = "계정이 없으신가요?"
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = .lightGray
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
-    private lazy var signInButton: UIButton = {
-        var signInButton = UIButton()
-        signInButton.titleLabel?.font = UIFont.systemFont(ofSize: 15)
+    private lazy var signUpButton: UIButton = {
+        var button = UIButton()
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
         let title = "회원가입"
         let attributedTitle = NSMutableAttributedString(string: title)
         attributedTitle.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: NSRange(location: 0, length: title.count))
-        signInButton.setAttributedTitle(attributedTitle, for: .normal)
-        signInButton.backgroundColor = .white
-        signInButton.setTitleColor(.lightGray, for: .normal)
-        signInButton.translatesAutoresizingMaskIntoConstraints = false
-        return signInButton
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.backgroundColor = .white
+        button.setTitleColor(.lightGray, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
+        return button
     }()
     
     private lazy var signUpWithSNSLeadingLine: UIView = {
@@ -117,27 +156,27 @@ class ViewController: UIViewController {
         return signUpWithSNSTrailingLine
     }()
     
-    private lazy var signUpWithSNSLabel: UILabel = {
-        var signUpWithSNSLabel = UILabel()
-        signUpWithSNSLabel.text = "Sign Up With SNS"
-        signUpWithSNSLabel.font = UIFont.systemFont(ofSize: 15)
-        signUpWithSNSLabel.translatesAutoresizingMaskIntoConstraints = false
-        return signUpWithSNSLabel
+    private lazy var signInWithSNSLabel: UILabel = {
+        var label = UILabel()
+        label.text = "Sign Up With SNS"
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     private lazy var kakaoLoginButton: UIButton = {
-        var kakaoLoginButton = UIButton()
-        kakaoLoginButton.translatesAutoresizingMaskIntoConstraints = false
-        kakaoLoginButton.setImage(UIImage(named: "kakao_login_large_wide"), for: .normal)
-        kakaoLoginButton.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
-        return kakaoLoginButton
+        var button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "kakao_login_large_wide"), for: .normal)
+        button.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
+        return button
     }()
     
     private lazy var appleLoginButton: UIButton = {
-        var appleLoginButton = UIButton()
-        appleLoginButton.translatesAutoresizingMaskIntoConstraints = false
-        appleLoginButton.setImage(UIImage(named: "appleid_button"), for: .normal)
-        return appleLoginButton
+        var button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "appleid_button"), for: .normal)
+        return button
     }()
     
     private lazy var googleLoginButton: UIButton = {
@@ -148,24 +187,24 @@ class ViewController: UIViewController {
         configuration.title = "Continue with Google"
         configuration.baseForegroundColor = .black
         configuration.baseBackgroundColor = .white
-        var googleLoginButton = UIButton(configuration: configuration)
-        googleLoginButton.translatesAutoresizingMaskIntoConstraints = false
-        googleLoginButton.backgroundColor = .white
-        googleLoginButton.layer.cornerRadius = 10
-        googleLoginButton.layer.borderWidth = 1
-        googleLoginButton.layer.borderColor = UIColor.lightGray.cgColor
-        googleLoginButton.addTarget(self, action: #selector(googleLoginButtonTapped), for: .touchUpInside)
-        return googleLoginButton
+        var button = UIButton(configuration: configuration)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = .white
+        button.layer.cornerRadius = 10
+        button.layer.borderWidth = 1
+        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.addTarget(self, action: #selector(googleLoginButtonTapped), for: .touchUpInside)
+        return button
     }()
     
-    //TODO: Test를 위해 넣어둠 googleLoginButton 들어갈 예정
+    //TODO: Test
     private lazy var kakaoLogoutButton: UIButton = {
-        var kakaoLogoutButton = UIButton()
-        kakaoLogoutButton.translatesAutoresizingMaskIntoConstraints = false
-        kakaoLogoutButton.setTitle("Logout", for: .normal)
-        kakaoLogoutButton.setTitleColor(.black, for: .normal)
-        kakaoLogoutButton.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
-        return kakaoLogoutButton
+        var button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Logout", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        button.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
+        return button
     }()
     
     private lazy var searchStackView: UIStackView = {
@@ -203,9 +242,13 @@ class ViewController: UIViewController {
         
         view.backgroundColor = .white
         
+        setDelegate()
+        
         view.addSubviews([logoImage,
                           emailTextField,
                           passwordTextField,
+                          clearAllPasswordButton,
+                          hiddenToggleButton,
                           loginButton,
                           searchStackView,
                           signInStackView,
@@ -222,10 +265,10 @@ class ViewController: UIViewController {
         searchStackView.addArrangedSubview(searchEmailButton)
         searchStackView.addArrangedSubview(searchPasswordButton)
         signInStackView.addArrangedSubview(signInStackViewLeftSpacer)
-        signInStackView.addArrangedSubview(signInLabel)
-        signInStackView.addArrangedSubview(signInButton)
+        signInStackView.addArrangedSubview(signUpLabel)
+        signInStackView.addArrangedSubview(signUpButton)
         signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSLeadingLine)
-        signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSLabel)
+        signUpSNSLabelStackView.addArrangedSubview(signInWithSNSLabel)
         signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSTrailingLine)
         
         NSLayoutConstraint.activate([
@@ -239,11 +282,27 @@ class ViewController: UIViewController {
             emailTextField.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 20),
             emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            emailTextField.heightAnchor.constraint(equalToConstant: 30),
             
             // passwordTextField Constraints
-            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 10),
+            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 5),
             passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 30),
+            
+            
+            
+            // clearAllPasswordButton Constraints
+            clearAllPasswordButton.topAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: 4),
+            clearAllPasswordButton.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor, constant: -5),
+            clearAllPasswordButton.widthAnchor.constraint(equalToConstant: 25),
+            clearAllPasswordButton.heightAnchor.constraint(equalToConstant: 25),
+            
+            // hiddenToggleButton Constraints
+            hiddenToggleButton.topAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: 4),
+            hiddenToggleButton.trailingAnchor.constraint(equalTo: clearAllPasswordButton.leadingAnchor, constant: -10),
+            hiddenToggleButton.widthAnchor.constraint(equalToConstant: 25),
+            hiddenToggleButton.heightAnchor.constraint(equalToConstant: 25),
             
             // loginButton Constraints
             loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10),
@@ -298,6 +357,36 @@ class ViewController: UIViewController {
     }
     
     //MARK: - Methods
+    func setDelegate() {
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+    }
+    
+    @objc func clearAllPasswordButtonTapped() {
+        passwordTextField.text = ""
+        
+        let isPasswordTextFieldEmpty = passwordTextField.text?.isEmpty ?? true
+        clearAllPasswordButton.isHidden = isPasswordTextFieldEmpty
+        hiddenToggleButton.isHidden = isPasswordTextFieldEmpty
+    }
+    
+    @objc func hiddenToggleButtonTapped() {
+        passwordTextField.isSecureTextEntry.toggle()
+        
+        if passwordTextField.isSecureTextEntry {
+            hiddenToggleButton.setImage(UIImage(systemName: "eye.slash.fill"), for: .normal)
+        } else {
+            hiddenToggleButton.setImage(UIImage(systemName: "eye.fill"), for: .normal)
+        }
+    }
+    
+    @objc func signUpButtonTapped() {
+        let signUpViewController = SignUpViewController()
+        present(signUpViewController, animated: true)
+    }
+    
+    //MARK: - Kakao Login/out Methods
+    
     func kakaoSetUserInfo() {
         UserApi.shared.me {(user, error) in
             if let error = error {
@@ -371,7 +460,6 @@ class ViewController: UIViewController {
                                 print("FB: 이메일이 사용중이지 않을때 signup failed error: \(error.localizedDescription)")
                             } else {
                                 print("FB: 이메일이 사용중이지 않을때 signup success")
-                                
                                 //사용자 정보 저장
                                 if let nickname = user?.kakaoAccount?.profile?.nickname,
                                    let email = user?.kakaoAccount?.email,
@@ -389,7 +477,6 @@ class ViewController: UIViewController {
                                     //TestViewController.modalPresentationStyle = .fullScreen
                                     //self.present(TestViewController, animated: true)
                                 }
-                                
                             }
                         }
                     }
@@ -399,7 +486,6 @@ class ViewController: UIViewController {
         }
     }
     
-    //MARK: - Kakao Login/out Methods
     @objc func kakaoLoginButtonTapped() {
         print("Kakao Login Button Tapped")
         // 카카오 토큰이 존재한다면
@@ -464,7 +550,6 @@ class ViewController: UIViewController {
     }
     
     //MARK: - Google Login/out Methods
-    
     func googleSetUserInfo(_ userID: String, _ userName: String, _ userEmail: String, _ userProfileURL: URL) {
         Auth.auth().fetchSignInMethods(forEmail: userEmail) { signInMethods, error in
             if let error = error {
@@ -554,25 +639,19 @@ class ViewController: UIViewController {
         // Start the sign in flow!
         GIDSignIn.sharedInstance.signIn(withPresenting: self) { result, error in
             guard error == nil else { return }
-            
             guard let user = result?.user, let idToken = user.idToken?.tokenString else { return }
-            
             let credential = GoogleAuthProvider.credential(withIDToken: idToken,
                                                            accessToken: user.accessToken.tokenString)
-            
             print("Google Login Success User: \(user.userID ?? "")")
             print("Google Login Success User: \(user.profile?.name ?? "")")
             print("Google Login Success User: \(user.profile?.email ?? "")")
             print("Google Login Success User: \(user.profile?.imageURL(withDimension: 320))")
-            
             guard let userID = user.userID else { return }
             guard let userName = user.profile?.name else { return }
             guard let userEmail = user.profile?.email else { return }
             guard let userProfileURL = user.profile?.imageURL(withDimension: 320) else { return }
-            
-            //TODO: - 사용자 정보 등록  밑의부분 googleSetUserInfo() 묶기
+            //사용자 정보 저장
             self.googleSetUserInfo(userID, userName, userEmail, userProfileURL)
-            
         }
     }
     
@@ -607,9 +686,32 @@ class ViewController: UIViewController {
 
 //MARK: - TextField Delegate Methods
 extension ViewController: UITextFieldDelegate {
-    //textFieldDidChangeSelection
     
-    //textFieldDidBeginEditing
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        if textField == passwordTextField {
+            if let text = textField.text, text.isEmpty {
+                clearAllPasswordButton.isHidden = true
+                hiddenToggleButton.isHidden = true
+            } else {
+                clearAllPasswordButton.isHidden = false
+                hiddenToggleButton.isHidden = false
+            }
+        }
+    }
     
-    //textFieldDidEndEditing
+    //텍스트 필드 강조
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == emailTextField {
+            emailTextField.layer.borderColor = UIColor.black.cgColor
+            emailTextField.layer.borderWidth = 1
+        } else if textField == passwordTextField {
+            passwordTextField.layer.borderColor = UIColor.black.cgColor
+            passwordTextField.layer.borderWidth = 1
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.layer.borderWidth = 0
+        textField.layer.borderColor = .none
+    }
 }
