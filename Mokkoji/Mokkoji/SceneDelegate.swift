@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let window = UIWindow(windowScene: windowScene)
         let navigationController = UINavigationController(rootViewController: PmListViewController())
-        let profilController =  UINavigationController(rootViewController: MapViewController())
+        let profilController =  UINavigationController(rootViewController: TestViewController())
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([navigationController, profilController], animated: true)
