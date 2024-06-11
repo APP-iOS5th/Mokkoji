@@ -56,7 +56,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         
         mapContainer = self.view as? KMViewContainer
         
-        mapContainer = KMViewContainer(frame: view.bounds)
+        mapContainer = KMViewContainer(frame: CGRect(x: 0, y: 0, width: 250, height: 250))
         view.addSubview(mapContainer!) // nil 체크 후 안전하게 강제 언래핑
 
         // mapController 초기화
@@ -80,7 +80,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         latitude = locationManager.location?.coordinate.latitude
         longitude = locationManager.location?.coordinate.longitude
         // mapContainer 초기화 및 추가
-        mapContainer = KMViewContainer(frame: .zero)
+        mapContainer = KMViewContainer(frame: CGRect(x: 0, y: 0, width: 250, height: 250))
         mapContainer?.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(mapContainer!)
         
@@ -245,5 +245,3 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         longitude = location.coordinate.longitude
     }
 }
-
-
