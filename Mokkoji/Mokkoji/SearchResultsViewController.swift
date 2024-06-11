@@ -7,23 +7,13 @@
 
 import UIKit
 
-struct Place: Codable {
-    let id: String
-//    let address_name: String
-    let road_address_name: String
-    let x: String
-    let y: String
-//    let category_group_name: String
-    let place_name: String
-}
-
 protocol SearchResultsSelectionDelegate {
     func didSelectPlace(longitude: Double, latitude:Double)
 }
 
 class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UITableViewDelegate, UITableViewDataSource {
     
-    var results: [Place] = []
+    var results: [MapInfo] = []
     
     var delegate: SearchResultsSelectionDelegate?
     
@@ -68,8 +58,8 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPlace = results[indexPath.row]
-        if let x = Double(selectedPlace.x),
-           let y = Double(selectedPlace.y) {
+        if let x = Double(selectedPlace.placeLongitude),
+           let y = Double(selectedPlace.placeLatitude) {
             delegate?.didSelectPlace(longitude: x, latitude: y)
             dismiss(animated: true)
         } else {
@@ -81,14 +71,14 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         var config = cell.defaultContentConfiguration()
-        config.text = results[indexPath.row].place_name
+        config.text = results[indexPath.row].placeName
         cell.contentConfiguration = config
        
         return cell
     }
     
     // MARK: - Methods
-    func updateResults(_ results: [Place]) {
+    func updateResults(_ results: [MapInfo]) {
         self.results = results
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -133,14 +123,14 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
                     if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                        let documents = json["documents"] as? [[String: Any]] {
                         
-                        var places: [Place] = []
+                        var places: [MapInfo] = []
                         for (index, document) in documents.enumerated() {
                             if let id = document["id"] as? String,
                                let placeName = document["place_name"] as? String,
                                let addressName = document["road_address_name"] as? String,
                                let xString = document["x"] as? String,
                                let yString = document["y"] as? String {
-                                let place = Place(id: id, road_address_name: addressName, x: xString, y: yString, place_name: placeName)
+                                let place = MapInfo(placeId: id, roadAddressName: addressName, placeLatitude: yString, placeLongitude: xString, placeName: placeName)
                                 places.append(place)
                                 print("Index: \(index), Place Name: \(placeName), Address Name: \(addressName)")
                             }
