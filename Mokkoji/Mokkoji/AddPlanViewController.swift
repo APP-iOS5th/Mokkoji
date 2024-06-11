@@ -69,27 +69,41 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         return datePicker
     }()
     
-    lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.alignment = .fill
-        stackView.spacing = 20
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-
     lazy var profileImage: UIImageView = {
         let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "person.circle.fill") /// 임시 이미지
+        imageView.tintColor = .black
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
     lazy var inviteButton: UIButton = {
-        let button = UIButton()
-        
+        let button = UIButton(type: .system)
+        button.setTitle("친구 초대", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 7
+        button.addAction(UIAction { [weak self] _ in
+            self?.inviteButtonTapped()
+        }, for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
+    }()
+    
+    lazy var spacerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    lazy var stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.alignment = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
     }()
     
     lazy var addMapButton: UIButton = {
@@ -101,7 +115,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     lazy var mapView: UIImageView = {
         let imageView = UIImageView()
-        
+
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -126,6 +140,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         stackView.addArrangedSubview(profileImage)
         stackView.addArrangedSubview(inviteButton)
+        stackView.addArrangedSubview(spacerView)
         
         self.view.addSubview(titleText)
         self.view.addSubview(bodyText)
@@ -148,10 +163,16 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             dateField.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             dateField.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
+            profileImage.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 5),
             profileImage.widthAnchor.constraint(equalToConstant: 50),
             profileImage.heightAnchor.constraint(equalToConstant: 50),
             
-            stackView.topAnchor.constraint(equalTo: dateField.bottomAnchor),
+            inviteButton.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 5),
+            inviteButton.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 10),
+            inviteButton.widthAnchor.constraint(equalToConstant: 70),
+            inviteButton.heightAnchor.constraint(equalToConstant: 30),
+            
+            stackView.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 10),
             stackView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
@@ -227,6 +248,10 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         dateField.text = selectedDate
         dateField.resignFirstResponder()
+    }
+    
+    func inviteButtonTapped() {
+        
     }
 
     
