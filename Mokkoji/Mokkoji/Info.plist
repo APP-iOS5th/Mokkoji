@@ -5,7 +5,7 @@
 	<key>REVERSED_CLIENT_ID</key>
 	<string>${REVERSED_CLIENT_ID}</string>
 	<key>KAKAO_NATIVE_APP_KEY</key>
-	<string>${KAKAO_NATIVE_APP_KEY}</string>
+	<string>$(KAKAO_NATIVE_APP_KEY)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -25,10 +25,6 @@
 			</array>
 		</dict>
 	</array>
-	<key>KAKAO_APP_KEY</key>
-	<string>57508ed70cf99d7a7f29859b737d471e</string>
-	<key>KAKAO_NATIVE_APP_KEY</key>
-	<string>$(KAKAO_NATIVE_APP_KEY)</string>
 	<key>KAKAO_REST_API_KEY</key>
 	<string>$(KAKAO_REST_API_KEY)</string>
 	<key>UIApplicationSceneManifest</key>
