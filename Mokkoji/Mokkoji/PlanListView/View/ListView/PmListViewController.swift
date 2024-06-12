@@ -61,8 +61,8 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     @objc func addButtonTapped() {
         print("Add button tapped")
         // 추가뷰로 이동
-        // let addPlanViewController = AddPlanViewController()
-        // navigationController?.pushViewController(addPlanViewController, animated: true)
+         let addPlanViewController = AddPlanViewController()
+         navigationController?.pushViewController(addPlanViewController, animated: true)
     }
 
     // Edit 버튼 클릭 시 실행될 메서드

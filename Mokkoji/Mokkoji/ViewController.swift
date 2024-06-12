@@ -364,6 +364,12 @@ class ViewController: UIViewController {
         passwordTextField.delegate = self
     }
     
+    func loginSuccess() {
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+        let tabBarController = sceneDelegate.createTabBarController()
+        sceneDelegate.changeRootViewController(tabBarController, animated: true)
+    }
+    
     @objc func clearAllPasswordButtonTapped() {
         passwordTextField.text = ""
         
@@ -418,11 +424,9 @@ class ViewController: UIViewController {
                                 self.fetchUserFromFirestore(userId: String((user?.id)!)) { user in
                                     if let user = user {
                                         UserInfo.shared.user = user
-                                        print("이미 사용자가 존재하는 경우 currentUser 정보 : \(UserInfo.shared.user)")
-                                        //TODO: 다음뷰 표시
-                                        //let TestViewController = TestViewController()
-                                        //TestViewController.modalPresentationStyle = .fullScreen
-                                        //self.present(TestViewController, animated: true)
+                                        print("이미 사용자가 존재하는 경우 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
+                                        //탭바뷰 이동
+                                        self.loginSuccess()
                                         
                                     } else {
                                         print("User 데이터가 없습니다. ")
@@ -447,7 +451,7 @@ class ViewController: UIViewController {
                                         self.fetchUserFromFirestore(userId: String((user?.id)!)) { user in
                                             if let user = user {
                                                 UserInfo.shared.user = user
-                                                print("fetch 이후 currentUser 정보 : \(UserInfo.shared.user)")
+                                                print("fetch 이후 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
                                                 //TODO: 다음뷰 표시
                                                 //let TestViewController = TestViewController()
                                                 //TestViewController.modalPresentationStyle = .fullScreen
@@ -470,7 +474,7 @@ class ViewController: UIViewController {
                                     let user = User(id: String(userId), name: nickname, email: email, profileImageUrl: profileImageUrl)
                                     UserInfo.shared.user = user
                                     
-                                    print("이메일이 사용중이지 않을때 사용자 정보 저장: \(UserInfo.shared.user)")
+                                    print("이메일이 사용중이지 않을때 사용자 정보 저장: \(String(describing: UserInfo.shared.user))")
                                     
                                     // Firestore에 사용자 정보 저장
                                     self.saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
@@ -570,11 +574,9 @@ class ViewController: UIViewController {
                         self.fetchUserFromFirestore(userId: userID) { user in
                             if let user = user {
                                 UserInfo.shared.user = user
-                                print("이미 사용자가 존재하는 경우 currentUser 정보 : \(UserInfo.shared.user)")
-                                //TODO: 다음뷰 표시
-                                //let TestViewController = TestViewController()
-                                //TestViewController.modalPresentationStyle = .fullScreen
-                                //self.present(TestViewController, animated: true)
+                                print("이미 사용자가 존재하는 경우 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
+                                //탭바뷰 표시
+                                self.loginSuccess()
                                 
                             } else {
                                 print("User 데이터가 없습니다. ")
@@ -595,11 +597,9 @@ class ViewController: UIViewController {
                                 self.fetchUserFromFirestore(userId: userID) { user in
                                     if let user = user {
                                         UserInfo.shared.user = user
-                                        print("fetch 이후 currentUser 정보: \(UserInfo.shared.user)")
-                                        //TODO: 다음뷰 표시
-                                        //let TestViewController = TestViewController()
-                                        //TestViewController.modalPresentationStyle = .fullScreen
-                                        //self.present(TestViewController, animated: true)
+                                        print("fetch 이후 currentUser 정보: \(String(describing: UserInfo.shared.user))")
+                                        //탭바뷰 표시
+                                        self.loginSuccess()
                                     } else {
                                         print("User 데이터가 없습니다.")
                                     }
@@ -615,14 +615,12 @@ class ViewController: UIViewController {
                         let newUser = User(id: userID, name: userName, email: userEmail, profileImageUrl: userProfileURL)
                         UserInfo.shared.user = newUser
                         
-                        print("이메일이 사용 중이지 않을 때, 사용자 정보 저장: \(UserInfo.shared.user)")
+                        print("이메일이 사용 중이지 않을 때, 사용자 정보 저장: \(String(describing: UserInfo.shared.user))")
                         
                         // Firestore에 사용자 정보 저장
                         self.saveUserToFirestore(user: newUser, userId: userID)
-                        //TODO: 다음뷰 표시
-                        //let TestViewController = TestViewController()
-                        //TestViewController.modalPresentationStyle = .fullScreen
-                        //self.present(TestViewController, animated: true)
+                        //탭바뷰 표시
+                        self.loginSuccess()
                     }
                 }
             }
@@ -647,7 +645,7 @@ class ViewController: UIViewController {
             print("Google Login Success User: \(user.userID ?? "")")
             print("Google Login Success User: \(user.profile?.name ?? "")")
             print("Google Login Success User: \(user.profile?.email ?? "")")
-            print("Google Login Success User: \(user.profile?.imageURL(withDimension: 320))")
+            print("Google Login Success User: \(String(describing: user.profile?.imageURL(withDimension: 320)))")
             guard let userID = user.userID else { return }
             guard let userName = user.profile?.name else { return }
             guard let userEmail = user.profile?.email else { return }
@@ -660,9 +658,7 @@ class ViewController: UIViewController {
     //MARK: - Apple Login Methods
     @objc func appleLoginButtonTapped() {
         //TODO: - 임시로 애플로그인버튼에서 tabBarController로 이동, 변경 요망
-        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
-        let tabBarController = sceneDelegate.createTabBarController()
-        sceneDelegate.changeRootViewController(tabBarController, animated: true)
+        loginSuccess()
     }
     
     //MARK: - FireStore Methods

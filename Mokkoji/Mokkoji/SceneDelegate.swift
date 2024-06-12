@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func changeRootViewController (_ viewController: UIViewController, animated: Bool) {
         guard let window = self.window else { return }
         window.rootViewController = viewController // 전환
+        window.makeKeyAndVisible()
     }
     
     func createTabBarController() -> UITabBarController {
