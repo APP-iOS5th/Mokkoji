@@ -27,8 +27,11 @@
 		4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41432C16844C00DE424A /* MapInfo.swift */; };
 		4A9E41522C16B40D00DE424A /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41512C16B40D00DE424A /* UserInfo.swift */; };
 		4A9E415D2C1884E900DE424A /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E415C2C1884E900DE424A /* SignUpViewController.swift */; };
-		584EEBE32C195F9100538F55 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 584EEBE22C195F9100538F55 /* Config.xcconfig */; };
-		584EEBE52C195F9C00538F55 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 584EEBE42C195F9C00538F55 /* GoogleService-Info.plist */; };
+		584EEBE82C1967E100538F55 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 584EEBE72C1967E100538F55 /* FirebaseAuth */; };
+		584EEBEA2C1967E100538F55 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 584EEBE92C1967E100538F55 /* FirebaseFirestore */; };
+		584EEBEC2C1967E100538F55 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 584EEBEB2C1967E100538F55 /* FirebaseFirestoreSwift */; };
+		584EEBEE2C19689000538F55 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 584EEBED2C19689000538F55 /* Config.xcconfig */; };
+		584EEBF02C19689700538F55 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 584EEBEF2C19689700538F55 /* GoogleService-Info.plist */; };
 		5882714D2C1949EA006D65FB /* PlanListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5882714C2C1949EA006D65FB /* PlanListViewController.swift */; };
 		5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5882714E2C194A13006D65FB /* SearchResultsViewController.swift */; };
 		588271512C194C7B006D65FB /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 588271502C194C7B006D65FB /* GoogleSignIn */; };
@@ -64,8 +67,8 @@
 		4A9E41432C16844C00DE424A /* MapInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapInfo.swift; sourceTree = "<group>"; };
 		4A9E41512C16B40D00DE424A /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		4A9E415C2C1884E900DE424A /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
-		584EEBE22C195F9100538F55 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		584EEBE42C195F9C00538F55 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		584EEBED2C19689000538F55 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		584EEBEF2C19689700538F55 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5882714C2C1949EA006D65FB /* PlanListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlanListViewController.swift; sourceTree = "<group>"; };
 		5882714E2C194A13006D65FB /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		C1B688452C180B5C00B76DCD /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -83,8 +86,11 @@
 				588271532C194C7B006D65FB /* GoogleSignInSwift in Frameworks */,
 				588271592C194CE4006D65FB /* FirebaseFirestoreSwift in Frameworks */,
 				588271512C194C7B006D65FB /* GoogleSignIn in Frameworks */,
+				584EEBEC2C1967E100538F55 /* FirebaseFirestoreSwift in Frameworks */,
+				584EEBEA2C1967E100538F55 /* FirebaseFirestore in Frameworks */,
 				588271572C194CE4006D65FB /* FirebaseFirestore in Frameworks */,
 				5882715B2C194D89006D65FB /* KakaoSDK in Frameworks */,
+				584EEBE82C1967E100538F55 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +151,7 @@
 			children = (
 				4A187EE22C0F06EE00F5C2EE /* Mokkoji */,
 				4A187EE12C0F06EE00F5C2EE /* Products */,
+				584EEBE62C1966D900538F55 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -170,8 +177,6 @@
 				4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */,
 				4A187EEE2C0F06EF00F5C2EE /* LaunchScreen.storyboard */,
 				4A187EF12C0F06EF00F5C2EE /* Info.plist */,
-				4A9E415A2C18045300DE424A /* GoogleService-Info.plist */,
-				4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */,
 			);
 			path = Mokkoji;
 			sourceTree = "<group>";
@@ -193,6 +198,15 @@
 				4A9E41432C16844C00DE424A /* MapInfo.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		584EEBE62C1966D900538F55 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				584EEBED2C19689000538F55 /* Config.xcconfig */,
+				584EEBEF2C19689700538F55 /* GoogleService-Info.plist */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		C1B6884B2C180F4F00B76DCD /* Profile */ = {
@@ -228,6 +242,9 @@
 				588271562C194CE4006D65FB /* FirebaseFirestore */,
 				588271582C194CE4006D65FB /* FirebaseFirestoreSwift */,
 				5882715A2C194D89006D65FB /* KakaoSDK */,
+				584EEBE72C1967E100538F55 /* FirebaseAuth */,
+				584EEBE92C1967E100538F55 /* FirebaseFirestore */,
+				584EEBEB2C1967E100538F55 /* FirebaseFirestoreSwift */,
 			);
 			productName = Mokkoji;
 			productReference = 4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */;
@@ -278,8 +295,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */,
-				584EEBE52C195F9C00538F55 /* GoogleService-Info.plist in Resources */,
-				584EEBE32C195F9100538F55 /* Config.xcconfig in Resources */,
+				584EEBF02C19689700538F55 /* GoogleService-Info.plist in Resources */,
+				584EEBEE2C19689000538F55 /* Config.xcconfig in Resources */,
 				4A187EF02C0F06EF00F5C2EE /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -332,7 +349,7 @@
 /* Begin XCBuildConfiguration section */
 		4A187EF22C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */;
+			baseConfigurationReference = 584EEBED2C19689000538F55 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -396,7 +413,7 @@
 		};
 		4A187EF32C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */;
+			baseConfigurationReference = 584EEBED2C19689000538F55 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -453,7 +470,7 @@
 		};
 		4A187EF52C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */;
+			baseConfigurationReference = 584EEBED2C19689000538F55 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -484,7 +501,7 @@
 		};
 		4A187EF62C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */;
+			baseConfigurationReference = 584EEBED2C19689000538F55 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -576,6 +593,18 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3B605C172C16E3A300D3603C /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */;
 			productName = "KakaoMapsSDK-SPM";
+		};
+		584EEBE72C1967E100538F55 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseAuth;
+		};
+		584EEBE92C1967E100538F55 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseFirestore;
+		};
+		584EEBEB2C1967E100538F55 /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseFirestoreSwift;
 		};
 		588271502C194C7B006D65FB /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
