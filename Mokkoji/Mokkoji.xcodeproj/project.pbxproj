@@ -22,6 +22,14 @@
 		4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */; };
 		4A187EF02C0F06EF00F5C2EE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEF2C0F06EF00F5C2EE /* Base */; };
 		4A4E408D2C193277008F96DA /* AddView in Resources */ = {isa = PBXBuildFile; fileRef = 4A4E408C2C193277008F96DA /* AddView */; };
+		4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9E2C1958390001470C /* AddPlanViewController.swift */; };
+		4A21EDA22C1958390001470C /* InviteFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */; };
+		4A9CECAA2C19432D00E0F029 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECA92C19432D00E0F029 /* GoogleSignIn */; };
+		4A9CECAC2C19432D00E0F029 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECAB2C19432D00E0F029 /* GoogleSignInSwift */; };
+		4A9CECAF2C19435400E0F029 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECAE2C19435400E0F029 /* FirebaseAuth */; };
+		4A9CECB12C19435400E0F029 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECB02C19435400E0F029 /* FirebaseFirestore */; };
+		4A9CECB32C19435400E0F029 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECB22C19435400E0F029 /* FirebaseFirestoreSwift */; };
+		4A9CECB62C19435F00E0F029 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECB52C19435F00E0F029 /* KakaoSDK */; };
 		4A9E41402C16843A00DE424A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E413F2C16843A00DE424A /* User.swift */; };
 		4A9E41422C16843F00DE424A /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41412C16843F00DE424A /* Plan.swift */; };
 		4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41432C16844C00DE424A /* MapInfo.swift */; };
@@ -58,6 +66,9 @@
 		4A187EEF2C0F06EF00F5C2EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A187EF12C0F06EF00F5C2EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A4E408C2C193277008F96DA /* AddView */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AddView; sourceTree = "<group>"; };
+		4A21ED9E2C1958390001470C /* AddPlanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPlanViewController.swift; sourceTree = "<group>"; };
+		4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteFriendViewController.swift; sourceTree = "<group>"; };
+		4A9E413D2C167D6A00DE424A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		4A9E413F2C16843A00DE424A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4A9E41412C16843F00DE424A /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		4A9E41432C16844C00DE424A /* MapInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapInfo.swift; sourceTree = "<group>"; };
@@ -92,7 +103,7 @@
 		3B605C072C168C1000D3603C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				4A4E408C2C193277008F96DA /* AddView */,
+				4A21EDA02C1958390001470C /* AddView */,
 				3B7B45602C1921AD00C8DEA2 /* ListView */,
 				3B605C1B2C16EF8200D3603C /* DetailView */,
 				3B605C1C2C16EF9800D3603C /* MapView */,
@@ -172,6 +183,15 @@
 				4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */,
 			);
 			path = Mokkoji;
+			sourceTree = "<group>";
+		};
+		4A21EDA02C1958390001470C /* AddView */ = {
+			isa = PBXGroup;
+			children = (
+				4A21ED9E2C1958390001470C /* AddPlanViewController.swift */,
+				4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */,
+			);
+			path = AddView;
 			sourceTree = "<group>";
 		};
 		4A9E413E2C16842A00DE424A /* Model */ = {
@@ -270,7 +290,6 @@
 				4A0CAD0D2C193D3500F6EF87 /* Config.xcconfig in Resources */,
 				4A187EF02C0F06EF00F5C2EE /* Base in Resources */,
 				4A9E415B2C18045300DE424A /* GoogleService-Info.plist in Resources */,
-				4A4E408D2C193277008F96DA /* AddView in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,10 +304,12 @@
 				C1B6884A2C180BFF00B76DCD /* ProfileEditViewController.swift in Sources */,
 				3B605C142C16C2C200D3603C /* PmDetailViewController.swift in Sources */,
 				4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */,
+				4A21EDA22C1958390001470C /* InviteFriendViewController.swift in Sources */,
 				4A9E41402C16843A00DE424A /* User.swift in Sources */,
 				4A9E415D2C1884E900DE424A /* SignUpViewController.swift in Sources */,
 				3B605C1E2C16F07200D3603C /* PmDetailViewCell.swift in Sources */,
 				3B605C162C16E28000D3603C /* MapViewController.swift in Sources */,
+				4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */,
 				3B7B455E2C18518100C8DEA2 /* TestViewController.swift in Sources */,
 				5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */,
 				3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */,

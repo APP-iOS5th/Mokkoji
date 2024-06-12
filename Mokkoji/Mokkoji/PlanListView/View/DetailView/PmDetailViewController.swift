@@ -3,7 +3,7 @@ import UIKit
 class PmDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
-    let mapViewController = MapViewController(nibName: nil, bundle: nil)
+    let mapViewController = MapViewController()
     var plans: [Plan] = []
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
     
