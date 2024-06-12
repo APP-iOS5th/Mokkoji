@@ -205,9 +205,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     /// addView 성공 이벤트 delegate - 추가적으로 수행할 작업을 진행
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
         print("OK")
-        /// Poi 생성
-//        createPoiStyle()
-//        createPois()
     }
 
     /// addView 실패 이벤트 delegate - 실패에 대한 오류 처리를 진행
@@ -299,7 +296,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     }
     
     func createPosition(position: MapPoint) {
-        positions.append(position)
         /// 지도(KakaoMap)를 그리기 위한 viewInfo를 생성
         let mapviewInfo: MapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: position, defaultLevel: 15)
         mapController?.addView(mapviewInfo)
@@ -336,6 +332,8 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     /// Poi 개별 뱃지 추가
     func createPois(position: MapPoint) {
+        positions.append(position)
+        
         guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
             print("Failed to get map view")
             return
