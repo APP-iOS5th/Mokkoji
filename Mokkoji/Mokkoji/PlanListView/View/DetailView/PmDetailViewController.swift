@@ -66,10 +66,8 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
             Plan(uuid: UUID(), order: 3, title: "투어", body: "네이버", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
             
         ]
-        
-
-
     }
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return plans.count
@@ -89,7 +87,7 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
                     cell.timeLabel.text = formattedDate
                     
                     cell.clockImage.image = UIImage(systemName: "clock.fill")
-                } 
+                }
                 
                 return cell
     }

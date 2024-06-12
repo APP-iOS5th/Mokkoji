@@ -17,6 +17,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     var plans: [Plan] = []
     var user: User!
     var plan: Plan?
+    var user2: User!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +52,9 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
         ]
         
-        user = User(id: 1, name: "홍길동", email: "hong@example.com", profileImageUrl: URL(string: "https://example.com/profile.jpg")!, plan: plans, sharedPlan: sharedPlans, friendList: nil)
+        user = User(id: 1, name: "홍길동", email: "hong@example.com", profileImageUrl: URL(string: "https://lh3.googleusercontent.com/a/ACg8ocKKJBq7bA6ijBEJIsYa2wz-5JCYj-x0BxeAkll8wvI0L64D1ooi=s320")!, plan: plans, sharedPlan: sharedPlans, friendList: nil)
+        
+
 
         
         // isSelectArray 초기화
@@ -186,7 +189,11 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             let formattedDate = dateFormatter.string(from: plan.date)
             cell.dateLabel.text = formattedDate
             
-            cell.profileimage.image = UIImage(systemName: "person.crop.circle")
+            loadImage(from: user.profileImageUrl) { image in
+                DispatchQueue.main.async {
+                    cell.profileimage.image = image ?? UIImage(systemName: "person.crop.circle")
+                }
+            }
             setNeedsUpdateConfiguration(cell, at: indexPath)
             return cell
         } else {
@@ -201,7 +208,11 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             let formattedDate = dateFormatter.string(from: sharedPlan.date)
             cell.dateLabel.text = formattedDate
             
-            cell.profileimage.image = UIImage(systemName: "person.crop.circle")
+            loadImage(from: user.profileImageUrl) { image in
+                DispatchQueue.main.async {
+                    cell.profileimage.image = image ?? UIImage(systemName: "person.crop.circle")
+                }
+            }
             setNeedsUpdateConfiguration(cell, at: indexPath)
             return cell
         }
@@ -216,4 +227,19 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             return "공유 받은 약속"
         }
     }
+    
+    func loadImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
+        // URLSession의 shared 인스턴스를 사용하여 데이터 태스크를 만듭니다.
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            // 데이터, 에러 확인 후 이미지 변환
+            guard let data = data, error == nil, let image = UIImage(data: data) else {
+                // 에러가 있거나 데이터가 없거나 이미지 변환이 실패하면 nil을 반환합니다.
+                completion(nil)
+                return
+            }
+            // 이미지 변환이 성공하면 completion 핸들러를 호출하여 이미지를 반환합니다.
+            completion(image)
+        }.resume() // 데이터 태스크를 시작합니다.
+    }
+
 }
