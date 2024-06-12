@@ -10,7 +10,6 @@
 		3B0146762C195ABD009CF0D7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B0146752C195ABD009CF0D7 /* GoogleService-Info.plist */; };
 		3B0146782C195ACD009CF0D7 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B0146772C195ACD009CF0D7 /* Config.xcconfig */; };
 		3B01467A2C195EFF009CF0D7 /* InfoFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */; };
-		3B01467D2C196854009CF0D7 /* SharedDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B01467C2C196854009CF0D7 /* SharedDate.swift */; };
 		3B605C0F2C168E7200D3603C /* PmListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C0E2C168E7200D3603C /* PmListViewController.swift */; };
 		3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */; };
 		3B605C142C16C2C200D3603C /* PmDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C132C16C2C200D3603C /* PmDetailViewController.swift */; };
@@ -18,7 +17,6 @@
 		3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 3B605C182C16E3A300D3603C /* KakaoMapsSDK-SPM */; };
 		3B605C1E2C16F07200D3603C /* PmDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */; };
 		3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */; };
-		3B7B455E2C18518100C8DEA2 /* TestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7B455D2C18518100C8DEA2 /* TestViewController.swift */; };
 		4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */; };
 		4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */; };
 		4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE72C0F06EE00F5C2EE /* ViewController.swift */; };
@@ -48,14 +46,12 @@
 		3B0146752C195ABD009CF0D7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3B0146772C195ACD009CF0D7 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
 		3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoFriendViewController.swift; sourceTree = "<group>"; };
-		3B01467C2C196854009CF0D7 /* SharedDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDate.swift; sourceTree = "<group>"; };
 		3B605C0E2C168E7200D3603C /* PmListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmListViewController.swift; sourceTree = "<group>"; };
 		3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		3B605C132C16C2C200D3603C /* PmDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmDetailViewController.swift; sourceTree = "<group>"; };
 		3B605C152C16E28000D3603C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmDetailViewCell.swift; sourceTree = "<group>"; };
 		3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
-		3B7B455D2C18518100C8DEA2 /* TestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewController.swift; sourceTree = "<group>"; };
 		4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mokkoji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -95,23 +91,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3B01467B2C19683C009CF0D7 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				3B01467C2C196854009CF0D7 /* SharedDate.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		3B605C072C168C1000D3603C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				3B01467B2C19683C009CF0D7 /* Model */,
 				4A21EDA02C1958390001470C /* AddView */,
 				3B7B45602C1921AD00C8DEA2 /* ListView */,
 				3B605C1B2C16EF8200D3603C /* DetailView */,
 				3B605C1C2C16EF9800D3603C /* MapView */,
-				3B7B455D2C18518100C8DEA2 /* TestViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -305,7 +291,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B01467D2C196854009CF0D7 /* SharedDate.swift in Sources */,
 				C1B688482C180BBB00B76DCD /* AddFriendViewController.swift in Sources */,
 				C1B6884A2C180BFF00B76DCD /* ProfileEditViewController.swift in Sources */,
 				3B605C142C16C2C200D3603C /* PmDetailViewController.swift in Sources */,
@@ -316,7 +301,6 @@
 				3B605C1E2C16F07200D3603C /* PmDetailViewCell.swift in Sources */,
 				3B605C162C16E28000D3603C /* MapViewController.swift in Sources */,
 				4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */,
-				3B7B455E2C18518100C8DEA2 /* TestViewController.swift in Sources */,
 				5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */,
 				3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */,
 				4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */,

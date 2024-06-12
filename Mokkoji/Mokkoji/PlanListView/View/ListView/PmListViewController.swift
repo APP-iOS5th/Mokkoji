@@ -139,6 +139,8 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         if indexPath.section == 0 {
             let pmDetailViewController = PmDetailViewController()
             navigationController?.pushViewController(pmDetailViewController, animated: true)
+            
+            
         }
         else {
             let pmDetailViewController = PmDetailViewController()
@@ -156,7 +158,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         if section == 0 {
             return plans.count
         } else {
-            // 공유 받은 약속 섹션의 행 수를 설정합니다. (현재는 예제로 5를 반환)
+           
             return 3
         }
     }

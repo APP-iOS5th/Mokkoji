@@ -106,7 +106,7 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
         
         let friendListV = InfoFriendViewController()
         friendListV.friends = friendList
-        
+        friendListV.selectedPlan = selectedPlan
         present(friendListV, animated: true, completion: nil)
         
     }

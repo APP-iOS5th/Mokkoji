@@ -11,7 +11,8 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource,UITableV
 
     let tableView = UITableView()
     var friends: [User] = []
-
+    var selectedPlan: Plan? // 추가된 속성
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,6 +28,8 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource,UITableV
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+        
+
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return friends.count
@@ -39,13 +42,29 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource,UITableV
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedFriend = friends[indexPath.row]
+        var selectedFriend = friends[indexPath.row]
         // 공유 기능 구현
-        sharePlan(with: selectedFriend)
+        sharePlan(with: &selectedFriend)
     }
 
-    func sharePlan(with friend: User) {
-        // 공유 기능 구현 (예시: 콘솔에 출력)
+
+    func sharePlan(with friend: inout User) {
+        guard let plan = selectedPlan else {
+            print("선택된 약속이 없습니다.")
+            return
+        }
+
+        if friend.sharedPlan == nil {
+            friend.sharedPlan = []
+        }
+        
+        friend.sharedPlan?.append(plan)
+        
         print("\(friend.name)에게 약속을 공유했습니다.")
+        print("\(plan)")
+        
+        dismiss(animated: true, completion: nil)
     }
+
+
 }
