@@ -140,7 +140,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(PlaceListTableViewCell.self, forCellReuseIdentifier: "placeListCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         return tableView
@@ -270,11 +270,15 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // TODO: - 커스텀 셀을 생성하여 장소 리스트에 재사용
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        var config = cell.defaultContentConfiguration()
-        config.text = "\(indexPath.row + 1) \(mapInfoList[indexPath.row].placeName)"
-        cell.contentConfiguration = config
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "placeListCell", for: indexPath) as? PlaceListTableViewCell else {
+            return UITableViewCell()
+        }
         
+        let placeOrder = "\(indexPath.row + 1).circle.fill"
+        let numbering = UIImage(systemName: placeOrder)
+        let placeName = "\(mapInfoList[indexPath.row].placeName)"
+        cell.configure(number: numbering, placeInfo: placeName)
+
         return cell
     }
     
