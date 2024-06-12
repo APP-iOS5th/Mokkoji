@@ -396,7 +396,7 @@ class ViewController: UIViewController {
                 print("setUserInfo nickname: \(user?.kakaoAccount?.profile?.nickname ?? "no nickname")")
                 print("setUserInfo email: \(user?.kakaoAccount?.email ?? "no email")")
                 print("setUserInfo profileImageUrl: \(String(describing: user?.kakaoAccount?.profile?.profileImageUrl))")
-                UserInfo.shared.user?.id = String((user?.id)!)
+                UserInfo.shared.user?.id = (user?.id)!
                 
                 //TODO: - fetchSignInMethods deprecated, 이메일로 확인하는것은 보안에 문제가됨.
                 // Firebase에 사용자 등록 전에 이미 가입된 사용자인지 확인
@@ -466,7 +466,7 @@ class ViewController: UIViewController {
                                    let email = user?.kakaoAccount?.email,
                                    let profileImageUrl = user?.kakaoAccount?.profile?.profileImageUrl,
                                    let userId = user?.id {
-                                    let user = User(id: String(userId), name: nickname, email: email, profileImageUrl: profileImageUrl)
+                                    let user = User(id: userId, name: nickname, email: email, profileImageUrl: profileImageUrl)
                                     UserInfo.shared.user = user
                                     
                                     print("이메일이 사용중이지 않을때 사용자 정보 저장: \(UserInfo.shared.user)")
@@ -611,7 +611,7 @@ class ViewController: UIViewController {
                         print("이메일이 사용 중이지 않을 때, 회원가입 성공")
                         
                         // 사용자 정보 저장
-                        let newUser = User(id: userID, name: userName, email: userEmail, profileImageUrl: userProfileURL)
+                        let newUser = User(id: Int64(userID)!, name: userName, email: userEmail, profileImageUrl: userProfileURL)
                         UserInfo.shared.user = newUser
                         
                         print("이메일이 사용 중이지 않을 때, 사용자 정보 저장: \(UserInfo.shared.user)")
