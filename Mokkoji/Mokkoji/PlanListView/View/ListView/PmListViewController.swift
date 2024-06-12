@@ -54,7 +54,9 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
         ]
         
-//        saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
+        UserInfo.shared.user?.plan = plans
+        UserInfo.shared.user?.sharedPlan = sharedPlans
+        
         plans = UserInfo.shared.user?.plan ?? []
 
 
@@ -64,16 +66,16 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
 
     }
     
-//    // Firestore에 plan 정보 저장
-//    //MARK: - FireStore Methods
-//    func saveUserToFirestore(user: User, userId: String) {
-//        let userRef = db.collection("plans").document(userId)
-//        do {
-//            try userRef.setData(from: user)
-//        } catch let error {
-//            print("Firestore Writing Error: \(error)")
-//        }
-//    }
+    // Firestore에 plan 정보 저장
+    //MARK: - FireStore Methods
+    func saveUserToFirestore(user: User, userId: String) {
+        let userRef = db.collection("users").document(userId)
+        do {
+            try userRef.setData(from: user)
+        } catch let error {
+            print("Firestore Writing Error: \(error)")
+        }
+    }
     
     // Firestore에서 plan 정보 가져오기
     func fetchPlanFromFirestore(userId: String, completion: @escaping (Plan?) -> Void) {
@@ -106,6 +108,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         if let navigationBar = self.navigationController?.navigationBar {
             navigationBar.overrideUserInterfaceStyle = .light
         }
+//        saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
 
         // Firestore에서 계획 정보 가져오기
         fetchPlanFromFirestore(userId: String(UserInfo.shared.user!.id)) { [weak self] plan in

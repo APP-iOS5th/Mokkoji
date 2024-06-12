@@ -20,3 +20,19 @@ struct Plan: Codable {
     var currentLongitude: Double?
     var participant: [User]?
 }
+
+// Firestore에 저장할 데이터 형식으로 변환하기 위한 extension
+extension Plan {
+    var firestoreRepresentation: [String: Any] {
+        var representation: [String: Any] = [
+            "uuid": uuid.uuidString,
+            "order": order,
+            "title": title,
+            "body": body,
+            "date": date,
+            "time": time,
+
+        ]
+        return representation
+    }
+}

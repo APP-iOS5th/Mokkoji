@@ -1,5 +1,6 @@
 import UIKit
-
+import FirebaseFirestore
+import Firebase
 
 
 class PmDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
@@ -10,6 +11,7 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
     var plan: Plan?
     var user: User!
+    let db = Firestore.firestore()
     
     
     override func viewDidLoad() {
@@ -67,6 +69,25 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
             
         ]
     }
+    // Firestore에서 plan 정보 가져오기
+    func fetchPlanFromFirestore(userId: String, completion: @escaping (Plan?) -> Void) {
+        let planRef = db.collection("plans").document(userId)
+        planRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                do {
+                    let plan = try document.data(as: Plan.self)
+                    completion(plan)
+                } catch let error {
+                    print("Plan Decoding Error: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("Firestore에 Plan이 존재하지 않음.")
+                completion(nil)
+            }
+        }
+    }
+
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
