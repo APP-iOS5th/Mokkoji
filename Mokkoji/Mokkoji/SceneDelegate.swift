@@ -8,17 +8,29 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
-    var window: UIWindow?
     
-
+    var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let window = UIWindow(windowScene: windowScene)
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(windowScene: windowScene)
+        
+        //MARK: - Login View (Entry Point)
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
+        
+    }
+    
+    func changeRootViewController (_ viewController: UIViewController, animated: Bool) {
+        guard let window = self.window else { return }
+        window.rootViewController = viewController // 전환
+        window.makeKeyAndVisible()
+    }
+    
+    func createTabBarController() -> UITabBarController {
         let navigationController = UINavigationController(rootViewController: PmListViewController())
-        let profilController =  UINavigationController(rootViewController: ProfileViewController())
+        let profilController = UINavigationController(rootViewController: ProfileViewController())
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([navigationController, profilController], animated: true)
@@ -32,9 +44,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             items[1].image = UIImage(systemName: "person")
             items[1].title = "프로필"
         }
-        window.rootViewController = tabBarController
-        self.window = window
-        window.makeKeyAndVisible()
+        
+        return tabBarController
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -67,4 +78,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
-
