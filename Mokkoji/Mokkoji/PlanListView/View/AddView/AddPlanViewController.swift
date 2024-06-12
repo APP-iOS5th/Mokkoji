@@ -302,8 +302,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     func inviteButtonTapped() {
-        let addFriendTableViewController = AddFriendTableViewController()
-        let navigationController = UINavigationController(rootViewController: addFriendTableViewController)
+        let inviteFriendTableViewController = InviteFriendTableViewController()
+        let navigationController = UINavigationController(rootViewController: inviteFriendTableViewController)
         present(navigationController, animated: true)
     }
 
