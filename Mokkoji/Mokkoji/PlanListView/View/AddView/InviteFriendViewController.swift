@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AddFriendTableViewController: UIViewController {
+class InviteFriendTableViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
