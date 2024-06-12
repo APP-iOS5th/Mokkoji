@@ -49,7 +49,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     let locationManager = CLLocationManager()
     
     /// 핀 꼽기
-    var position = MapPoint(longitude: 0, latitude: 0)
     var positions: [MapPoint] = []
     
     /// 검색창 만들기
@@ -194,9 +193,11 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             let latitude: Double? = location.coordinate.latitude
             let longitude: Double? = location.coordinate.longitude
 //            MapPoint(longitude: 126.977458, latitude: 37.56664)
-            createPosition(longitude: longitude!, latitude: latitude!)
+            let position = MapPoint(longitude: longitude!, latitude: latitude!)
+            createPosition(position: position)
         } else {
-            createPosition(longitude: 127.108678, latitude: 37.402001)
+            let defaultPosition = MapPoint(longitude: 127.108678, latitude: 37.402001)
+            createPosition(position: defaultPosition)
         }
         
     }
@@ -205,8 +206,8 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
         print("OK")
         /// Poi 생성
-        createPoiStyle()
-        createPois()
+//        createPoiStyle()
+//        createPois()
     }
 
     /// addView 실패 이벤트 delegate - 실패에 대한 오류 처리를 진행
@@ -236,12 +237,15 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         /// 장소 지도 뷰 생성
         if let x = Double(place.placeLongitude),
            let y = Double(place.placeLatitude) {
-            createPosition(longitude: x, latitude: y)
+            let position = MapPoint(longitude: x, latitude: y)
+            createPosition(position: position)
+            /// Poi 생성
+            createPoiStyle()
+            createPois(position: position)
         } else {
             print("Invalid coordinates")
         }
-        /// Poi 생성
-        createPois()
+
         /// Route 생성
         createRouteStyleSet()
         createRouteline()
@@ -294,8 +298,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
                                     })
     }
     
-    func createPosition(longitude: Double, latitude: Double) {
-        position = MapPoint(longitude: longitude, latitude: latitude)
+    func createPosition(position: MapPoint) {
         positions.append(position)
         /// 지도(KakaoMap)를 그리기 위한 viewInfo를 생성
         let mapviewInfo: MapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: position, defaultLevel: 15)
@@ -332,7 +335,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     }
     
     /// Poi 개별 뱃지 추가
-    func createPois() {
+    func createPois(position: MapPoint) {
         guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
             print("Failed to get map view")
             return
@@ -350,9 +353,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         poi?.addBadge(badge)
         poi?.show()
         poi?.showBadge(badgeID: "noti\(poiCnt)")
-        
-        /// position 초기화
-        position = MapPoint(longitude: 0, latitude: 0)
     }
     
     // MARK: - Route Methods
