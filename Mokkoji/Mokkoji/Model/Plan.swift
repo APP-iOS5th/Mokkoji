@@ -10,11 +10,12 @@ import Foundation
 
 struct Plan: Codable {
     var uuid: UUID
-    var order: Int
+    var order: Int?
     var title: String
     var body: String
-    var date: Date
-    var time: Date
+    var date: String?
+    var time: Date?
+    var mapTimeInfo: [Date]?
     var mapInfo: [MapInfo]
     var currentLatitude: Double?
     var currentLongitude: Double?

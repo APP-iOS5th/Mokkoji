@@ -9,6 +9,10 @@ import UIKit
 
 class PlaceListTableViewCell: UITableViewCell {
     
+    var selectedTime: Date? {
+        return timePicker.date
+    }
+    
     lazy var numberIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .black

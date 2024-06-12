@@ -40,9 +40,9 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
 
         // 임시 데이터
         plans = [
-            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "만교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 2, title: "Lunch", body: "Team lunch", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 3, title: "Call", body: "Client call", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
+            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "만교역", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 2, title: "Lunch", body: "Team lunch", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 3, title: "Call", body: "Client call", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
         ]
         
         // isSelectArray 초기화
@@ -170,11 +170,11 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            let formattedDate = dateFormatter.string(from: plan.date)
-            cell.dateLabel.text = formattedDate
-            
-            cell.profileimage.image = UIImage(systemName: "person.crop.circle")
-            setNeedsUpdateConfiguration(cell, at: indexPath)
+//            let formattedDate = dateFormatter.string(from: plan.date)
+//            cell.dateLabel.text = formattedDate
+//            
+//            cell.profileimage.image = UIImage(systemName: "person.crop.circle")
+//            setNeedsUpdateConfiguration(cell, at: indexPath)
             return cell
         } else {
             // 공유 받은 약속 셀 구성

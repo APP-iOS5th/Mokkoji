@@ -56,9 +56,9 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
         ])
         
         plans = [
-            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "판교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 2, title: "재밌다", body: "카카오", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 3, title: "투어", body: "네이버", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "판교역", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 2, title: "재밌다", body: "카카오", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 3, title: "투어", body: "네이버", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
         ]
     }
     
@@ -75,10 +75,10 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
         
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH:mm"
-        let formattedDate = timeFormatter.string(from: plan.time)
-        cell.timeLabel.text = formattedDate
-        
-        cell.clockImage.image = UIImage(systemName: "clock.fill")
+//        let formattedDate = timeFormatter.string(from: plan.time)
+//        cell.timeLabel.text = formattedDate
+//        
+//        cell.clockImage.image = UIImage(systemName: "clock.fill")
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

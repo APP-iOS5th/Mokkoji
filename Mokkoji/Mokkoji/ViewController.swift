@@ -420,9 +420,9 @@ class ViewController: UIViewController {
                                         UserInfo.shared.user = user
                                         print("이미 사용자가 존재하는 경우 currentUser 정보 : \(UserInfo.shared.user)")
                                         //TODO: 다음뷰 표시
-                                        //let TestViewController = TestViewController()
-                                        //TestViewController.modalPresentationStyle = .fullScreen
-                                        //self.present(TestViewController, animated: true)
+                                        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                                                                                        let tabBarController = sceneDelegate.createTabBarController()
+                                                                                        sceneDelegate.changeRootViewController(tabBarController, animated: true)
                                         
                                     } else {
                                         print("User 데이터가 없습니다. ")
@@ -449,9 +449,9 @@ class ViewController: UIViewController {
                                                 UserInfo.shared.user = user
                                                 print("fetch 이후 currentUser 정보 : \(UserInfo.shared.user)")
                                                 //TODO: 다음뷰 표시
-                                                //let TestViewController = TestViewController()
-                                                //TestViewController.modalPresentationStyle = .fullScreen
-                                                //self.present(TestViewController, animated: true)
+                                                guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                                                                                                let tabBarController = sceneDelegate.createTabBarController()
+                                                                                                sceneDelegate.changeRootViewController(tabBarController, animated: true)
                                             } else {
                                                 print("User 데이터가 없습니다. ")
                                             }

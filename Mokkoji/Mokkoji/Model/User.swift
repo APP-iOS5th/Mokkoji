@@ -15,4 +15,5 @@ struct User: Codable {
     var profileImageUrl: URL
     var plan: [Plan]?
     var friendList: [User]?
+
 }

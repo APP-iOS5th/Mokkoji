@@ -49,6 +49,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     let locationManager = CLLocationManager()
     
     /// 핀 꼽기
+//    var planId: UUID
     var positions: [MapPoint] = []
     
     /// 검색창 만들기
@@ -58,6 +59,17 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     var delegate: SelectedPlaceListDelegate?
     var selectedPlaces: [MapInfo] = []
+//    var selectedPlaces: [MapInfo] = {
+//        if let plans = UserInfo.shared.user?.plan {
+//            for plan in plans {
+//                let mapInfos = plan.mapInfo
+//                for mapInfo in mapInfos {
+//                    <#body#>
+//                }
+//            }
+//        }
+//        if let savedPositions = UserInfo.shared.user?.plan
+//    }
     
     init() {
         _observerAdded = false

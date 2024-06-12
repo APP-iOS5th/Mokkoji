@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseCore
+import FirebaseFirestore
 
 extension UIImageView {
     /// 이미지 로딩 후 completion 클로저 실행
@@ -30,9 +33,12 @@ extension UIImageView {
 }
 
 class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate {
-    
+    let db = Firestore.firestore()  //firestore
     let mapViewController = MapViewController()
+    
+    var selectedTimes: [Date] = []
     var mapInfoList: [MapInfo] = []
+    var planList: [Plan] = []
     
     lazy var mainContainer: UIScrollView = {
         let scrollView = UIScrollView()
@@ -269,7 +275,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // TODO: - 커스텀 셀을 생성하여 장소 리스트에 재사용
+        /// 커스텀 셀을 생성하여 장소 리스트에 재사용
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "placeListCell", for: indexPath) as? PlaceListTableViewCell else {
             return UITableViewCell()
         }
@@ -278,6 +284,10 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let numbering = UIImage(systemName: placeOrder)
         let placeName = "\(mapInfoList[indexPath.row].placeName)"
         cell.configure(number: numbering, placeInfo: placeName)
+        
+        if let selectedTime = cell.selectedTime {
+            selectedTimes.append(selectedTime)
+        }
 
         return cell
     }
@@ -290,8 +300,49 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // MARK: - Methods
     @objc func saveButtonTapped() {
-        // TODO: - Plan 데이터 저장
+        /// Plan 객체 생성
+        guard let newPlan = makePlan() else {
+            return
+        }
+        
+        guard let user = UserInfo.shared.user else {
+            return
+        }
+        
+        /// User에 Plan 추가
+        UserInfo.shared.user?.plan?.append(newPlan)
+        saveUserToFirestore(user: user, userId: String(user.id))
         self.navigationController?.popViewController(animated: true)
+    }
+    
+    func saveUserToFirestore(user: User, userId: String) {
+        let userRef = db.collection("users").document(userId)
+        do {
+            try userRef.setData(from: user)
+        } catch let error {
+            print("Firestore Writing Error: \(error)")
+        }
+    }
+    
+    func makePlan() -> Plan? {
+        guard let title = titleText.text, !title.isEmpty else {
+            return nil
+        }
+        
+        guard let body = bodyText.text, !body.isEmpty else {
+            return nil
+        }
+        
+        guard let date = dateField.text, !date.isEmpty else {
+            return nil
+        }
+        
+        let placeListTableViewCell = PlaceListTableViewCell()
+//        let mapTimeInfo = placeListTableViewCell.timePicker
+        
+        let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes, mapInfo: mapInfoList)
+        
+        return newPlan
     }
     
     func dateChanged() {
