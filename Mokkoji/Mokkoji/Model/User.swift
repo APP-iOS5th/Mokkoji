@@ -14,5 +14,6 @@ struct User: Codable {
     var email: String
     var profileImageUrl: URL
     var plan: [Plan]?
+    var plan: [Plan]?
     var friendList: [User]?
 }
