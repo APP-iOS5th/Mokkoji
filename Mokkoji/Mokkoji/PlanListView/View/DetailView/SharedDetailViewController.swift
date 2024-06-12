@@ -1,15 +1,20 @@
+//
+//  SharedDetailViewController.swift
+//  Mokkoji
+//
+//  Created by 차지용 on 6/12/24.
+//
+
 import UIKit
 
-
-
-class PmDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class SharedDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
     let mapViewController = MapViewController()
     var plans: [Plan] = []
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
-    var plan: Plan?
     var user: User!
+    var plan: Plan!
     
     
     override func viewDidLoad() {
@@ -61,14 +66,12 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
         ])
         
         plans = [
-            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "판교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 2, title: "재밌다", body: "카카오", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 3, title: "투어", body: "네이버", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            
-        ]
+             Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+             Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
+         ]
         
-
-
+        
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -77,35 +80,18 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PmDetailViewCell
-        if indexPath.section == 0 {
-                    // 나의 약속 섹션
-                    let plan = plans[indexPath.row]
-                    cell.titleLabel.text = plan.title
-                    cell.bodyLabel.text = plan.body
-                    
-                    let timeFormatter = DateFormatter()
-                    timeFormatter.dateFormat = "HH:mm"
-                    let formattedDate = timeFormatter.string(from: plan.time)
-                    cell.timeLabel.text = formattedDate
-                    
-                    cell.clockImage.image = UIImage(systemName: "clock.fill")
-                } 
-                
-                return cell
-    }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            selectedPlan = plans[indexPath.row]
+        if let sharedPlan = plan {
+            cell.titleLabel.text = sharedPlan.title
+            cell.bodyLabel.text = sharedPlan.body
             
-            // InformationViewController 생성
-            let informationViewController = InformationViewController()
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm"
+            let formattedDate = timeFormatter.string(from: sharedPlan.time)
+            cell.timeLabel.text = formattedDate
             
-            // 선택한 Plan을 InformationViewController에 전달
-            informationViewController.selectedPlan = selectedPlan
-            
-            // InformationViewController로 이동
-            navigationController?.pushViewController(informationViewController, animated: true)
+            cell.clockImage.image = UIImage(systemName: "clock.fill")
         }
-        
+        return cell
     }
+    
 }

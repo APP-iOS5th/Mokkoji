@@ -15,6 +15,8 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     var isSelectArray = [Bool]()
     
     var plans: [Plan] = []
+    var user: User!
+    var plan: Plan?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,6 +46,13 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             Plan(uuid: UUID(), order: 2, title: "Lunch", body: "Team lunch", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
             Plan(uuid: UUID(), order: 3, title: "Call", body: "Client call", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
         ]
+        let sharedPlans = [
+            Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
+        ]
+        
+        user = User(id: 1, name: "홍길동", email: "hong@example.com", profileImageUrl: URL(string: "https://example.com/profile.jpg")!, plan: plans, sharedPlan: sharedPlans, friendList: nil)
+
         
         // isSelectArray 초기화
         initializeSelectArray()
@@ -137,14 +146,16 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     //선택한 셀을 tap하면 이동
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
+            let selectedPlan = user.plan?[indexPath.row]
             let pmDetailViewController = PmDetailViewController()
+            pmDetailViewController.plans = [selectedPlan].compactMap { $0 }
             navigationController?.pushViewController(pmDetailViewController, animated: true)
-            
-            
         }
         else {
-            let pmDetailViewController = PmDetailViewController()
-            navigationController?.pushViewController(pmDetailViewController, animated: true)
+            let selectedSharedPlan = user.sharedPlan?[indexPath.row]
+            let sharedDetailViewController = SharedDetailViewController()
+            sharedDetailViewController.plan = selectedSharedPlan // 선택한 약속만 포함하는 속성으로 설정
+            navigationController?.pushViewController(sharedDetailViewController, animated: true)
         }
 
     }
@@ -159,7 +170,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             return plans.count
         } else {
            
-            return 3
+            return user.sharedPlan?.count ?? 0
         }
     }
 
@@ -180,9 +191,16 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             return cell
         } else {
             // 공유 받은 약속 셀 구성
+            let sharedPlan = user.sharedPlan![indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-            cell.titleLabel.text = "Shared Plan \(indexPath.row + 1)"
-            cell.dateLabel.text = "2024-06-11" // 예제 날짜
+            
+            cell.titleLabel.text = sharedPlan.title
+        
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let formattedDate = dateFormatter.string(from: sharedPlan.date)
+            cell.dateLabel.text = formattedDate
+            
             cell.profileimage.image = UIImage(systemName: "person.crop.circle")
             setNeedsUpdateConfiguration(cell, at: indexPath)
             return cell
