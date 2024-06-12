@@ -6,7 +6,8 @@
 //
 
 import UIKit
-
+import FirebaseFirestore
+import Firebase
 
 class PmListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -18,6 +19,8 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     var user: User!
     var plan: Plan?
     var user2: User!
+    
+    let db = Firestore.firestore()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,18 +56,59 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         ]
         
         user = User(id: 1, name: "홍길동", email: "hong@example.com", profileImageUrl: URL(string: "https://lh3.googleusercontent.com/a/ACg8ocKKJBq7bA6ijBEJIsYa2wz-5JCYj-x0BxeAkll8wvI0L64D1ooi=s320")!, plan: plans, sharedPlan: sharedPlans, friendList: nil)
-        
 
-
-        
         // isSelectArray 초기화
         initializeSelectArray()
+        //Firestore에 plan 정보 저장
+        if let firstPlan = user.plan?.first {
+            savePlanToFirestore(plan: firstPlan, planId: firstPlan.uuid.uuidString)
+        }
+    }
+    
+    func savePlanToFirestore(plan: Plan, planId: String) {
+        let planRef = db.collection("plans").document(planId)
+        do {
+            try planRef.setData(from: plan, encoder: Firestore.Encoder())
+        } catch let error {
+            print("Firestore Writing Error: \(error)")
+        }
+    }
+
+
+
+
+    
+    // Firestore에서 plan 정보 가져오기
+    func fetchPlanFromFirestore(planId: String, completion: @escaping (Plan?) -> Void) {
+        let planRef = db.collection("plans").document(planId)
+        planRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                do {
+                    let plan = try document.data(as: Plan.self)
+                    completion(plan)
+                } catch let error {
+                    print("Plan Decoding Error: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("Firestore에 Plan이 존재하지 않음.")
+                completion(nil)
+            }
+        }
     }
 
 
     func initializeSelectArray() {
         isSelectArray = [Bool](repeating: false, count: plans.count)
 
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationBar = self.navigationController?.navigationBar {
+            navigationBar.overrideUserInterfaceStyle = .light
+        }
     }
 
 
