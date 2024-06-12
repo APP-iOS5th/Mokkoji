@@ -17,30 +17,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         
         //MARK: - Login View
-        window?.rootViewController = ViewController()
-        window?.makeKeyAndVisible()
+//        window?.rootViewController = ViewController()
+//        window?.makeKeyAndVisible()
         
         //MARK: - TabbarController View
 
-//        let navigationController = UINavigationController(rootViewController: PmListViewController())
-//        let profilController =  UINavigationController(rootViewController: ProfileViewController())
-//        
-//        let tabBarController = UITabBarController()
-//        tabBarController.setViewControllers([navigationController, profilController], animated: true)
-//        
-//        if let items = tabBarController.tabBar.items {
-//            items[0].selectedImage = UIImage(systemName: "star.fill")
-//            items[0].image = UIImage(systemName: "star")
-//            items[0].title = "약속 리스트"
-//            
-//            items[1].selectedImage = UIImage(systemName: "person.fill")
-//            items[1].image = UIImage(systemName: "person")
-//            items[1].title = "프로필"
-//        }
-//        
-//        window.rootViewController = tabBarController
-//
-//        window.makeKeyAndVisible()
+        let navigationController = UINavigationController(rootViewController: PmListViewController())
+        let profilController =  UINavigationController(rootViewController: ProfileViewController())
+        
+        let tabBarController = UITabBarController()
+        tabBarController.setViewControllers([navigationController, profilController], animated: true)
+        
+        if let items = tabBarController.tabBar.items {
+            items[0].selectedImage = UIImage(systemName: "star.fill")
+            items[0].image = UIImage(systemName: "star")
+            items[0].title = "약속 리스트"
+            
+            items[1].selectedImage = UIImage(systemName: "person.fill")
+            items[1].image = UIImage(systemName: "person")
+            items[1].title = "프로필"
+        }
+        
+        window?.rootViewController = tabBarController
+
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
