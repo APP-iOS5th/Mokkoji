@@ -8,18 +8,21 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
-    var window: UIWindow?
     
-
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 
         guard let windowScene = (scene as? UIWindowScene) else { return }
-
+        
         let window = UIWindow(windowScene: windowScene)
+        
+        //MARK: - Login View
+//        let entryViewController = ViewController()
+//        window?.rootViewController = entryViewController
+        
+        //MARK: - TabbarController View
+
         let navigationController = UINavigationController(rootViewController: PmListViewController())
-        let profilController =  UINavigationController(rootViewController: TestViewController())
+        let profilController =  UINavigationController(rootViewController: ProfileViewController())
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([navigationController, profilController], animated: true)
@@ -33,41 +36,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             items[1].image = UIImage(systemName: "person")
             items[1].title = "프로필"
         }
+        
         window.rootViewController = tabBarController
-        self.window = window
-        window.makeKeyAndVisible()
 
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        let window = UIWindow(windowScene: windowScene)
-        
-        let navigation = UINavigationController(rootViewController: ProfileViewController())
-        
-        window.rootViewController = navigation
-        
-        self.window = window
-        self.window?.makeKeyAndVisible()
-        self.window = UIWindow(windowScene: windowScene)
-        
-        // MARK: - 초기 뷰컨트롤러 셋팅
-        /// NavigationController 1 - Plan
-        let planListViewController = PlanListViewController()
-        let firstNavigationController = UINavigationController(rootViewController: planListViewController)
-        firstNavigationController.tabBarItem = UITabBarItem(title: "Plan", image: UIImage(systemName: "star.fill"), tag: 0)
-        
-        /// NavigationController 2 - Profile
-        let profileViewController = ProfileViewController()
-        let secondNavigationController = UINavigationController(rootViewController: profileViewController)
-        secondNavigationController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle.fill"), tag: 1)
-        
-        /// TabBarController
-        let tabBarController = UITabBarController()
-        tabBarController.viewControllers = [firstNavigationController, secondNavigationController]
-        
-        self.window?.rootViewController = tabBarController
-        self.window?.makeKeyAndVisible()
+        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
