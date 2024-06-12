@@ -9,7 +9,7 @@ import Foundation
 
 class UserInfo {
     static let shared = UserInfo()
-    
+
     var user: User?
 
     private init() {}

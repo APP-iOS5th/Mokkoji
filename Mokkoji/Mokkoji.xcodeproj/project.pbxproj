@@ -60,7 +60,6 @@
 		4A187EF12C0F06EF00F5C2EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A21ED9E2C1958390001470C /* AddPlanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPlanViewController.swift; sourceTree = "<group>"; };
 		4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteFriendViewController.swift; sourceTree = "<group>"; };
-		4A9E413D2C167D6A00DE424A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		4A9E413F2C16843A00DE424A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4A9E41412C16843F00DE424A /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		4A9E41432C16844C00DE424A /* MapInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapInfo.swift; sourceTree = "<group>"; };
@@ -173,7 +172,6 @@
 				4A187EF12C0F06EF00F5C2EE /* Info.plist */,
 				4A9E415A2C18045300DE424A /* GoogleService-Info.plist */,
 				4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */,
-				4A9E413D2C167D6A00DE424A /* Config.xcconfig */,
 			);
 			path = Mokkoji;
 			sourceTree = "<group>";
@@ -334,7 +332,7 @@
 /* Begin XCBuildConfiguration section */
 		4A187EF22C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
+			baseConfigurationReference = 4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -398,7 +396,7 @@
 		};
 		4A187EF32C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
+			baseConfigurationReference = 4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -455,7 +453,7 @@
 		};
 		4A187EF52C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
+			baseConfigurationReference = 4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -464,6 +462,9 @@
 				DEVELOPMENT_TEAM = 2TXBC7N5Q5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mokkoji/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 정보 앱 사용중 백그라운드에서 허용";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 정보 항상 허용";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 정보 앱 사용중에만 허용";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -483,7 +484,7 @@
 		};
 		4A187EF62C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
+			baseConfigurationReference = 4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -492,6 +493,9 @@
 				DEVELOPMENT_TEAM = 2TXBC7N5Q5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mokkoji/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 정보 앱 사용중 백그라운드에서 허용";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 정보 항상 허용";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 정보 앱 사용중에만 허용";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
