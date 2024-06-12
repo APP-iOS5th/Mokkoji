@@ -16,14 +16,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-        //MARK: - Login View
-//        window?.rootViewController = ViewController()
-//        window?.makeKeyAndVisible()
+        //MARK: - Login View (Entry Point)
+        window?.rootViewController = ViewController()
+        window?.makeKeyAndVisible()
         
-        //MARK: - TabbarController View
-
+    }
+    
+    func changeRootViewController (_ viewController: UIViewController, animated: Bool) {
+        guard let window = self.window else { return }
+        window.rootViewController = viewController // 전환
+    }
+    
+    func createTabBarController() -> UITabBarController {
         let navigationController = UINavigationController(rootViewController: PmListViewController())
-        let profilController =  UINavigationController(rootViewController: ProfileViewController())
+        let profilController = UINavigationController(rootViewController: ProfileViewController())
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([navigationController, profilController], animated: true)
@@ -38,9 +44,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             items[1].title = "프로필"
         }
         
-        window?.rootViewController = tabBarController
-
-        window?.makeKeyAndVisible()
+        return tabBarController
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
