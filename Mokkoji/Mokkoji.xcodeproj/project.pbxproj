@@ -58,32 +58,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3B605C062C168BDB00D3603C /* ListView */ = {
-			isa = PBXGroup;
-			children = (
-				3B605C072C168C1000D3603C /* View */,
-			);
-			path = ListView;
-			sourceTree = "<group>";
-		};
 		3B605C072C168C1000D3603C /* View */ = {
 			isa = PBXGroup;
 			children = (
-				3B605C1A2C16EF7300D3603C /* ListView */,
+				3B7B45602C1921AD00C8DEA2 /* ListView */,
 				3B605C1B2C16EF8200D3603C /* DetailView */,
 				3B605C1C2C16EF9800D3603C /* MapView */,
 				3B7B455D2C18518100C8DEA2 /* TestViewController.swift */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		3B605C1A2C16EF7300D3603C /* ListView */ = {
-			isa = PBXGroup;
-			children = (
-				3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */,
-				3B605C0E2C168E7200D3603C /* PmListViewController.swift */,
-			);
-			path = ListView;
 			sourceTree = "<group>";
 		};
 		3B605C1B2C16EF8200D3603C /* DetailView */ = {
@@ -102,6 +85,23 @@
 				3B605C152C16E28000D3603C /* MapViewController.swift */,
 			);
 			path = MapView;
+			sourceTree = "<group>";
+		};
+		3B7B45602C1921AD00C8DEA2 /* ListView */ = {
+			isa = PBXGroup;
+			children = (
+				3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */,
+				3B605C0E2C168E7200D3603C /* PmListViewController.swift */,
+			);
+			path = ListView;
+			sourceTree = "<group>";
+		};
+		3B7B45612C1921C400C8DEA2 /* PlanListView */ = {
+			isa = PBXGroup;
+			children = (
+				3B605C072C168C1000D3603C /* View */,
+			);
+			path = PlanListView;
 			sourceTree = "<group>";
 		};
 		4A187ED72C0F06EE00F5C2EE = {
@@ -127,7 +127,7 @@
 				4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */,
 				4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */,
 				4A187EE72C0F06EE00F5C2EE /* ViewController.swift */,
-				3B605C062C168BDB00D3603C /* ListView */,
+				3B7B45612C1921C400C8DEA2 /* PlanListView */,
 				4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */,
 				4A187EEE2C0F06EF00F5C2EE /* LaunchScreen.storyboard */,
 				4A187EF12C0F06EF00F5C2EE /* Info.plist */,
