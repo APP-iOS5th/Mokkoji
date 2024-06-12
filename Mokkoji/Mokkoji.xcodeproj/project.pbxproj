@@ -22,12 +22,6 @@
 		4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */; };
 		4A187EF02C0F06EF00F5C2EE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEF2C0F06EF00F5C2EE /* Base */; };
 		4A4E408D2C193277008F96DA /* AddView in Resources */ = {isa = PBXBuildFile; fileRef = 4A4E408C2C193277008F96DA /* AddView */; };
-		4A9CECAA2C19432D00E0F029 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECA92C19432D00E0F029 /* GoogleSignIn */; };
-		4A9CECAC2C19432D00E0F029 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECAB2C19432D00E0F029 /* GoogleSignInSwift */; };
-		4A9CECAF2C19435400E0F029 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECAE2C19435400E0F029 /* FirebaseAuth */; };
-		4A9CECB12C19435400E0F029 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECB02C19435400E0F029 /* FirebaseFirestore */; };
-		4A9CECB32C19435400E0F029 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECB22C19435400E0F029 /* FirebaseFirestoreSwift */; };
-		4A9CECB62C19435F00E0F029 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 4A9CECB52C19435F00E0F029 /* KakaoSDK */; };
 		4A9E41402C16843A00DE424A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E413F2C16843A00DE424A /* User.swift */; };
 		4A9E41422C16843F00DE424A /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41412C16843F00DE424A /* Plan.swift */; };
 		4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41432C16844C00DE424A /* MapInfo.swift */; };
@@ -36,6 +30,12 @@
 		4A9E415D2C1884E900DE424A /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E415C2C1884E900DE424A /* SignUpViewController.swift */; };
 		5882714D2C1949EA006D65FB /* PlanListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5882714C2C1949EA006D65FB /* PlanListViewController.swift */; };
 		5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5882714E2C194A13006D65FB /* SearchResultsViewController.swift */; };
+		588271512C194C7B006D65FB /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 588271502C194C7B006D65FB /* GoogleSignIn */; };
+		588271532C194C7B006D65FB /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 588271522C194C7B006D65FB /* GoogleSignInSwift */; };
+		588271552C194CE4006D65FB /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 588271542C194CE4006D65FB /* FirebaseAuth */; };
+		588271572C194CE4006D65FB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 588271562C194CE4006D65FB /* FirebaseFirestore */; };
+		588271592C194CE4006D65FB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 588271582C194CE4006D65FB /* FirebaseFirestoreSwift */; };
+		5882715B2C194D89006D65FB /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5882715A2C194D89006D65FB /* KakaoSDK */; };
 		C1B688462C180B5C00B76DCD /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688452C180B5C00B76DCD /* ProfileViewController.swift */; };
 		C1B688482C180BBB00B76DCD /* AddFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */; };
 		C1B6884A2C180BFF00B76DCD /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688492C180BFF00B76DCD /* ProfileEditViewController.swift */; };
@@ -58,7 +58,6 @@
 		4A187EEF2C0F06EF00F5C2EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A187EF12C0F06EF00F5C2EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A4E408C2C193277008F96DA /* AddView */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AddView; sourceTree = "<group>"; };
-		4A9E413D2C167D6A00DE424A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		4A9E413F2C16843A00DE424A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4A9E41412C16843F00DE424A /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		4A9E41432C16844C00DE424A /* MapInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapInfo.swift; sourceTree = "<group>"; };
@@ -77,13 +76,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A9CECAC2C19432D00E0F029 /* GoogleSignInSwift in Frameworks */,
 				3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */,
-				4A9CECAA2C19432D00E0F029 /* GoogleSignIn in Frameworks */,
-				4A9CECB12C19435400E0F029 /* FirebaseFirestore in Frameworks */,
-				4A9CECAF2C19435400E0F029 /* FirebaseAuth in Frameworks */,
-				4A9CECB32C19435400E0F029 /* FirebaseFirestoreSwift in Frameworks */,
-				4A9CECB62C19435F00E0F029 /* KakaoSDK in Frameworks */,
+				588271552C194CE4006D65FB /* FirebaseAuth in Frameworks */,
+				588271532C194C7B006D65FB /* GoogleSignInSwift in Frameworks */,
+				588271592C194CE4006D65FB /* FirebaseFirestoreSwift in Frameworks */,
+				588271512C194C7B006D65FB /* GoogleSignIn in Frameworks */,
+				588271572C194CE4006D65FB /* FirebaseFirestore in Frameworks */,
+				5882715B2C194D89006D65FB /* KakaoSDK in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -171,7 +170,6 @@
 				4A187EF12C0F06EF00F5C2EE /* Info.plist */,
 				4A9E415A2C18045300DE424A /* GoogleService-Info.plist */,
 				4A0CAD0C2C193D3500F6EF87 /* Config.xcconfig */,
-				4A9E413D2C167D6A00DE424A /* Config.xcconfig */,
 			);
 			path = Mokkoji;
 			sourceTree = "<group>";
@@ -213,12 +211,12 @@
 			);
 			name = Mokkoji;
 			packageProductDependencies = (
-				4A9CECA92C19432D00E0F029 /* GoogleSignIn */,
-				4A9CECAB2C19432D00E0F029 /* GoogleSignInSwift */,
-				4A9CECAE2C19435400E0F029 /* FirebaseAuth */,
-				4A9CECB02C19435400E0F029 /* FirebaseFirestore */,
-				4A9CECB22C19435400E0F029 /* FirebaseFirestoreSwift */,
-				4A9CECB52C19435F00E0F029 /* KakaoSDK */,
+				588271502C194C7B006D65FB /* GoogleSignIn */,
+				588271522C194C7B006D65FB /* GoogleSignInSwift */,
+				588271542C194CE4006D65FB /* FirebaseAuth */,
+				588271562C194CE4006D65FB /* FirebaseFirestore */,
+				588271582C194CE4006D65FB /* FirebaseFirestoreSwift */,
+				5882715A2C194D89006D65FB /* KakaoSDK */,
 			);
 			productName = Mokkoji;
 			productReference = 4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */;
@@ -322,7 +320,6 @@
 /* Begin XCBuildConfiguration section */
 		4A187EF22C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -386,7 +383,6 @@
 		};
 		4A187EF32C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -443,7 +439,6 @@
 		};
 		4A187EF52C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -471,7 +466,6 @@
 		};
 		4A187EF62C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -561,32 +555,29 @@
 			package = 3B605C172C16E3A300D3603C /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */;
 			productName = "KakaoMapsSDK-SPM";
 		};
-		4A9CECA92C19432D00E0F029 /* GoogleSignIn */ = {
+		588271502C194C7B006D65FB /* GoogleSignIn */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4A9CECA82C19432D00E0F029 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignIn;
 		};
-		4A9CECAB2C19432D00E0F029 /* GoogleSignInSwift */ = {
+		588271522C194C7B006D65FB /* GoogleSignInSwift */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4A9CECA82C19432D00E0F029 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
 		};
-		4A9CECAE2C19435400E0F029 /* FirebaseAuth */ = {
+		588271542C194CE4006D65FB /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4A9CECAD2C19435400E0F029 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
 		};
-		4A9CECB02C19435400E0F029 /* FirebaseFirestore */ = {
+		588271562C194CE4006D65FB /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4A9CECAD2C19435400E0F029 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
 		};
-		4A9CECB22C19435400E0F029 /* FirebaseFirestoreSwift */ = {
+		588271582C194CE4006D65FB /* FirebaseFirestoreSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4A9CECAD2C19435400E0F029 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestoreSwift;
 		};
-		4A9CECB52C19435F00E0F029 /* KakaoSDK */ = {
+		5882715A2C194D89006D65FB /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4A9CECB42C19435F00E0F029 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDK;
