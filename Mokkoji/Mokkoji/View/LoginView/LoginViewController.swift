@@ -98,6 +98,7 @@ class LoginViewController: UIViewController {
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -385,6 +386,35 @@ class LoginViewController: UIViewController {
     @objc func signUpButtonTapped() {
         let signUpViewController = SignUpViewController()
         self.navigationController?.pushViewController(signUpViewController, animated: true)
+    }
+    
+    @objc func loginButtonTapped() {
+        if let email = emailTextField.text,
+           let password = passwordTextField.text {
+            Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+                guard let self = self else { return }
+                if let error = error {
+                    // 에러가 났다면 여기서 처리 ...
+                    print("Email Login Error: \(error.localizedDescription)")
+                } else {
+                    // 로그인에 성공했다면 여기서 처리...
+                    fetchUserFromFirestore(userId: password) { user in
+                        if let user = user {
+                            UserInfo.shared.user = user
+                            print("이미 사용자가 존재하는 경우 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
+                            //탭바뷰 이동
+                            self.loginSuccess()
+                            
+                        } else {
+                            print("User 데이터가 없습니다. ")
+                        }
+                    }
+
+                }
+            }
+            
+        }
+        
     }
     
     //MARK: - Kakao Login/out Methods
