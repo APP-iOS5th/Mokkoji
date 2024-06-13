@@ -88,7 +88,7 @@ class SignUpViewController: UIViewController {
     ///회원가입 버튼
     private lazy var signUpButton: UIButton = {
         var button = UIButton()
-        button.setTitle("로그인", for: .normal)
+        button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 1
@@ -210,7 +210,7 @@ class SignUpViewController: UIViewController {
     }
     
     @objc func signUpButtonTapped() {
-        //TODO: 이메일 정규식 추가, 비밀번호6자 이상 해야함
+        //TODO: 이메일 정규식 추가, 비밀번호6자, 프로필사진 필수지정  -> 3개 만족해야 회원가입 버튼활성화
         guard let name = self.signUpNameTextField.text else { return }
         guard let email = self.signUpEmailTextField.text else { return }
         guard let password = self.signUpPasswordTextField.text else { return }
@@ -219,7 +219,6 @@ class SignUpViewController: UIViewController {
         self.user.email = email
         self.user.id = password
         
-        // TODO: - User객체 파이어베이스에 회원가입 데이터올리기
         self.createUser(user.email, user.id)
     }
     
