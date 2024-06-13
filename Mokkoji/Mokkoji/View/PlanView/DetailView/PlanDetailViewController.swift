@@ -13,6 +13,12 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
     let db = Firestore.firestore()
     var isSelectArray = [Bool]()
     
+    lazy var mainContainer: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,10 +45,13 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
         mapViewController.didMove(toParent: self)
         
         // 맵 뷰 배경색 설정
-        mapViewController.view.backgroundColor = .white
+//        mapViewController.view.backgroundColor = .white
         
         // 뷰 계층 구조에 테이블 뷰 추가
-        view.addSubview(tableView)
+//        view.addSubview(tableView)
+        view.addSubview(mainContainer)
+        mainContainer.addSubview(mapViewController.view)
+        mainContainer.addSubview(tableView)
         
         // Set up constraints for the map view
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -50,15 +59,24 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
         // 테이블 뷰 제약 조건 설정
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            mapViewController.view.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            mapViewController.view.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.9), // 너비를 슈퍼뷰 너비의 90%로 설정
-            mapViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mainContainer.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            mainContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            
+//            mapViewController.view.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+//            mapViewController.view.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.9), // 너비를 슈퍼뷰 너비의 90%로 설정
+            
+            mapViewController.view.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
+            mapViewController.view.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            mapViewController.view.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            mapViewController.view.widthAnchor.constraint(equalToConstant: 300),
             mapViewController.view.heightAnchor.constraint(equalToConstant: 300),
             
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.bottomAnchor)
         ])
     }
     
