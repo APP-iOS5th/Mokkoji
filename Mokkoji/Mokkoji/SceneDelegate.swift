@@ -14,17 +14,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
 
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        window = UIWindow(windowScene: windowScene)
+        let window = UIWindow(windowScene: windowScene)
         
         //MARK: - Login View (Entry Point)
-        window?.rootViewController = ViewController()
-        window?.makeKeyAndVisible()
         
+        let mainViewController = ViewController()
+        let navigationVC = UINavigationController(rootViewController: mainViewController)
+        
+        window.rootViewController = navigationVC
+        window.makeKeyAndVisible()
+        self.window = window
     }
     
     func changeRootViewController (_ viewController: UIViewController, animated: Bool) {
         guard let window = self.window else { return }
         window.rootViewController = viewController // 전환
+        window.makeKeyAndVisible()
     }
     
     func createTabBarController() -> UITabBarController {
