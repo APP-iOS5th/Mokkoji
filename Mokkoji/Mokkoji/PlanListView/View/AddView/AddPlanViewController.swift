@@ -135,11 +135,11 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         return button
     }()
     
-    lazy var mapView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "map")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    lazy var mapView: UIView = {
+        let view = UIView()
+        addChild(mapViewController)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     lazy var tableView: UITableView = {
@@ -162,6 +162,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
         
         mapViewController.delegate = self
+        
+        mapView.addSubview(mapViewController.view)
         
         stackView.addArrangedSubview(profileImage)
         stackView.addArrangedSubview(inviteButton)
@@ -215,6 +217,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             mapView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor, constant: 15),
             mapView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             mapView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            mapView.widthAnchor.constraint(equalToConstant: 300),
             mapView.heightAnchor.constraint(equalToConstant: 300),
             
             tableView.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 15),
@@ -229,6 +232,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         /// tableVIew의 contentSize 관찰 시작
         tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         tableViewHeightConstraint?.constant = tableView.contentSize.height
+        
+        mapViewController.didMove(toParent: self)
         
         // TODO: - 친구 초대를 통해 선택된 user의 profileUrl을 전달받아 이미지를 그림
 //        let user =
