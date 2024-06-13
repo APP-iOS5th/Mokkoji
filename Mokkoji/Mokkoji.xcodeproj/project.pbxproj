@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B0146762C195ABD009CF0D7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B0146752C195ABD009CF0D7 /* GoogleService-Info.plist */; };
+		3B0146782C195ACD009CF0D7 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B0146772C195ACD009CF0D7 /* Config.xcconfig */; };
+		3B01467A2C195EFF009CF0D7 /* InfoFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */; };
+		3B0146862C19BE58009CF0D7 /* SharedDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0146852C19BE58009CF0D7 /* SharedDetailViewController.swift */; };
 		3B605C0F2C168E7200D3603C /* PmListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C0E2C168E7200D3603C /* PmListViewController.swift */; };
 		3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */; };
 		3B605C142C16C2C200D3603C /* PmDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C132C16C2C200D3603C /* PmDetailViewController.swift */; };
@@ -47,6 +51,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B0146752C195ABD009CF0D7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3B0146772C195ACD009CF0D7 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
+		3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoFriendViewController.swift; sourceTree = "<group>"; };
+		3B0146852C19BE58009CF0D7 /* SharedDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDetailViewController.swift; sourceTree = "<group>"; };
 		3B605C0E2C168E7200D3603C /* PmListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmListViewController.swift; sourceTree = "<group>"; };
 		3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		3B605C132C16C2C200D3603C /* PmDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmDetailViewController.swift; sourceTree = "<group>"; };
@@ -106,7 +114,6 @@
 				3B7B45602C1921AD00C8DEA2 /* ListView */,
 				3B605C1B2C16EF8200D3603C /* DetailView */,
 				3B605C1C2C16EF9800D3603C /* MapView */,
-				3B7B455D2C18518100C8DEA2 /* TestViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -117,6 +124,8 @@
 				3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */,
 				3B605C132C16C2C200D3603C /* PmDetailViewController.swift */,
 				3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */,
+				3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */,
+				3B0146852C19BE58009CF0D7 /* SharedDetailViewController.swift */,
 			);
 			path = DetailView;
 			sourceTree = "<group>";
@@ -179,6 +188,8 @@
 				4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */,
 				4A187EEE2C0F06EF00F5C2EE /* LaunchScreen.storyboard */,
 				4A187EF12C0F06EF00F5C2EE /* Info.plist */,
+				3B0146752C195ABD009CF0D7 /* GoogleService-Info.plist */,
+				3B0146772C195ACD009CF0D7 /* Config.xcconfig */,
 			);
 			path = Mokkoji;
 			sourceTree = "<group>";
@@ -297,6 +308,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B0146782C195ACD009CF0D7 /* Config.xcconfig in Resources */,
 				4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */,
 				584EEBF02C19689700538F55 /* GoogleService-Info.plist in Resources */,
 				584EEBEE2C19689000538F55 /* Config.xcconfig in Resources */,
@@ -322,12 +334,13 @@
 				3B605C1E2C16F07200D3603C /* PmDetailViewCell.swift in Sources */,
 				3B605C162C16E28000D3603C /* MapViewController.swift in Sources */,
 				4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */,
-				3B7B455E2C18518100C8DEA2 /* TestViewController.swift in Sources */,
 				5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */,
 				3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */,
 				4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */,
+				3B01467A2C195EFF009CF0D7 /* InfoFriendViewController.swift in Sources */,
 				4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */,
 				C1B688462C180B5C00B76DCD /* ProfileViewController.swift in Sources */,
+				3B0146862C19BE58009CF0D7 /* SharedDetailViewController.swift in Sources */,
 				4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */,
 				5882714D2C1949EA006D65FB /* PlanListViewController.swift in Sources */,
 				4A9E41522C16B40D00DE424A /* UserInfo.swift in Sources */,

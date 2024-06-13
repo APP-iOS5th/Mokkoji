@@ -1,18 +1,24 @@
+//
+//  SharedDetailViewController.swift
+//  Mokkoji
+//
+//  Created by 차지용 on 6/12/24.
+//
+
 import UIKit
 import FirebaseFirestore
 import Firebase
-
-class PmDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class SharedDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
     let mapViewController = MapViewController()
     var plans: [Plan] = []
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
-    var plan: Plan?
     var user: User!
-    let db = Firestore.firestore()
-    var isSelectArray = [Bool]()
+    var plan: Plan!
     
+    let db = Firestore.firestore()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -60,6 +66,11 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
             tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+        
+        plans = [
+             Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+             Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
+         ]
     }
     
     // Firestore에서 plan 정보 가져오기
@@ -81,53 +92,24 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    func initializeSelectArray() {
-        isSelectArray = [Bool](repeating: false, count: plans.count)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        if let navigationBar = self.navigationController?.navigationBar {
-            navigationBar.overrideUserInterfaceStyle = .light
-        }
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return plans.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PmDetailViewCell
-        if indexPath.section == 0 {
-            // 나의 약속 섹션
-            let plan = plans[indexPath.row]
-            cell.titleLabel.text = plan.title
-            cell.bodyLabel.text = plan.body
+        if let sharedPlan = plan {
+            cell.titleLabel.text = sharedPlan.title
+            cell.bodyLabel.text = sharedPlan.body
             
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "HH:mm"
-            let formattedDate = timeFormatter.string(from: plan.time)
+            let formattedDate = timeFormatter.string(from: sharedPlan.time)
             cell.timeLabel.text = formattedDate
             
             cell.clockImage.image = UIImage(systemName: "clock.fill")
         }
-        
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            selectedPlan = plans[indexPath.row]
-            
-            // InformationViewController 생성
-            let informationViewController = InformationViewController()
-            
-            // 선택한 Plan을 InformationViewController에 전달
-            informationViewController.selectedPlan = selectedPlan
-            
-            // InformationViewController로 이동
-            navigationController?.pushViewController(informationViewController, animated: true)
-        }
-    }
 }

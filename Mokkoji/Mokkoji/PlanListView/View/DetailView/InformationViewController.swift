@@ -13,6 +13,7 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
     let promissTitle = UILabel()
     var plans: [Plan] = []
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
+    var friendList:[User] = []
 
 
     override func viewDidLoad() {
@@ -58,11 +59,12 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
             sharedBtn.heightAnchor.constraint(equalToConstant: 50),
 
         ])
-        plans = [
-            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "판교역", date: nil, time: Date(), mapTimeInfo: nil, mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 2, title: "재밌다", body: "카카오", date: nil, time: Date(), mapTimeInfo: nil, mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 3, title: "투어", body: "네이버", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-        ]
+
+        let friend1 = User(id: 1, name: "친구 1", email: "friend1@example.com", profileImageUrl: URL(string: "http://example.com/image1")!, plan: nil, friendList: nil)
+        let friend2 = User(id: 2, name: "친구 2", email: "friend2@example.com", profileImageUrl: URL(string: "http://example.com/image2")!, plan: nil, friendList: nil)
+        let friend3 = User(id: 3, name: "친구 3", email: "friend3@example.com", profileImageUrl: URL(string: "http://example.com/image3")!, plan: nil, friendList: nil)
+        
+        friendList = [friend1,friend2,friend3]
 
     }
 
@@ -95,7 +97,12 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
     
     //공유 메소드
     @objc func sharedFuntion() {
-        print("공유!!!")
+        print("공유")
+        let friendListV = InfoFriendViewController()
+        friendListV.friends = friendList
+        friendListV.selectedPlan = selectedPlan
+        present(friendListV, animated: true, completion: nil)
+        
     }
 
 }

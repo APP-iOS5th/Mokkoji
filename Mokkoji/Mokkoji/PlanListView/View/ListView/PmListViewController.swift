@@ -6,7 +6,8 @@
 //
 
 import UIKit
-
+import FirebaseFirestore
+import Firebase
 
 class PmListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -15,6 +16,9 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     var isSelectArray = [Bool]()
     
     var plans: [Plan] = []
+   
+    
+    let db = Firestore.firestore()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,14 +43,56 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         view.addSubview(tableView)
 
         // 임시 데이터
-        plans = [
-            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "만교역", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 2, title: "Lunch", body: "Team lunch", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 3, title: "Call", body: "Client call", date: nil, time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
-        ]
+//        plans = [
+//            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "판교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+//            Plan(uuid: UUID(), order: 2, title: "Lunch", body: "홍대역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+//            Plan(uuid: UUID(), order: 3, title: "Call", body: "Client call", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
+//        ]
+//        let sharedPlans = [
+//            Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+//            Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
+//        ]
         
+//        UserInfo.shared.user?.plan = plans
+//        UserInfo.shared.user?.sharedPlan = sharedPlans
+        
+        plans = UserInfo.shared.user?.plan ?? []
+
+
         // isSelectArray 초기화
         initializeSelectArray()
+        //Firestore에 plan 정보 저장
+
+    }
+    
+    // Firestore에 plan 정보 저장
+    //MARK: - FireStore Methods
+    func saveUserToFirestore(user: User, userId: String) {
+        let userRef = db.collection("users").document(userId)
+        do {
+            try userRef.setData(from: user)
+        } catch let error {
+            print("Firestore Writing Error: \(error)")
+        }
+    }
+    
+    // Firestore에서 plan 정보 가져오기
+    func fetchPlanFromFirestore(userId: String, completion: @escaping (Plan?) -> Void) {
+        let planRef = db.collection("plans").document(userId)
+        planRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                do {
+                    let plan = try document.data(as: Plan.self)
+                    completion(plan)
+                } catch let error {
+                    print("Plan Decoding Error: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("Firestore에 Plan이 존재하지 않음.")
+                completion(nil)
+            }
+        }
     }
 
 
@@ -54,6 +100,31 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         isSelectArray = [Bool](repeating: false, count: plans.count)
 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationBar = self.navigationController?.navigationBar {
+            navigationBar.overrideUserInterfaceStyle = .light
+        }
+//        saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
+
+        // Firestore에서 계획 정보 가져오기
+        fetchPlanFromFirestore(userId: String(UserInfo.shared.user!.id)) { [weak self] plan in
+            guard let self = self else { return }
+            if let plan = plan {
+                // Firestore에서 가져온 계획이 있으면 plans 배열에 추가
+                self.plans.append(plan)
+                // isSelectArray 초기화
+                self.initializeSelectArray()
+                // 테이블 뷰 리로드
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
+
 
 
 
@@ -137,12 +208,16 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     //선택한 셀을 tap하면 이동
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
+            let selectedSharedPlan = plans[indexPath.row]
             let pmDetailViewController = PmDetailViewController()
+            pmDetailViewController.plans = [selectedSharedPlan] // 선택된 계획만 전달
             navigationController?.pushViewController(pmDetailViewController, animated: true)
         }
         else {
-            let pmDetailViewController = PmDetailViewController()
-            navigationController?.pushViewController(pmDetailViewController, animated: true)
+            let selectedSharedPlan = plans[indexPath.row]
+            let sharedDetailViewController = SharedDetailViewController()
+            sharedDetailViewController.plan = selectedSharedPlan // 선택한 약속만 포함하는 속성으로 설정
+            navigationController?.pushViewController(sharedDetailViewController, animated: true)
         }
 
     }
@@ -156,8 +231,8 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         if section == 0 {
             return plans.count
         } else {
-            // 공유 받은 약속 섹션의 행 수를 설정합니다. (현재는 예제로 5를 반환)
-            return 3
+           
+            return UserInfo.shared.user?.sharedPlan?.count ?? 0
         }
     }
 
@@ -170,22 +245,40 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-//            let formattedDate = dateFormatter.string(from: plan.date)
-//            cell.dateLabel.text = formattedDate
-//            
-//            cell.profileimage.image = UIImage(systemName: "person.crop.circle")
-//            setNeedsUpdateConfiguration(cell, at: indexPath)
+            let formattedDate = dateFormatter.string(from: plan.date)
+            cell.dateLabel.text = formattedDate
+            
+            // 사용자 정보가 UserInfo.shared.user에 있으므로 해당 정보를 사용합니다.
+            loadImage(from: UserInfo.shared.user?.profileImageUrl) { image in
+                DispatchQueue.main.async {
+                    cell.profileimage.image = image ?? UIImage(systemName: "person.crop.circle")
+                }
+            }
+            setNeedsUpdateConfiguration(cell, at: indexPath)
             return cell
         } else {
             // 공유 받은 약속 셀 구성
+            let sharedPlan = plans[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-            cell.titleLabel.text = "Shared Plan \(indexPath.row + 1)"
-            cell.dateLabel.text = "2024-06-11" // 예제 날짜
-            cell.profileimage.image = UIImage(systemName: "person.crop.circle")
+            
+            cell.titleLabel.text = sharedPlan.title
+        
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let formattedDate = dateFormatter.string(from: sharedPlan.date)
+            cell.dateLabel.text = formattedDate
+            
+            // 사용자 정보가 UserInfo.shared.user에 있으므로 해당 정보를 사용합니다.
+            loadImage(from: UserInfo.shared.user?.profileImageUrl) { image in
+                DispatchQueue.main.async {
+                    cell.profileimage.image = image ?? UIImage(systemName: "person.crop.circle")
+                }
+            }
             setNeedsUpdateConfiguration(cell, at: indexPath)
             return cell
         }
     }
+
 
 
     // 섹션 헤더 타이틀 설정
@@ -195,5 +288,29 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         } else {
             return "공유 받은 약속"
         }
+    }
+    
+    func loadImage(from url: URL?, completion: @escaping (UIImage?) -> Void) {
+        guard let url = url else {
+            // URL이 nil인 경우 기본 이미지를 반환합니다.
+            completion(UIImage(systemName: "person.crop.circle"))
+            return
+        }
+        // URL이 nil이 아닌 경우에만 데이터 태스크를 시작합니다.
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            // 이미지 데이터 로딩 후에 에러가 발생하거나 데이터가 nil인 경우를 처리합니다.
+            if let error = error {
+                print("Error loading image: \(error)")
+                completion(UIImage(systemName: "person.crop.circle"))
+                return
+            }
+            guard let data = data, let image = UIImage(data: data) else {
+                // 데이터가 nil이거나 이미지 변환에 실패한 경우 기본 이미지를 반환합니다.
+                completion(UIImage(systemName: "person.crop.circle"))
+                return
+            }
+            // 이미지 로딩이 성공하면 completion 핸들러를 호출하여 이미지를 반환합니다.
+            completion(image)
+        }.resume() // 데이터 태스크를 시작합니다.
     }
 }
