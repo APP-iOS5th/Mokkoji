@@ -7,9 +7,24 @@
 
 import UIKit
 
+extension UIImageView {
+    func load(url: URL) {
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.image = image
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var friends = ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1", "j1", "k1", "l1"]
+    var userProfileImage = UserInfo.shared.user!.profileImageUrl
     //var myName: String = "육현서"
     var myMail: String? {
         didSet {
@@ -33,7 +48,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - 프로필 사진
     let profileImageView: UIImageView! = {
         let image = UIImageView()
-    
+        
         image.image = UIImage(systemName: "person.circle")
         image.clipsToBounds = true
         image.layer.borderWidth = 2
@@ -60,7 +75,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     private lazy var nameLabel: UILabel = {
         let nameL = UILabel()
-        nameL.text = "Name: "
+        nameL.text = "Name:"
             
         return nameL
     }()
@@ -68,7 +83,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - 이름 확인 라벨 (기능 없음)
     private lazy var nameCheck: UILabel! = {
        let nameLabel = UILabel()
-        nameLabel.text = "사용자 이름"
+        if let userName = UserInfo.shared.user?.name {
+            nameLabel.text = "\(userName)"
+        } else {
+            nameLabel.text = "No Name"
+        }
+
         nameLabel.numberOfLines = 2
         nameLabel.lineBreakMode = .byWordWrapping
         
@@ -77,7 +97,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     private lazy var mailLabel: UILabel = {
         let mailL = UILabel()
-        mailL.text = "E-mail: "
+        mailL.text = "E-mail:"
             
         return mailL
     }()
@@ -85,7 +105,12 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - 이메일 확인 라벨 (기능 없음)
     private lazy var mailCheck: UILabel! = {
        let mailLabel = UILabel()
-        mailLabel.text = "사용자 이메일"
+        if let userEmail = UserInfo.shared.user?.email {
+            mailLabel.text = "\(userEmail)"
+        } else {
+            mailLabel.text = "No Email"
+        }
+
         mailLabel.numberOfLines = 2
         mailLabel.lineBreakMode = .byWordWrapping
         
@@ -143,6 +168,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         friendsTableView.delegate = self
         friendsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
         
+        
+        
         view.addSubview(profileImageView)
         view.addSubview(nameLabel)
         view.addSubview(nameCheck)
@@ -170,17 +197,17 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             profileImageView.heightAnchor.constraint(equalToConstant: 100),
             
             nameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
-            nameLabel.leadingAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.leadingAnchor, constant: 130),
+            nameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
             
             nameCheck.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
-            nameCheck.leadingAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.trailingAnchor, constant: 5),
+            nameCheck.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
             nameCheck.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
-            mailLabel.topAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.topAnchor, constant: 30),
-            mailLabel.leadingAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.leadingAnchor, constant: 130),
+            mailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
+            mailLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
             
-            mailCheck.topAnchor.constraint(equalTo: nameLabel.safeAreaLayoutGuide.topAnchor, constant: 30),
-            mailCheck.leadingAnchor.constraint(equalTo: mailLabel.safeAreaLayoutGuide.trailingAnchor, constant: 5),
+            mailCheck.topAnchor.constraint(equalTo: nameCheck.bottomAnchor, constant: 10),
+            mailCheck.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
             mailCheck.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
             logoutButton.topAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.topAnchor, constant: 120),
@@ -197,8 +224,18 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             friendsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 230),
             friendsTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             friendsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            friendsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            friendsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
         ])
+    }
+    override func viewIsAppearing(_ animated: Bool) {
+        profileImageView.load(url: userProfileImage)
+        if let userFriend = UserInfo.shared.user?.friendList {
+            
+        } else {
+            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)]
+            UserInfo.shared.user?.friendList = emptyFriend
+        }
+        friendsTableView.reloadData()
     }
     
     // MARK: - 프로필 편집 페이지로 이동 + edit에서 저장한 name, email(아직), image(아직) 불러오기
@@ -222,7 +259,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - 친구 추가 페이지 이동 (모달)
     @objc func friendsPlusButton() {
         let friendsViewController = AddFriendViewController()
-        self.present(friendsViewController, animated: true)
+        self.navigationController?.pushViewController(friendsViewController, animated: true)
         
     }
     
@@ -235,13 +272,18 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // MARK: - 친구 테이블 뷰
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return friends.count
+        return UserInfo.shared.user?.friendList?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
-        cell.textLabel?.text = friends[indexPath.row]
+        guard let cellImage = UserInfo.shared.user?.friendList?[indexPath.row].profileImageUrl else {
+            return UITableViewCell()
+        }
+        
+        cell.textLabel?.text = UserInfo.shared.user?.friendList?[indexPath.row].name
         cell.imageView?.image = UIImage(systemName: "person.circle")
+        cell.imageView?.load(url: cellImage)
 
         return cell
     }
@@ -255,7 +297,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
-        friends.remove(at: indexPath.row)
+        UserInfo.shared.user?.friendList?.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
     }
 }

@@ -420,6 +420,9 @@ class ViewController: UIViewController {
                                         UserInfo.shared.user = user
                                         print("이미 사용자가 존재하는 경우 currentUser 정보 : \(UserInfo.shared.user)")
                                         //TODO: 다음뷰 표시
+                                        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                                                let tabBarController = sceneDelegate.createTabBarController()
+                                                sceneDelegate.changeRootViewController(tabBarController, animated: true)
                                         //let TestViewController = TestViewController()
                                         //TestViewController.modalPresentationStyle = .fullScreen
                                         //self.present(TestViewController, animated: true)
@@ -449,6 +452,10 @@ class ViewController: UIViewController {
                                                 UserInfo.shared.user = user
                                                 print("fetch 이후 currentUser 정보 : \(UserInfo.shared.user)")
                                                 //TODO: 다음뷰 표시
+                                                guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+                                                        let tabBarController = sceneDelegate.createTabBarController()
+                                                        sceneDelegate.changeRootViewController(tabBarController, animated: true)
+                                    
                                                 //let TestViewController = TestViewController()
                                                 //TestViewController.modalPresentationStyle = .fullScreen
                                                 //self.present(TestViewController, animated: true)

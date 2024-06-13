@@ -62,11 +62,12 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        self.view.addSubview(profileEditMail)
+        self.view.addSubview(profileEditImage)
         self.view.addSubview(profileEditName)
+        self.view.addSubview(profileEditMail)
         self.view.addSubview(profileEditNameLabel)
         self.view.addSubview(profileEditMailLabel)
-        self.view.addSubview(profileEditImage)
+        
         
         self.navigationItem.title = "PROFILE EDIT"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "cancel", style: .plain, target: self, action: #selector(cancelButton))
@@ -83,10 +84,12 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
             profileEditName.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 110),
             profileEditMail.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 400),
             profileEditMail.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 110),
+            
             profileEditNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 350),
             profileEditNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             profileEditMailLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 400),
             profileEditMailLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            
             profileEditImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             profileEditImage.widthAnchor.constraint(equalToConstant: 300),
             profileEditImage.heightAnchor.constraint(equalToConstant: 300),
@@ -121,7 +124,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         dismiss(animated: true)
     }
     
-    // MARK: - 구현방식 맞는지 확인 필요
+    // TODO: - 구현방식 맞는지 확인 필요
     @objc func tapSaveButton() {
         guard let text = profileEditName.text, 
               let text2 = profileEditMail.text,
