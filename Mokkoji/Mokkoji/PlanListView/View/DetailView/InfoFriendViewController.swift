@@ -46,8 +46,8 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource,UITableV
         // 공유 기능 구현
         sharePlan(with: &selectedFriend)
     }
-
-
+    
+    //약
     func sharePlan(with friend: inout User) {
         guard let plan = selectedPlan else {
             print("선택된 약속이 없습니다.")
@@ -65,6 +65,4 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource,UITableV
         
         dismiss(animated: true, completion: nil)
     }
-
-
 }

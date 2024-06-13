@@ -2,7 +2,6 @@ import UIKit
 import FirebaseFirestore
 import Firebase
 
-
 class PmDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
@@ -12,7 +11,7 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
     var plan: Plan?
     var user: User!
     let db = Firestore.firestore()
-    
+    var isSelectArray = [Bool]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,14 +60,8 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
             tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        
-        plans = [
-            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "판교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 2, title: "재밌다", body: "카카오", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 3, title: "투어", body: "네이버", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            
-        ]
     }
+    
     // Firestore에서 plan 정보 가져오기
     func fetchPlanFromFirestore(userId: String, completion: @escaping (Plan?) -> Void) {
         let planRef = db.collection("plans").document(userId)
@@ -87,8 +80,18 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
-
     
+    func initializeSelectArray() {
+        isSelectArray = [Bool](repeating: false, count: plans.count)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationBar = self.navigationController?.navigationBar {
+            navigationBar.overrideUserInterfaceStyle = .light
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return plans.count
@@ -97,21 +100,22 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PmDetailViewCell
         if indexPath.section == 0 {
-                    // 나의 약속 섹션
-                    let plan = plans[indexPath.row]
-                    cell.titleLabel.text = plan.title
-                    cell.bodyLabel.text = plan.body
-                    
-                    let timeFormatter = DateFormatter()
-                    timeFormatter.dateFormat = "HH:mm"
-                    let formattedDate = timeFormatter.string(from: plan.time)
-                    cell.timeLabel.text = formattedDate
-                    
-                    cell.clockImage.image = UIImage(systemName: "clock.fill")
-                }
-                
-                return cell
+            // 나의 약속 섹션
+            let plan = plans[indexPath.row]
+            cell.titleLabel.text = plan.title
+            cell.bodyLabel.text = plan.body
+            
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm"
+            let formattedDate = timeFormatter.string(from: plan.time)
+            cell.timeLabel.text = formattedDate
+            
+            cell.clockImage.image = UIImage(systemName: "clock.fill")
+        }
+        
+        return cell
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             selectedPlan = plans[indexPath.row]
@@ -125,6 +129,5 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
             // InformationViewController로 이동
             navigationController?.pushViewController(informationViewController, animated: true)
         }
-        
     }
 }

@@ -6,7 +6,8 @@
 //
 
 import UIKit
-
+import FirebaseFirestore
+import Firebase
 class SharedDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
@@ -16,7 +17,8 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
     var user: User!
     var plan: Plan!
     
-    
+    let db = Firestore.firestore()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -69,6 +71,25 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
              Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
              Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
          ]
+    }
+    
+    // Firestore에서 plan 정보 가져오기
+    func fetchPlanFromFirestore(userId: String, completion: @escaping (Plan?) -> Void) {
+        let planRef = db.collection("plans").document(userId)
+        planRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                do {
+                    let plan = try document.data(as: Plan.self)
+                    completion(plan)
+                } catch let error {
+                    print("Plan Decoding Error: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("Firestore에 Plan이 존재하지 않음.")
+                completion(nil)
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

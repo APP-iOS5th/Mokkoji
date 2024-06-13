@@ -17,8 +17,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     
     var plans: [Plan] = []
    
-    var plan: Plan?
-
+    
     let db = Firestore.firestore()
 
     override func viewDidLoad() {
@@ -45,8 +44,8 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
 
         // 임시 데이터
         plans = [
-            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "만교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 2, title: "Lunch", body: "Team lunch", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "판교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 2, title: "Lunch", body: "홍대역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
             Plan(uuid: UUID(), order: 3, title: "Call", body: "Client call", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
         ]
         let sharedPlans = [
@@ -108,7 +107,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         if let navigationBar = self.navigationController?.navigationBar {
             navigationBar.overrideUserInterfaceStyle = .light
         }
-//        saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
+        saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
 
         // Firestore에서 계획 정보 가져오기
         fetchPlanFromFirestore(userId: String(UserInfo.shared.user!.id)) { [weak self] plan in
@@ -211,7 +210,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
         if indexPath.section == 0 {
             let selectedSharedPlan = plans[indexPath.row]
             let pmDetailViewController = PmDetailViewController()
-            pmDetailViewController.plans = [selectedSharedPlan].compactMap { $0 }
+            pmDetailViewController.plans = [selectedSharedPlan] // 선택된 계획만 전달
             navigationController?.pushViewController(pmDetailViewController, animated: true)
         }
         else {
@@ -233,7 +232,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             return plans.count
         } else {
            
-            return plans.count
+            return UserInfo.shared.user?.sharedPlan?.count ?? 0
         }
     }
 
