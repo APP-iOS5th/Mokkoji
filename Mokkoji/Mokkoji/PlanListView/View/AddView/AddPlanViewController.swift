@@ -301,7 +301,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     // MARK: - Methods
     @objc func saveButtonTapped() {
         /// Plan 객체 생성
-        guard let newPlan = makePlan() else {
+        guard let newPlans = makePlan() else {
             return
         }
         
@@ -310,7 +310,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         /// User에 Plan 추가
-        UserInfo.shared.user?.plan?.append(newPlan)
+        UserInfo.shared.user?.plan? = newPlans
         saveUserToFirestore(user: user, userId: String(user.id))
         self.navigationController?.popViewController(animated: true)
     }
@@ -324,7 +324,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    func makePlan() -> Plan? {
+    func makePlan() -> [Plan]? {
         guard let title = titleText.text, !title.isEmpty else {
             return nil
         }
@@ -338,11 +338,11 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         let placeListTableViewCell = PlaceListTableViewCell()
-//        let mapTimeInfo = placeListTableViewCell.timePicker
-        
+        var newPlans = [Plan]()
         let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes, mapInfo: mapInfoList)
+        newPlans.append(newPlan)
         
-        return newPlan
+        return newPlans
     }
     
     func dateChanged() {
