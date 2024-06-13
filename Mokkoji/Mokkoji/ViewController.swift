@@ -30,6 +30,7 @@ class ViewController: UIViewController {
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
     
+    
     //MARK: - UIComponents
     private lazy var logoImage: UIImageView = {
         var imageView = UIImageView(image: UIImage(systemName: "hand.point.up.left.and.text.fill"))
@@ -390,7 +391,7 @@ class ViewController: UIViewController {
     
     @objc func signUpButtonTapped() {
         let signUpViewController = SignUpViewController()
-        present(signUpViewController, animated: true)
+        self.navigationController?.pushViewController(signUpViewController, animated: true)
     }
     
     //MARK: - Kakao Login/out Methods
@@ -452,10 +453,8 @@ class ViewController: UIViewController {
                                             if let user = user {
                                                 UserInfo.shared.user = user
                                                 print("fetch 이후 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
-                                                //TODO: 다음뷰 표시
-                                                //let TestViewController = TestViewController()
-                                                //TestViewController.modalPresentationStyle = .fullScreen
-                                                //self.present(TestViewController, animated: true)
+                                                //다음뷰 표시
+                                                self.loginSuccess()
                                             } else {
                                                 print("User 데이터가 없습니다. ")
                                             }
@@ -478,10 +477,8 @@ class ViewController: UIViewController {
                                     
                                     // Firestore에 사용자 정보 저장
                                     self.saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
-                                    //TODO: 다음뷰 표시
-                                    //let TestViewController = TestViewController()
-                                    //TestViewController.modalPresentationStyle = .fullScreen
-                                    //self.present(TestViewController, animated: true)
+                                    //다음뷰 표시
+                                    self.loginSuccess()
                                 }
                             }
                         }
@@ -657,7 +654,7 @@ class ViewController: UIViewController {
     
     //MARK: - Apple Login Methods
     @objc func appleLoginButtonTapped() {
-        //TODO: - 임시로 애플로그인버튼에서 tabBarController로 이동, 변경 요망
+        //TODO: - 애플 로그인 구현
         loginSuccess()
     }
     
@@ -720,4 +717,9 @@ extension ViewController: UITextFieldDelegate {
         textField.layer.borderWidth = 0
         textField.layer.borderColor = .none
     }
+}
+
+#Preview {
+    let viewController = ViewController()
+    return viewController
 }
