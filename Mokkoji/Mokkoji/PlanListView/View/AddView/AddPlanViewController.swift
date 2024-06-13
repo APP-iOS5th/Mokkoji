@@ -263,14 +263,26 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         /// 큰 타이틀 설정
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        mapViewController.mapController?.activateEngine()
+        
+
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
+        /// 부모 뷰 컨트롤러가 사라질 때 엔진 일시 중지
+        mapViewController.mapController?.pauseEngine()
         /// PlanListView의 title은 inline으로 유지
         self.navigationController?.navigationBar.prefersLargeTitles = false
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        /// 부모 뷰 컨트롤러가 사라질 때 엔진 정지
+        mapViewController.mapController?.resetEngine()
+    }
+
     
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -342,7 +354,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             return nil
         }
         
-        let placeListTableViewCell = PlaceListTableViewCell()
         var newPlans = [Plan]()
         let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes, mapInfo: mapInfoList)
         newPlans.append(newPlan)
@@ -368,6 +379,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     func addMapButtonTapped() {
-        show(mapViewController, sender: nil)
+//        show(mapViewController, sender: nil)
+        self.navigationController?.pushViewController(mapViewController, animated: true)
     }
 }
