@@ -268,20 +268,20 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
 
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        /// 부모 뷰 컨트롤러가 사라질 때 엔진 일시 중지
-        mapViewController.mapController?.pauseEngine()
-        /// PlanListView의 title은 inline으로 유지
-        self.navigationController?.navigationBar.prefersLargeTitles = false
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        /// 부모 뷰 컨트롤러가 사라질 때 엔진 정지
-        mapViewController.mapController?.resetEngine()
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//
+//        /// 부모 뷰 컨트롤러가 사라질 때 엔진 일시 중지
+//        mapViewController.mapController?.pauseEngine()
+//        /// PlanListView의 title은 inline으로 유지
+//        self.navigationController?.navigationBar.prefersLargeTitles = false
+//    }
+//    
+//    override func viewDidDisappear(_ animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        /// 부모 뷰 컨트롤러가 사라질 때 엔진 정지
+//        mapViewController.mapController?.resetEngine()
+//    }
 
     
     // MARK: - UITableViewDelegate
@@ -322,13 +322,15 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             return
         }
         
-        guard let user = UserInfo.shared.user else {
+        guard var user = UserInfo.shared.user else {
             return
         }
         
         /// User에 Plan 추가
-        UserInfo.shared.user?.plan? = newPlans
-        saveUserToFirestore(user: user, userId: String(user.id))
+        user.plan = newPlans
+        DispatchQueue.main.async {
+            self.saveUserToFirestore(user: user, userId: String(user.id))
+        }
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -336,6 +338,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let userRef = db.collection("users").document(userId)
         do {
             try userRef.setData(from: user)
+            print("Firestore ...")
         } catch let error {
             print("Firestore Writing Error: \(error)")
         }
@@ -354,7 +357,15 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             return nil
         }
         
+        guard var user = UserInfo.shared.user else {
+            return nil
+        }
+        
         var newPlans = [Plan]()
+        
+        if let currentPlan = user.plan {
+            newPlans = currentPlan
+        }
         let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes, mapInfo: mapInfoList)
         newPlans.append(newPlan)
         

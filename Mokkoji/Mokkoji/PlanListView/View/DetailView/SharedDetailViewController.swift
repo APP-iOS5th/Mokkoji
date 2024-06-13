@@ -68,8 +68,8 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
         ])
         
         plans = [
-             Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-             Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
+            Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date().toString(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
+            Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date().toString(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
          ]
     }
     
@@ -104,7 +104,7 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
             
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "HH:mm"
-            let formattedDate = timeFormatter.string(from: sharedPlan.time)
+            let formattedDate = timeFormatter.string(from: sharedPlan.time ?? Date())
             cell.timeLabel.text = formattedDate
             
             cell.clockImage.image = UIImage(systemName: "clock.fill")

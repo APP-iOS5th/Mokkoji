@@ -63,13 +63,13 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     // Firestore에서 plan 정보 가져오기
-    func fetchPlanFromFirestore(userId: String, completion: @escaping (Plan?) -> Void) {
-        let planRef = db.collection("plans").document(userId)
+    func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
+        let planRef = db.collection("users").document(userId)
         planRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 do {
-                    let plan = try document.data(as: Plan.self)
-                    completion(plan)
+                    let user = try document.data(as: User.self)
+                    completion(user)
                 } catch let error {
                     print("Plan Decoding Error: \(error)")
                     completion(nil)
@@ -107,7 +107,7 @@ class PmDetailViewController: UIViewController, UITableViewDataSource, UITableVi
             
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "HH:mm"
-            let formattedDate = timeFormatter.string(from: plan.time)
+            let formattedDate = timeFormatter.string(from: plan.time ?? Date())
             cell.timeLabel.text = formattedDate
             
             cell.clockImage.image = UIImage(systemName: "clock.fill")

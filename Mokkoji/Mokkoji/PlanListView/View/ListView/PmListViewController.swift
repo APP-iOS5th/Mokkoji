@@ -77,13 +77,13 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     // Firestore에서 plan 정보 가져오기
-    func fetchPlanFromFirestore(userId: String, completion: @escaping (Plan?) -> Void) {
-        let planRef = db.collection("plans").document(userId)
+    func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
+        let planRef = db.collection("users").document(userId)
         planRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 do {
-                    let plan = try document.data(as: Plan.self)
-                    completion(plan)
+                    let user = try document.data(as: User.self)
+                    completion(user)
                 } catch let error {
                     print("Plan Decoding Error: \(error)")
                     completion(nil)
@@ -110,11 +110,11 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
 //        saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
 
         // Firestore에서 계획 정보 가져오기
-        fetchPlanFromFirestore(userId: String(UserInfo.shared.user!.id)) { [weak self] plan in
+        fetchPlanFromFirestore(userId: String(UserInfo.shared.user!.id)) { [weak self] user in
             guard let self = self else { return }
-            if let plan = plan {
+            if let user = user {
                 // Firestore에서 가져온 계획이 있으면 plans 배열에 추가
-                self.plans.append(plan)
+                self.plans = user.plan ?? []
                 // isSelectArray 초기화
                 self.initializeSelectArray()
                 // 테이블 뷰 리로드
@@ -242,11 +242,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             let plan = plans[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
             cell.titleLabel.text = plan.title
-            
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            let formattedDate = dateFormatter.string(from: plan.date)
-            cell.dateLabel.text = formattedDate
+            cell.dateLabel.text = plan.date
             
             // 사용자 정보가 UserInfo.shared.user에 있으므로 해당 정보를 사용합니다.
             loadImage(from: UserInfo.shared.user?.profileImageUrl) { image in
@@ -262,11 +258,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
             
             cell.titleLabel.text = sharedPlan.title
-        
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            let formattedDate = dateFormatter.string(from: sharedPlan.date)
-            cell.dateLabel.text = formattedDate
+            cell.dateLabel.text = sharedPlan.date
             
             // 사용자 정보가 UserInfo.shared.user에 있으므로 해당 정보를 사용합니다.
             loadImage(from: UserInfo.shared.user?.profileImageUrl) { image in
