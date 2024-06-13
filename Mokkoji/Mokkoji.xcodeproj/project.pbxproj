@@ -9,16 +9,16 @@
 /* Begin PBXBuildFile section */
 		3B01467A2C195EFF009CF0D7 /* InfoFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */; };
 		3B0146862C19BE58009CF0D7 /* SharedDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0146852C19BE58009CF0D7 /* SharedDetailViewController.swift */; };
-		3B605C0F2C168E7200D3603C /* PmListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C0E2C168E7200D3603C /* PmListViewController.swift */; };
+		3B605C0F2C168E7200D3603C /* PlanListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C0E2C168E7200D3603C /* PlanListViewController.swift */; };
 		3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */; };
-		3B605C142C16C2C200D3603C /* PmDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C132C16C2C200D3603C /* PmDetailViewController.swift */; };
+		3B605C142C16C2C200D3603C /* PlanDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C132C16C2C200D3603C /* PlanDetailViewController.swift */; };
 		3B605C162C16E28000D3603C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C152C16E28000D3603C /* MapViewController.swift */; };
 		3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 3B605C182C16E3A300D3603C /* KakaoMapsSDK-SPM */; };
-		3B605C1E2C16F07200D3603C /* PmDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */; };
+		3B605C1E2C16F07200D3603C /* PlanDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */; };
 		3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */; };
 		4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */; };
 		4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */; };
-		4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE72C0F06EE00F5C2EE /* ViewController.swift */; };
+		4A187EE82C0F06EE00F5C2EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE72C0F06EE00F5C2EE /* LoginViewController.swift */; };
 		4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */; };
 		4A187EF02C0F06EF00F5C2EE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEF2C0F06EF00F5C2EE /* Base */; };
 		4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9E2C1958390001470C /* AddPlanViewController.swift */; };
@@ -34,7 +34,6 @@
 		584EEBEE2C19689000538F55 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 584EEBED2C19689000538F55 /* Config.xcconfig */; };
 		584EEBF02C19689700538F55 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 584EEBEF2C19689700538F55 /* GoogleService-Info.plist */; };
 		584EEBF22C197AF700538F55 /* PlaceListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */; };
-		5882714D2C1949EA006D65FB /* PlanListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5882714C2C1949EA006D65FB /* PlanListViewController.swift */; };
 		5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5882714E2C194A13006D65FB /* SearchResultsViewController.swift */; };
 		588271512C194C7B006D65FB /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 588271502C194C7B006D65FB /* GoogleSignIn */; };
 		588271532C194C7B006D65FB /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 588271522C194C7B006D65FB /* GoogleSignInSwift */; };
@@ -50,16 +49,16 @@
 /* Begin PBXFileReference section */
 		3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoFriendViewController.swift; sourceTree = "<group>"; };
 		3B0146852C19BE58009CF0D7 /* SharedDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDetailViewController.swift; sourceTree = "<group>"; };
-		3B605C0E2C168E7200D3603C /* PmListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmListViewController.swift; sourceTree = "<group>"; };
+		3B605C0E2C168E7200D3603C /* PlanListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanListViewController.swift; sourceTree = "<group>"; };
 		3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
-		3B605C132C16C2C200D3603C /* PmDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmDetailViewController.swift; sourceTree = "<group>"; };
+		3B605C132C16C2C200D3603C /* PlanDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailViewController.swift; sourceTree = "<group>"; };
 		3B605C152C16E28000D3603C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
-		3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PmDetailViewCell.swift; sourceTree = "<group>"; };
+		3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailViewCell.swift; sourceTree = "<group>"; };
 		3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
 		4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mokkoji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		4A187EE72C0F06EE00F5C2EE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4A187EE72C0F06EE00F5C2EE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4A187EEF2C0F06EF00F5C2EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A187EF12C0F06EF00F5C2EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -73,7 +72,6 @@
 		584EEBED2C19689000538F55 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		584EEBEF2C19689700538F55 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListTableViewCell.swift; sourceTree = "<group>"; };
-		5882714C2C1949EA006D65FB /* PlanListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlanListViewController.swift; sourceTree = "<group>"; };
 		5882714E2C194A13006D65FB /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		C1B688452C180B5C00B76DCD /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewController.swift; sourceTree = "<group>"; };
@@ -101,7 +99,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3B605C072C168C1000D3603C /* View */ = {
+		3B605C072C168C1000D3603C /* PlanView */ = {
 			isa = PBXGroup;
 			children = (
 				4A21EDA02C1958390001470C /* AddView */,
@@ -109,14 +107,14 @@
 				3B605C1B2C16EF8200D3603C /* DetailView */,
 				3B605C1C2C16EF9800D3603C /* MapView */,
 			);
-			path = View;
+			path = PlanView;
 			sourceTree = "<group>";
 		};
 		3B605C1B2C16EF8200D3603C /* DetailView */ = {
 			isa = PBXGroup;
 			children = (
-				3B605C1D2C16F07200D3603C /* PmDetailViewCell.swift */,
-				3B605C132C16C2C200D3603C /* PmDetailViewController.swift */,
+				3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */,
+				3B605C132C16C2C200D3603C /* PlanDetailViewController.swift */,
 				3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */,
 				3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */,
 				3B0146852C19BE58009CF0D7 /* SharedDetailViewController.swift */,
@@ -136,19 +134,20 @@
 		3B7B45602C1921AD00C8DEA2 /* ListView */ = {
 			isa = PBXGroup;
 			children = (
-				5882714C2C1949EA006D65FB /* PlanListViewController.swift */,
 				3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */,
-				3B605C0E2C168E7200D3603C /* PmListViewController.swift */,
+				3B605C0E2C168E7200D3603C /* PlanListViewController.swift */,
 			);
 			path = ListView;
 			sourceTree = "<group>";
 		};
-		3B7B45612C1921C400C8DEA2 /* PlanListView */ = {
+		3B7B45612C1921C400C8DEA2 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				3B605C072C168C1000D3603C /* View */,
+				584EEBF82C1AD7C000538F55 /* LoginView */,
+				C1B6884B2C180F4F00B76DCD /* ProfileView */,
+				3B605C072C168C1000D3603C /* PlanView */,
 			);
-			path = PlanListView;
+			path = View;
 			sourceTree = "<group>";
 		};
 		4A187ED72C0F06EE00F5C2EE = {
@@ -171,14 +170,10 @@
 		4A187EE22C0F06EE00F5C2EE /* Mokkoji */ = {
 			isa = PBXGroup;
 			children = (
-				C1B6884B2C180F4F00B76DCD /* Profile */,
-				4A9E41512C16B40D00DE424A /* UserInfo.swift */,
 				4A9E413E2C16842A00DE424A /* Model */,
+				3B7B45612C1921C400C8DEA2 /* View */,
 				4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */,
 				4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */,
-				4A187EE72C0F06EE00F5C2EE /* ViewController.swift */,
-				4A9E415C2C1884E900DE424A /* SignUpViewController.swift */,
-				3B7B45612C1921C400C8DEA2 /* PlanListView */,
 				4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */,
 				4A187EEE2C0F06EF00F5C2EE /* LaunchScreen.storyboard */,
 				4A187EF12C0F06EF00F5C2EE /* Info.plist */,
@@ -199,6 +194,7 @@
 		4A9E413E2C16842A00DE424A /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				4A9E41512C16B40D00DE424A /* UserInfo.swift */,
 				4A9E413F2C16843A00DE424A /* User.swift */,
 				4A9E41412C16843F00DE424A /* Plan.swift */,
 				4A9E41432C16844C00DE424A /* MapInfo.swift */,
@@ -215,14 +211,23 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		C1B6884B2C180F4F00B76DCD /* Profile */ = {
+		584EEBF82C1AD7C000538F55 /* LoginView */ = {
+			isa = PBXGroup;
+			children = (
+				4A9E415C2C1884E900DE424A /* SignUpViewController.swift */,
+				4A187EE72C0F06EE00F5C2EE /* LoginViewController.swift */,
+			);
+			path = LoginView;
+			sourceTree = "<group>";
+		};
+		C1B6884B2C180F4F00B76DCD /* ProfileView */ = {
 			isa = PBXGroup;
 			children = (
 				C1B688452C180B5C00B76DCD /* ProfileViewController.swift */,
 				C1B688492C180BFF00B76DCD /* ProfileEditViewController.swift */,
 				C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */,
 			);
-			path = Profile;
+			path = ProfileView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -316,26 +321,25 @@
 			files = (
 				C1B688482C180BBB00B76DCD /* AddFriendViewController.swift in Sources */,
 				C1B6884A2C180BFF00B76DCD /* ProfileEditViewController.swift in Sources */,
-				3B605C142C16C2C200D3603C /* PmDetailViewController.swift in Sources */,
+				3B605C142C16C2C200D3603C /* PlanDetailViewController.swift in Sources */,
 				4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */,
 				4A21EDA22C1958390001470C /* InviteFriendViewController.swift in Sources */,
 				584EEBF22C197AF700538F55 /* PlaceListTableViewCell.swift in Sources */,
 				4A9E41402C16843A00DE424A /* User.swift in Sources */,
 				4A9E415D2C1884E900DE424A /* SignUpViewController.swift in Sources */,
-				3B605C1E2C16F07200D3603C /* PmDetailViewCell.swift in Sources */,
+				3B605C1E2C16F07200D3603C /* PlanDetailViewCell.swift in Sources */,
 				3B605C162C16E28000D3603C /* MapViewController.swift in Sources */,
 				4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */,
 				5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */,
 				3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */,
-				4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */,
+				4A187EE82C0F06EE00F5C2EE /* LoginViewController.swift in Sources */,
 				3B01467A2C195EFF009CF0D7 /* InfoFriendViewController.swift in Sources */,
 				4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */,
 				C1B688462C180B5C00B76DCD /* ProfileViewController.swift in Sources */,
 				3B0146862C19BE58009CF0D7 /* SharedDetailViewController.swift in Sources */,
 				4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */,
-				5882714D2C1949EA006D65FB /* PlanListViewController.swift in Sources */,
 				4A9E41522C16B40D00DE424A /* UserInfo.swift in Sources */,
-				3B605C0F2C168E7200D3603C /* PmListViewController.swift in Sources */,
+				3B605C0F2C168E7200D3603C /* PlanListViewController.swift in Sources */,
 				4A9E41422C16843F00DE424A /* Plan.swift in Sources */,
 				3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */,
 			);

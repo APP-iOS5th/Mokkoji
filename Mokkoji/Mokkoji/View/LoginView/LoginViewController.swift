@@ -25,7 +25,7 @@ extension UIView {
     }
 }
 
-class ViewController: UIViewController {
+class LoginViewController: UIViewController {
     
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
@@ -201,14 +201,14 @@ class ViewController: UIViewController {
     }()
     
     //TODO: Test
-    private lazy var kakaoLogoutButton: UIButton = {
-        var button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Logout", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
-        return button
-    }()
+//    private lazy var kakaoLogoutButton: UIButton = {
+//        var button = UIButton()
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.setTitle("Logout", for: .normal)
+//        button.setTitleColor(.black, for: .normal)
+//        button.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
+//        return button
+//    }()
     
     private lazy var searchStackView: UIStackView = {
         let stackView = UIStackView()
@@ -258,8 +258,7 @@ class ViewController: UIViewController {
                           signUpSNSLabelStackView,
                           kakaoLoginButton,
                           appleLoginButton,
-                          googleLoginButton,
-                          kakaoLogoutButton
+                          googleLoginButton
                          ])
         
         let searchStackViewLeftSpacer = UIView()
@@ -350,12 +349,6 @@ class ViewController: UIViewController {
             googleLoginButton.topAnchor.constraint(equalTo: appleLoginButton.bottomAnchor, constant: 10),
             googleLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             googleLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
-            // kakaoLogoutButton Constraints
-            kakaoLogoutButton.heightAnchor.constraint(equalToConstant: 50),
-            kakaoLogoutButton.topAnchor.constraint(equalTo: googleLoginButton.bottomAnchor, constant: 10),
-            kakaoLogoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            kakaoLogoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
     }
     
@@ -688,7 +681,7 @@ class ViewController: UIViewController {
 }
 
 //MARK: - TextField Delegate Methods
-extension ViewController: UITextFieldDelegate {
+extension LoginViewController: UITextFieldDelegate {
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField == passwordTextField {
@@ -717,9 +710,4 @@ extension ViewController: UITextFieldDelegate {
         textField.layer.borderWidth = 0
         textField.layer.borderColor = .none
     }
-}
-
-#Preview {
-    let viewController = ViewController()
-    return viewController
 }

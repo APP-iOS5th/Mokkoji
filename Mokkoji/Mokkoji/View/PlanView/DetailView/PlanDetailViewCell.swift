@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PmDetailViewCell: UITableViewCell {
+class PlanDetailViewCell: UITableViewCell {
 
     let titleLabel = UILabel()
     let bodyLabel = UILabel()

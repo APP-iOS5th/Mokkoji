@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         //MARK: - Login View (Entry Point)
         
-        let mainViewController = ViewController()
+        let mainViewController = LoginViewController()
         let navigationVC = UINavigationController(rootViewController: mainViewController)
         
         window.rootViewController = navigationVC
@@ -33,7 +33,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func createTabBarController() -> UITabBarController {
-        let navigationController = UINavigationController(rootViewController: PmListViewController())
+        let navigationController = UINavigationController(rootViewController: PlanListViewController())
         let profilController = UINavigationController(rootViewController: ProfileViewController())
         
         let tabBarController = UITabBarController()

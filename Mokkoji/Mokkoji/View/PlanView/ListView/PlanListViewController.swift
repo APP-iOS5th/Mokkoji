@@ -9,7 +9,7 @@ import UIKit
 import FirebaseFirestore
 import Firebase
 
-class PmListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class PlanListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     let tableView = UITableView()
     var isEditMode = false // Edit 모드 여부를 추적
@@ -209,7 +209,7 @@ class PmListViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             let selectedSharedPlan = plans[indexPath.row]
-            let pmDetailViewController = PmDetailViewController()
+            let pmDetailViewController = PlanDetailViewController()
             pmDetailViewController.plans = [selectedSharedPlan] // 선택된 계획만 전달
             navigationController?.pushViewController(pmDetailViewController, animated: true)
         }

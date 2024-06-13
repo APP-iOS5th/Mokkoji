@@ -28,7 +28,7 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(PmDetailViewCell.self, forCellReuseIdentifier: "PmDetailViewCell")
+        tableView.register(PlanDetailViewCell.self, forCellReuseIdentifier: "PmDetailViewCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
         
@@ -74,7 +74,7 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PmDetailViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PlanDetailViewCell
         
         // selectedPlan을 사용하여 데이터 출력
         if let plan = selectedPlan {
