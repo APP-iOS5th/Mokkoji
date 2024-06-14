@@ -357,7 +357,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             return nil
         }
         
-        guard var user = UserInfo.shared.user else {
+        guard let user = UserInfo.shared.user else {
             return nil
         }
         
@@ -366,7 +366,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         if let currentPlan = user.plan {
             newPlans = currentPlan
         }
-        let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes, mapInfo: mapInfoList)
+        let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfos: selectedTimes, mapInfos: mapInfoList)
         newPlans.append(newPlan)
         
         return newPlans

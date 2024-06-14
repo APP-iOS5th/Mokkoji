@@ -68,8 +68,8 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
         ])
         
         plans = [
-            Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date().toString(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-            Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date().toString(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
+            Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date().toString(), time: Date(), mapInfos: [], currentLatitude: nil, currentLongitude: nil, participants: nil),
+            Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date().toString(), time: Date(), mapInfos: [], currentLatitude: nil, currentLongitude: nil, participants: nil)
          ]
     }
     

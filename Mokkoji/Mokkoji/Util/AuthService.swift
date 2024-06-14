@@ -7,8 +7,8 @@
 
 import Foundation
 
-class UserInfo {
-    static let shared = UserInfo()
+class AuthService {
+    static let shared = AuthService()
 
     var user: User?
 
