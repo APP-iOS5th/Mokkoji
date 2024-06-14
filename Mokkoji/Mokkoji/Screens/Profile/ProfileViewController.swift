@@ -24,7 +24,7 @@ extension UIImageView {
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var userProfileImage = UserInfo.shared.user!.profileImageUrl
+    var userProfileImage = AuthService.shared.user!.profileImageUrl
     //var myName: String = "육현서"
     var myMail: String? {
         didSet {
@@ -83,7 +83,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - 이름 확인 라벨 (기능 없음)
     private lazy var nameCheck: UILabel! = {
        let nameLabel = UILabel()
-        if let userName = UserInfo.shared.user?.name {
+        if let userName = AuthService.shared.user?.name {
             nameLabel.text = "\(userName)"
         } else {
             nameLabel.text = "No Name"
@@ -105,7 +105,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     // MARK: - 이메일 확인 라벨 (기능 없음)
     private lazy var mailCheck: UILabel! = {
        let mailLabel = UILabel()
-        if let userEmail = UserInfo.shared.user?.email {
+        if let userEmail = AuthService.shared.user?.email {
             mailLabel.text = "\(userEmail)"
         } else {
             mailLabel.text = "No Email"
@@ -229,11 +229,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     override func viewIsAppearing(_ animated: Bool) {
         profileImageView.load(url: userProfileImage)
-        if let userFriend = UserInfo.shared.user?.friendList {
+        if let userFriend = AuthService.shared.user?.friendList {
             
         } else {
             let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)]
-            UserInfo.shared.user?.friendList = emptyFriend
+            AuthService.shared.user?.friendList = emptyFriend
         }
         friendsTableView.reloadData()
     }
@@ -272,16 +272,16 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // MARK: - 친구 테이블 뷰
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UserInfo.shared.user?.friendList?.count ?? 0
+        return AuthService.shared.user?.friendList?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
-        guard let cellImage = UserInfo.shared.user?.friendList?[indexPath.row].profileImageUrl else {
+        guard let cellImage = AuthService.shared.user?.friendList?[indexPath.row].profileImageUrl else {
             return UITableViewCell()
         }
         
-        cell.textLabel?.text = UserInfo.shared.user?.friendList?[indexPath.row].name
+        cell.textLabel?.text = AuthService.shared.user?.friendList?[indexPath.row].name
         cell.imageView?.image = UIImage(systemName: "person.circle")
         cell.imageView?.load(url: cellImage)
 
@@ -297,7 +297,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
-        UserInfo.shared.user?.friendList?.remove(at: indexPath.row)
+        AuthService.shared.user?.friendList?.remove(at: indexPath.row)
         tableView.deleteRows(at: [indexPath], with: .fade)
     }
 }
