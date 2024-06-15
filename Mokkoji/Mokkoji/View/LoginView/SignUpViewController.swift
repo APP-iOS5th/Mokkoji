@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
+import FirebaseStorage
 import PhotosUI
 
 class SignUpViewController: UIViewController {
@@ -159,41 +160,6 @@ class SignUpViewController: UIViewController {
     
     //MARK: - Methods
     
-    private func saveImageToDocumentsDirectory(image: UIImage) -> URL? {
-        guard let data = image.jpegData(compressionQuality: 1) ?? image.pngData() else { return nil }
-        let filename = UUID().uuidString
-        let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(filename).jpg")
-        do {
-            try data.write(to: fileURL)
-            return fileURL
-        } catch {
-            print("Error saving image: \(error)")
-            return nil
-        }
-    }
-    
-    func saveImageToURL(image: UIImage, fileName: String) -> URL? {
-        // 이미지를 JPEG 형식의 Data로 변환
-        guard let imageData = image.jpegData(compressionQuality: 1.0) else {
-            return nil
-        }
-        
-        // 파일 저장 경로를 설정
-        let fileManager = FileManager.default
-        do {
-            let documentsURL = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-            let fileURL = documentsURL.appendingPathComponent(fileName)
-            
-            // Data를 파일로 저장
-            try imageData.write(to: fileURL)
-            
-            return fileURL
-        } catch {
-            print("Error saving image to URL: \(error)")
-            return nil
-        }
-    }
-    
     func setDelegate() {
         signUpNameTextField.delegate = self
         signUpEmailTextField.delegate = self
@@ -214,14 +180,24 @@ class SignUpViewController: UIViewController {
         guard let name = self.signUpNameTextField.text else { return }
         guard let email = self.signUpEmailTextField.text else { return }
         guard let password = self.signUpPasswordTextField.text else { return }
-        
+        guard let selectedImage = self.signUpProfileImage.image else { return }
         self.user.name = name
         self.user.email = email
         self.user.id = password
         
-        self.createUser(user.email, user.id)
+        
+        
+        self.uploadImage(image: selectedImage, pathRoot: self.user.id) { url in
+            if let url = url {
+                self.user.profileImageUrl = url
+                
+                //유저 프로필 사진 파이어 스토어에 올라간 url 사용하여 사용자 회원가입
+                self.createUser(email, password)
+            }
+        }
     }
     
+    //MARK: - FireStore Methods
     func createUser(_ email: String, _ passwrod: String) {
         Auth.auth().createUser(withEmail: email, password: passwrod) {result,error in
             if let error = error {
@@ -246,13 +222,33 @@ class SignUpViewController: UIViewController {
             print("Firestore Writing Error: \(error)")
         }
     }
+    
+    //MARK: - Firebase Storage Methods
+    //TODO: - Firebase 관련 메소드 FirebaseManger 파일로 묶기.
+    //https://firebase.google.com/docs/storage/ios/start?hl=ko
+    //https://ios-development.tistory.com/769
+    
+    ///Firebase Storage에 업로드
+    func uploadImage(image: UIImage, pathRoot: String, completion: @escaping (URL?) -> Void) {
+        guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
+        let metaData = StorageMetadata()
+        metaData.contentType = "image.jpeg"
+        
+        let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
+        
+        let firebaseReference = Storage.storage().reference().child("\(imageName)")
+        firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
+            firebaseReference.downloadURL { url, _ in
+                completion(url)
+            }
+        }
+    }
+    
 }
 
 //MARK: - PHPickerViewControllerDelegate Methods
 extension SignUpViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        picker.dismiss(animated: true, completion: nil)
-        
         let itemProvider = results.first?.itemProvider
         if let itemProvider = itemProvider,
            itemProvider.canLoadObject(ofClass: UIImage.self) {
@@ -261,19 +257,19 @@ extension SignUpViewController: PHPickerViewControllerDelegate {
                     guard let selectedImage = image as? UIImage else { return }
                     self.signUpProfileImage.image = selectedImage
                     
-                    if let profileImageUrl = self.saveImageToURL(image: selectedImage, fileName: "profileImage") {
-                        self.user.profileImageUrl = profileImageUrl
-                    }
-                    
+                    print("SignUp selected Image: \(selectedImage)")
+
                 }
             }
         }
+        picker.dismiss(animated: true, completion: nil)
     }
 }
 
 
 //MARK: - UITextFieldDelegate Methods
 extension SignUpViewController: UITextFieldDelegate {
+    //TODO: UITextFieldDelegate Method 추가하기.. 
     //    func textFieldDidChangeSelection(_ textField: UITextField) {
     //        if textField == passwordTextField {
     //            if let text = textField.text, text.isEmpty {
