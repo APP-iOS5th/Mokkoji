@@ -16,7 +16,10 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     var isSelectArray = [Bool]()
     
     var plans: [Plan] = []
-   
+    var sharedPlans: [Plan] = []
+    
+    var users: [User] = []
+    
     
     let db = Firestore.firestore()
 
@@ -41,22 +44,12 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.frame = view.bounds
         view.addSubview(tableView)
-
-        // 임시 데이터
-//        plans = [
-//            Plan(uuid: UUID(), order: 1, title: "시간순삭", body: "판교역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-//            Plan(uuid: UUID(), order: 2, title: "Lunch", body: "홍대역", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-//            Plan(uuid: UUID(), order: 3, title: "Call", body: "Client call", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
-//        ]
-//        let sharedPlans = [
-//            Plan(uuid: UUID(), order: 4, title: "회의", body: "Zoom 회의", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil),
-//            Plan(uuid: UUID(), order: 5, title: "디너", body: "친구와 저녁 식사", date: Date(), time: Date(), mapInfo: [], currentLatitude: nil, currentLongitude: nil, participant: nil)
-//        ]
         
 //        UserInfo.shared.user?.plan = plans
 //        UserInfo.shared.user?.sharedPlan = sharedPlans
         
         plans = UserInfo.shared.user?.plan ?? []
+        sharedPlans = UserInfo.shared.user?.sharedPlan ?? []
 
 
         // isSelectArray 초기화
@@ -103,18 +96,17 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         if let navigationBar = self.navigationController?.navigationBar {
             navigationBar.overrideUserInterfaceStyle = .light
         }
-//        saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
 
-        // Firestore에서 계획 정보 가져오기
         fetchPlanFromFirestore(userId: String(UserInfo.shared.user!.id)) { [weak self] user in
             guard let self = self else { return }
             if let user = user {
-                // Firestore에서 가져온 계획이 있으면 plans 배열에 추가
                 self.plans = user.plan ?? []
+                self.sharedPlans = user.sharedPlan ?? []
+                UserInfo.shared.user?.sharedPlan = self.sharedPlans
                 // isSelectArray 초기화
                 self.initializeSelectArray()
                 // 테이블 뷰 리로드
@@ -124,6 +116,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
+
 
 
 
@@ -228,59 +221,33 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return plans.count
-        } else {
-           
-            return UserInfo.shared.user?.sharedPlan?.count ?? 0
-        }
+        return section == 0 ? plans.count : sharedPlans.count
     }
 
     // 셀 구성
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0 {
-            let plan = plans[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-            cell.titleLabel.text = plan.title
-            cell.dateLabel.text = plan.date
-            
-            // 사용자 정보가 UserInfo.shared.user에 있으므로 해당 정보를 사용합니다.
-            loadImage(from: UserInfo.shared.user?.profileImageUrl) { image in
-                DispatchQueue.main.async {
-                    cell.profileimage.image = image ?? UIImage(systemName: "person.crop.circle")
-                }
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+        let plan = indexPath.section == 0 ? plans[indexPath.row] : sharedPlans[indexPath.row]
+        
+        cell.titleLabel.text = plan.title
+        cell.dateLabel.text = plan.date
+        
+        loadImage(from: UserInfo.shared.user?.profileImageUrl) { image in
+            DispatchQueue.main.async {
+                cell.profileimage.image = image ?? UIImage(systemName: "person.crop.circle")
             }
-            setNeedsUpdateConfiguration(cell, at: indexPath)
-            return cell
-        } else {
-            // 공유 받은 약속 셀 구성
-            let sharedPlan = plans[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-            
-            cell.titleLabel.text = sharedPlan.title
-            cell.dateLabel.text = sharedPlan.date
-            
-            // 사용자 정보가 UserInfo.shared.user에 있으므로 해당 정보를 사용합니다.
-            loadImage(from: UserInfo.shared.user?.profileImageUrl) { image in
-                DispatchQueue.main.async {
-                    cell.profileimage.image = image ?? UIImage(systemName: "person.crop.circle")
-                }
-            }
-            setNeedsUpdateConfiguration(cell, at: indexPath)
-            return cell
         }
+        
+        setNeedsUpdateConfiguration(cell, at: indexPath)
+        return cell
     }
 
 
 
     // 섹션 헤더 타이틀 설정
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return "나의 약속"
-        } else {
-            return "공유 받은 약속"
-        }
-    }
+          return section == 0 ? "나의 약속" : "공유 받은 약속"
+      }
     
     func loadImage(from url: URL?, completion: @escaping (UIImage?) -> Void) {
         guard let url = url else {

@@ -75,7 +75,7 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
             
             tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor, constant: 8),
             tableView.bottomAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.bottomAnchor)
         ])
     }
