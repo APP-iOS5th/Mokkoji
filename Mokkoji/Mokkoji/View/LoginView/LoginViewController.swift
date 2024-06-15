@@ -30,6 +30,15 @@ class LoginViewController: UIViewController {
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
     
+    //정규식
+    ///@ 앞에 알파벳, 숫자, 특수문자가 포함될 수 있고 @ 뒤에는 알파벳, 숫자, 그리고 . 뒤에는 알파벳 2자리 이상
+    let emailPattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+    ///비밀번호 정규식으로, 소문자, 대문자, 숫자 6자리 이상
+    let passwordPattern = "^[a-zA-Z0-9]{6,}$"
+    var emailValid = false
+    var passwordValid = false
+    var profileImageValid = false
+    var allValid = false
     
     //MARK: - UIComponents
     private lazy var logoImage: UIImageView = {
@@ -60,6 +69,7 @@ class LoginViewController: UIViewController {
         textField.backgroundColor = .systemGray4
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true
+        textField.textContentType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -79,7 +89,7 @@ class LoginViewController: UIViewController {
     
     private lazy var hiddenToggleButton: UIButton = {
         var button = UIButton()
-        button.setImage(UIImage(systemName: "eye.fill"), for: .normal)
+        button.setImage(UIImage(systemName: "eye.slash.fill"), for: .normal)
         button.tintColor = .black
         button.backgroundColor = .systemGray4
         button.isHidden = true
@@ -202,14 +212,14 @@ class LoginViewController: UIViewController {
     }()
     
     //TODO: Test
-//    private lazy var kakaoLogoutButton: UIButton = {
-//        var button = UIButton()
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.setTitle("Logout", for: .normal)
-//        button.setTitleColor(.black, for: .normal)
-//        button.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
-//        return button
-//    }()
+    //    private lazy var kakaoLogoutButton: UIButton = {
+    //        var button = UIButton()
+    //        button.translatesAutoresizingMaskIntoConstraints = false
+    //        button.setTitle("Logout", for: .normal)
+    //        button.setTitleColor(.black, for: .normal)
+    //        button.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
+    //        return button
+    //    }()
     
     private lazy var searchStackView: UIStackView = {
         let stackView = UIStackView()
@@ -351,6 +361,12 @@ class LoginViewController: UIViewController {
             googleLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             googleLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification, object: nil)
+        
     }
     
     //MARK: - Methods
@@ -409,12 +425,36 @@ class LoginViewController: UIViewController {
                             print("User 데이터가 없습니다. ")
                         }
                     }
-
+                    
                 }
             }
-            
         }
-        
+    }
+    
+    //MARK: - Keyboard Handling Methods
+    @objc func keyboardWillShow(_ notification: NSNotification) {
+        print("keyboard up")
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            
+            let keyboardHeight = keyboardSize.height
+            let safeAreaBottomInset = view.safeAreaInsets.bottom
+            
+            // 키보드 위와 signUpButton 남은 공간
+            let signUpButtonBottom = signUpButton.frame.origin.y + signUpButton.frame.size.height
+            let spaceAboveKeyboard = view.frame.size.height - keyboardHeight - safeAreaBottomInset
+            
+            // signUpButton이 키보드 위에 있는지 확인 후, 필요한 만큼 화면 이동
+            if signUpButtonBottom > spaceAboveKeyboard {
+                view.frame.origin.y = -(signUpButtonBottom - spaceAboveKeyboard + 10)
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: NSNotification) {
+        print("keyboard down")
+        if view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
+        }
     }
     
     //MARK: - Kakao Login/out Methods
@@ -740,5 +780,18 @@ extension LoginViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.layer.borderWidth = 0
         textField.layer.borderColor = .none
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        return true
     }
 }

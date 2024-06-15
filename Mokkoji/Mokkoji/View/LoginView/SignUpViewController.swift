@@ -21,6 +21,17 @@ class SignUpViewController: UIViewController {
                     email: "",
                     profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
     
+    //정규식
+    ///@ 앞에 알파벳, 숫자, 특수문자가 포함될 수 있고 @ 뒤에는 알파벳, 숫자, 그리고 . 뒤에는 알파벳 2자리 이상
+    let emailPattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+    ///비밀번호 정규식으로, 소문자, 대문자, 숫자 6자리 이상
+    let passwordPattern = "^[a-zA-Z0-9]{6,}$"
+    var emailValid = false
+    var passwordValid = false
+    var profileImageValid = false
+    var allValid = false
+    
+    
     //MARK: - UIComponents
     
     ///프로필 이미지
@@ -55,6 +66,8 @@ class SignUpViewController: UIViewController {
         textField.leftView = leftPadding
         textField.backgroundColor = .systemGray4
         textField.layer.cornerRadius = 5
+        textField.keyboardType = .namePhonePad
+        textField.autocorrectionType = .no //자동완성 비활성화
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -68,6 +81,8 @@ class SignUpViewController: UIViewController {
         textField.leftView = leftPadding
         textField.backgroundColor = .systemGray4
         textField.layer.cornerRadius = 5
+        textField.textContentType = .emailAddress
+        textField.keyboardType = .emailAddress
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -82,6 +97,7 @@ class SignUpViewController: UIViewController {
         textField.backgroundColor = .systemGray4
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true
+        textField.textContentType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -89,7 +105,7 @@ class SignUpViewController: UIViewController {
     ///회원가입 버튼
     private lazy var signUpButton: UIButton = {
         var button = UIButton()
-        button.setTitle("회원가입", for: .normal)
+        button.setTitle("가입하기", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 1
@@ -156,6 +172,10 @@ class SignUpViewController: UIViewController {
             
         ])
         
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     //MARK: - Methods
@@ -170,30 +190,97 @@ class SignUpViewController: UIViewController {
         var configuration = PHPickerConfiguration()
         configuration.selectionLimit = 1
         configuration.filter = .images
-        var imagePicker = PHPickerViewController(configuration: configuration)
+        let imagePicker = PHPickerViewController(configuration: configuration)
         imagePicker.delegate = self
         present(imagePicker, animated: true)
     }
     
     @objc func signUpButtonTapped() {
-        //TODO: 이메일 정규식 추가, 비밀번호6자, 프로필사진 필수지정  -> 3개 만족해야 회원가입 버튼활성화
-        guard let name = self.signUpNameTextField.text else { return }
-        guard let email = self.signUpEmailTextField.text else { return }
-        guard let password = self.signUpPasswordTextField.text else { return }
-        guard let selectedImage = self.signUpProfileImage.image else { return }
-        self.user.name = name
-        self.user.email = email
-        self.user.id = password
-        
-        
-        
-        self.uploadImage(image: selectedImage, pathRoot: self.user.id) { url in
-            if let url = url {
-                self.user.profileImageUrl = url
-                
-                //유저 프로필 사진 파이어 스토어에 올라간 url 사용하여 사용자 회원가입
-                self.createUser(email, password)
+
+        if profileImageValid == false {
+            //TODO: Alert로 프로필 이미지 설정해야한다고
+            print("프로필 이미지를 설정 해야합니다.")
+        } else if emailValid == false {
+            //TODO: Alert로 이메일 정규식이 맞지 않는다고
+            print("이메일 형식이 올바르지 않습니다.")
+        } else if passwordValid == false {
+            //TODO: Alert로 비밀번호 정규식이 맞지 않는다고
+            print("비밀번호 형식이 올바르지 않습니다.")
+        } else {
+            guard let name = self.signUpNameTextField.text else { return }
+            guard let email = self.signUpEmailTextField.text else { return }
+            guard let password = self.signUpPasswordTextField.text else { return }
+            guard let selectedImage = self.signUpProfileImage.image else { return }
+            self.user.name = name
+            self.user.email = email
+            self.user.id = password
+            
+            self.uploadImage(image: selectedImage, pathRoot: self.user.id) { url in
+                if let url = url {
+                    self.user.profileImageUrl = url
+                    
+                    //유저 프로필 사진 파이어 스토어에 올라간 url 사용하여 사용자 회원가입
+                    self.createUser(email, password)
+                }
             }
+        }
+    }
+    
+    //MARK: - Keyboard Handling Methods
+    @objc func keyboardWillShow(_ notification: NSNotification) {
+        print("keyboard up")
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            
+            let keyboardHeight = keyboardSize.height
+            let safeAreaBottomInset = view.safeAreaInsets.bottom
+            
+            // 키보드 위와 signUpButton 남은 공간
+            let signUpButtonBottom = signUpButton.frame.origin.y + signUpButton.frame.size.height
+            let spaceAboveKeyboard = view.frame.size.height - keyboardHeight - safeAreaBottomInset
+            
+            // signUpButton이 키보드 위에 있는지 확인 후, 필요한 만큼 화면 이동
+            if signUpButtonBottom > spaceAboveKeyboard {
+                view.frame.origin.y = -(signUpButtonBottom - spaceAboveKeyboard + 10)
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: NSNotification) {
+        print("keyboard down")
+        if view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
+        }
+    }
+    
+    //MARK: - 유효성 검사 Methods
+    func isValid(text: String, pattern: String) -> Bool {
+        let pred = NSPredicate(format: "SELF MATCHES %@", pattern)
+        return pred.evaluate(with: text)
+    }
+    
+    func checkEmailValidation() {
+        if isValid(text: signUpEmailTextField.text!, pattern: emailPattern) {
+            emailValid = true
+        } else {
+            emailValid = false
+        }
+    }
+    
+    func checkPasswordValidation() {
+        if isValid(text: signUpPasswordTextField.text!, pattern: passwordPattern) {
+            passwordValid = true
+        } else {
+            passwordValid = false
+        }
+    }
+    
+    fileprivate func checkAllValidation() {
+        if emailValid && passwordValid {
+            print("email, password Valid Success")
+            allValid = true
+        } else {
+            print("email, password Valid Fail")
+            allValid = false
         }
     }
     
@@ -256,12 +343,15 @@ extension SignUpViewController: PHPickerViewControllerDelegate {
                 DispatchQueue.main.async {
                     guard let selectedImage = image as? UIImage else { return }
                     self.signUpProfileImage.image = selectedImage
+                    self.signUpProfileImage.layer.cornerRadius = 20
+                    self.signUpProfileImage.clipsToBounds = true
                     
                     print("SignUp selected Image: \(selectedImage)")
 
                 }
             }
         }
+        self.profileImageValid = true
         picker.dismiss(animated: true, completion: nil)
     }
 }
@@ -269,21 +359,9 @@ extension SignUpViewController: PHPickerViewControllerDelegate {
 
 //MARK: - UITextFieldDelegate Methods
 extension SignUpViewController: UITextFieldDelegate {
-    //TODO: UITextFieldDelegate Method 추가하기.. 
-    //    func textFieldDidChangeSelection(_ textField: UITextField) {
-    //        if textField == passwordTextField {
-    //            if let text = textField.text, text.isEmpty {
-    //                clearAllPasswordButton.isHidden = true
-    //                hiddenToggleButton.isHidden = true
-    //            } else {
-    //                clearAllPasswordButton.isHidden = false
-    //                hiddenToggleButton.isHidden = false
-    //            }
-    //        }
-    //    }
-    
-    //텍스트 필드 강조
+    //TODO: UITextFieldDelegate Method 추가하기..
     func textFieldDidBeginEditing(_ textField: UITextField) {
+        //텍스트 필드 강조
         if textField == signUpNameTextField {
             signUpNameTextField.layer.borderColor = UIColor.black.cgColor
             signUpNameTextField.layer.borderWidth = 1
@@ -299,6 +377,28 @@ extension SignUpViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.layer.borderWidth = 0
         textField.layer.borderColor = .none
+        switch textField {
+        case signUpEmailTextField:
+            checkEmailValidation()
+        case signUpPasswordTextField:
+            checkPasswordValidation()
+        default:
+            break
+        }
+        checkAllValidation()
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification, object: nil)
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        return true
     }
 }
 
