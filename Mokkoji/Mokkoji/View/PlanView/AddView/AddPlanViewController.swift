@@ -9,6 +9,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
+import KakaoMapsSDK
 
 extension UIImageView {
     /// 이미지 로딩 후 completion 클로저 실행
@@ -350,9 +351,14 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
                     self?.mapInfoList.remove(at: indexPath.row)
                     /// 테이블 뷰에서 행 삭제
                     self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+                    /// 삭제된 장소의 poi 삭제
+                    self?.mapViewController.deletePoi(at: indexPath.row)
                     /// mapViewController 선택 장소 삭제
-//                    self?.mapViewController.selectedPlaces =
-                    ///
+                    self?.mapViewController.selectedPlaces = self?.mapInfoList ?? []
+                    /// 삭제된 경로 반영하여 경로 다시 그리기
+                    self?.mapViewController.createRouteline()
+                    /// mapView 렌더링 활성화
+                    self?.mapViewController.viewDidAppear(true)
                 }
                 alertController.addAction(deleteAction)
                 /// 삭제 취소
