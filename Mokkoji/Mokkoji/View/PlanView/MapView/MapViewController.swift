@@ -49,14 +49,15 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     let locationManager = CLLocationManager()
     
     /// 핀 꼽기
-    var positions: [MapPoint] = []
+//    var positions: [MapPoint] = []
+    var selectedPlaces: [MapInfo] = []
     
     /// 검색창 만들기
     var searchController: UISearchController!
     let searchResultsViewController = SearchResultsViewController()
     
     var delegate: SelectedPlaceListDelegate?
-    var selectedPlaces: [MapInfo] = []
+    
     
     init() {
         _observerAdded = false
@@ -133,6 +134,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         
         if mapController?.isEngineActive == false {
             mapController?.activateEngine()
+            print("Engine activate!")
         }
     }
     
@@ -144,11 +146,11 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         _appear = false
         mapController?.pauseEngine() /// 렌더링 중지
     }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        removeObservers()
-        mapController?.resetEngine() /// 엔진 정지 - 추가되었던 ViewBase들이 삭제됨
-    }
+//
+//    override func viewDidDisappear(_ animated: Bool) {
+//        removeObservers()
+//        mapController?.resetEngine() /// 엔진 정지 - 추가되었던 ViewBase들이 삭제됨
+//    }
 
     // MARK: - MapControllerDelegate
     /// 인증 실패시 호출
@@ -229,7 +231,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     // MARK: - SearchResultsSelectionDelegate
     func didSelectPlace(place: MapInfo) {
-        selectedPlaces.append(place)
+//        selectedPlaces.append(place)
         /// 장소 지도 뷰 생성
         if let x = Double(place.placeLongitude),
            let y = Double(place.placeLatitude) {
@@ -237,7 +239,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             createPosition(position: position)
             /// Poi 생성
             createPoiStyle()
-            createPois(position: position)
+            createPois(place: place)
         } else {
             print("Invalid coordinates")
         }
@@ -330,9 +332,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     }
     
     /// Poi 개별 뱃지 추가
-    func createPois(position: MapPoint) {
-        positions.append(position)
-        
+    func createPois(place: MapInfo) {
         guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
             print("Failed to get map view")
             return
@@ -342,14 +342,24 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         let poiOption = PoiOptions(styleID: "PerLevelStyle")
         poiOption.rank = 0
         
-        let poi = layer?.addPoi(option: poiOption, at: position)
-        let poiCnt: Int = layer?.getAllPois()?.count ?? 0
-        
-        /// Poi 개별 Badge추가 - 아래에서 생성된 Poi는 Style에 빌트인되어있는 badge와, Poi가 개별적으로 가지고 있는 Badge를 갖게 됨
-        let badge = PoiBadge(badgeID: "noti\(poiCnt)", image: UIImage(systemName: "\(poiCnt).circle.fill"), offset: CGPoint(x: 1.25, y: 0), zOrder: 0)
-        poi?.addBadge(badge)
-        poi?.show()
-        poi?.showBadge(badgeID: "noti\(poiCnt)")
+        if let x = Double(place.placeLongitude),
+           let y = Double(place.placeLatitude) {
+            let position = MapPoint(longitude: x, latitude: y)
+            let poi = layer?.addPoi(option: poiOption, at: position)
+            
+            var mapInfo = place
+            mapInfo.poiId = poi?.itemID
+            selectedPlaces.append(mapInfo)
+            
+            let poiCnt: Int = layer?.getAllPois()?.count ?? 0
+            
+            /// Poi 개별 Badge추가 - 아래에서 생성된 Poi는 Style에 빌트인되어있는 badge와, Poi가 개별적으로 가지고 있는 Badge를 갖게 됨
+            let badge = PoiBadge(badgeID: "noti\(poiCnt)", image: UIImage(systemName: "\(poiCnt).circle.fill"), offset: CGPoint(x: 1.25, y: 0), zOrder: 0)
+            poi?.addBadge(badge)
+            poi?.show()
+            poi?.showBadge(badgeID: "noti\(poiCnt)")
+        }
+        print("장소에 위도, 경도가 없습니다.")
     }
     
     // MARK: - Route Methods
@@ -407,9 +417,10 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         var segments = [[MapPoint]]()
         /// 각 구역의 지점들
         var points = [MapPoint]()
-        for pos in positions {
+        for place in selectedPlaces {
+            let position = MapPoint(longitude: Double(place.placeLongitude)!, latitude: Double(place.placeLatitude)!)
             /// WGS84 좌표값
-            let converted = pos.wgsCoord
+            let converted = position.wgsCoord
             let newPoint = MapPoint(longitude: converted.longitude, latitude: converted.latitude)
             points.append(newPoint)
         }
