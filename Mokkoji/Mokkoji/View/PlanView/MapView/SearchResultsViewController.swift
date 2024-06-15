@@ -128,7 +128,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
                                let yString = document["y"] as? String {
                                 let place = MapInfo(placeId: id, roadAddressName: addressName, placeLatitude: yString, placeLongitude: xString, placeName: placeName)
                                 places.append(place)
-                                print("Index: \(index), Place Name: \(placeName), Address Name: \(addressName)")
+//                                print("Index: \(index), Place Name: \(placeName), Address Name: \(addressName)")
                             }
                         }
                         self.updateResults(places)

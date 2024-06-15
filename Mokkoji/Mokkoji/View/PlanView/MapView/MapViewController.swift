@@ -134,15 +134,21 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         
         if mapController?.isEngineActive == false {
             mapController?.activateEngine()
-            print("Engine activate!")
+            print("Engine activate!asd")
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear")
+        if mapController?.isEngineActive == false {
+            mapController?.activateEngine()
+            print("Engine activate!")
             
+        }
     }
         
     override func viewWillDisappear(_ animated: Bool) {
+        print("viewWillDisappear")
         _appear = false
         mapController?.pauseEngine() /// 렌더링 중지
     }
@@ -187,41 +193,60 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     }
 
     func addViews() {
+        print("addViews")
         /// 여기에서 그릴 View(KakaoMap, Roadview)들을 추가
-        /// 초기 화면 위치(현재 위치)를 받아 지도(KakaoMap)를 그리기 위한 viewInfo를 생성
-        // TODO: - 현재 위치는 검색된 위치와 다르게 표시, 검색된 위치부터 1 표시
-        if let location = locationManager.location {
+        
+        let position: MapPoint
+        let mapviewInfo: MapviewInfo
+        let selectedCnt = selectedPlaces.count
+        
+        /// 1. 처음 맵을 만들 때(위치 허용 했을 때)
+        ///     - 받아온 사용자의 위치를 기준으로 설정
+        /// 2. 처음 맵을 만들 때(위치 허용 안했을 때)
+        ///     - 미리 설정한 위치를 기준으로 설정
+        /// 3. 이미 만든 맵을 가져올때
+        ///     - 마지막 저장된 위치를 기준으로 설정
+        if let location = locationManager.location, selectedCnt == 0 {
             let latitude: Double? = location.coordinate.latitude
             let longitude: Double? = location.coordinate.longitude
 //            MapPoint(longitude: 126.977458, latitude: 37.56664)
-            let position = MapPoint(longitude: longitude!, latitude: latitude!)
-            createPosition(position: position)
+            position = MapPoint(longitude: longitude!, latitude: latitude!)
+        } else if selectedCnt == 0 {
+            position = MapPoint(longitude: 127.108678, latitude: 37.402001)
         } else {
-            let defaultPosition = MapPoint(longitude: 127.108678, latitude: 37.402001)
-            createPosition(position: defaultPosition)
+            position = MapPoint(
+                longitude: Double(selectedPlaces[selectedCnt-1].placeLongitude) ?? 127.108678,
+                latitude: Double(selectedPlaces[selectedCnt-1].placeLatitude) ?? 37.402001)
         }
         
+        /// 초기 화면 위치(현재 위치)를 받아 지도(KakaoMap)를 그리기 위한 viewInfo를 생성
+        mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: position, defaultLevel: 15)
+        mapController?.addView(mapviewInfo)
     }
     
     /// addView 성공 이벤트 delegate - 추가적으로 수행할 작업을 진행
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
-        print("OK")
+        print("addViewSucceeded : OK")
+//        if selectedPlaces.count != 0 {
+//            createRouteline()
+//        }
     }
 
     /// addView 실패 이벤트 delegate - 실패에 대한 오류 처리를 진행
     func addViewFailed(_ viewName: String, viewInfoName: String) {
-        print("Failed")
+        print("addViewFailed : Failed")
     }
 
     /// Container 뷰가 리사이즈 되었을때 호출 - 변경된 크기에 맞게 ViewBase들의 크기를 조절할 필요가 있는 경우 여기에서 수행
     func containerDidResized(_ size: CGSize) {
+        print("containerDidResized")
         let mapView: KakaoMap? = mapController?.getView("mapview") as? KakaoMap
         /// 지도뷰의 크기를 리사이즈된 크기로 지정
         mapView?.viewRect = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: size)
     }
 
     func viewWillDestroyed(_ view: ViewBase) {
-        
+        print("viewWillDestroyed")
     }
     
     // MARK: - CLLocationManagerDelegate
@@ -231,22 +256,15 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     // MARK: - SearchResultsSelectionDelegate
     func didSelectPlace(place: MapInfo) {
-//        selectedPlaces.append(place)
-        /// 장소 지도 뷰 생성
-        if let x = Double(place.placeLongitude),
-           let y = Double(place.placeLatitude) {
-            let position = MapPoint(longitude: x, latitude: y)
-            createPosition(position: position)
-            /// Poi 생성
-            createPoiStyle()
-            createPois(place: place)
-        } else {
-            print("Invalid coordinates")
-        }
+        print("didSelectPlace")
+        /// Poi 생성
+        createPoiStyle()
+        createPois(place: place)
 
         /// Route 생성
         createRouteStyleSet()
         createRouteline()
+//        createPosition()
     }
     
     // MARK: - Methods
@@ -265,11 +283,13 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     }
 
     @objc func willResignActive(){
+        print("willResignActive")
         /// 뷰가 inactive 상태로 전환되는 경우 렌더링 중인 경우 렌더링을 중단
         mapController?.pauseEngine()
     }
 
     @objc func didBecomeActive(){
+        print("didBecomeActive")
         /// 뷰가 active 상태가 되면 렌더링 시작. 엔진은 미리 시작된 상태여야 함
         mapController?.activateEngine()
     }
@@ -296,9 +316,21 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
                                     })
     }
     
-    func createPosition(position: MapPoint) {
+    func createPosition() {
         /// 지도(KakaoMap)를 그리기 위한 viewInfo를 생성
-        let mapviewInfo: MapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: position, defaultLevel: 15)
+        let mapviewInfo: MapviewInfo
+        /// poi 정의
+        let position: MapPoint
+        let selectedCnt = selectedPlaces.count
+        
+        if selectedCnt == 0 {
+            position = MapPoint(longitude: 127.108678, latitude: 37.402001)
+        } else {
+            position = MapPoint(
+                longitude: Double(selectedPlaces[selectedCnt-1].placeLongitude) ?? 127.108678,
+                latitude: Double(selectedPlaces[selectedCnt-1].placeLatitude) ?? 37.402001)
+        }
+        mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: position, defaultLevel: 15)
         mapController?.addView(mapviewInfo)
     }
     
@@ -358,8 +390,26 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             poi?.addBadge(badge)
             poi?.show()
             poi?.showBadge(badgeID: "noti\(poiCnt)")
+        } else {
+            print("장소에 위도, 경도가 없습니다.")
         }
-        print("장소에 위도, 경도가 없습니다.")
+    }
+    
+    /// Poi 삭제
+    func deletePoi(at index: Int) {
+        guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
+            print("Failed to get map view")
+            return
+        }
+        let manager = mapView.getLabelManager()
+        let layer = manager.getLabelLayer(layerID: "PoiLayer")
+        let poiOption = PoiOptions(styleID: "PerLevelStyle")
+        poiOption.rank = 0
+        
+        if let poiId = selectedPlaces[index].poiId {
+            layer?.removePoi(poiID: poiId)
+        } else { return }
+        
     }
     
     // MARK: - Route Methods
@@ -392,7 +442,9 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         let mapView = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getRouteManager()
         let layer = manager.addRouteLayer(layerID: "RouteLayer", zOrder: 0)
-        
+        /// Route 초기화
+        layer?.clearAllRoutes()
+        /// Point 만들기
         let segmentPoints = routeSegmentPoints()
         var segments: [RouteSegment] = [RouteSegment]()
         let styleIndex: UInt = 0
