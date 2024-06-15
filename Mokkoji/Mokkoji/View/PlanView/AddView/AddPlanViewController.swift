@@ -163,6 +163,9 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         mapViewController.delegate = self
         
+        let deleteLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        tableView.addGestureRecognizer(deleteLongPressRecognizer)
+        
         mapView.addSubview(mapViewController.view)
         
         stackView.addArrangedSubview(profileImage)
@@ -268,20 +271,22 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
 
     }
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    
+        self.mapViewController.selectedPlaces = self.mapInfoList
 //        /// 부모 뷰 컨트롤러가 사라질 때 엔진 일시 중지
 //        mapViewController.mapController?.pauseEngine()
 //        /// PlanListView의 title은 inline으로 유지
 //        self.navigationController?.navigationBar.prefersLargeTitles = false
-//    }
+    }
 //    
-//    override func viewDidDisappear(_ animated: Bool) {
-//        super.viewDidDisappear(animated)
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
 //        /// 부모 뷰 컨트롤러가 사라질 때 엔진 정지
 //        mapViewController.mapController?.resetEngine()
-//    }
+    }
 
     
     // MARK: - UITableViewDelegate
@@ -334,11 +339,36 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.navigationController?.popViewController(animated: true)
     }
     
+    @objc func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state == .began {
+            let point = gestureRecognizer.location(in: tableView)
+            if let indexPath = tableView.indexPathForRow(at: point) {
+                /// AlertController를 사용하여 삭제 확인
+                let alertController = UIAlertController(title: nil, message: "이 항목을 삭제하시겠습니까?", preferredStyle: .actionSheet)
+                let deleteAction = UIAlertAction(title: "삭제", style: .destructive) { [weak self] _ in
+                    /// 데이터 삭제
+                    self?.mapInfoList.remove(at: indexPath.row)
+                    /// 테이블 뷰에서 행 삭제
+                    self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+                    /// mapViewController 선택 장소 삭제
+//                    self?.mapViewController.selectedPlaces =
+                    ///
+                }
+                alertController.addAction(deleteAction)
+                /// 삭제 취소
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+                alertController.addAction(cancelAction)
+                
+                present(alertController, animated: true, completion: nil)
+            }
+        }
+    }
+    
     func saveUserToFirestore(user: User, userId: String) {
         let userRef = db.collection("users").document(userId)
         do {
             try userRef.setData(from: user)
-            print("Firestore ...")
+            print("Plan data saved.")
         } catch let error {
             print("Firestore Writing Error: \(error)")
         }
@@ -357,7 +387,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             return nil
         }
         
-        guard var user = UserInfo.shared.user else {
+        guard let user = UserInfo.shared.user else {
             return nil
         }
         
