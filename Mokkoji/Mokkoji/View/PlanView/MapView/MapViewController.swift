@@ -58,6 +58,8 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     var delegate: SelectedPlaceListDelegate?
     
+    let POI_LAYER_ID = "PoiLayer"
+    let ROUTE_LAYER_ID = "RouteLayer"
     
     init() {
         _observerAdded = false
@@ -134,16 +136,21 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         
         if mapController?.isEngineActive == false {
             mapController?.activateEngine()
-            print("Engine activate!asd")
+            print("Engine activate!")
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
+        
         if mapController?.isEngineActive == false {
             mapController?.activateEngine()
             print("Engine activate!")
             
+            /// Poi 다시 그리기
+//            for place in selectedPlaces {
+//                createPois(place: place)
+//            }
         }
     }
         
@@ -227,9 +234,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     /// addView 성공 이벤트 delegate - 추가적으로 수행할 작업을 진행
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
         print("addViewSucceeded : OK")
-//        if selectedPlaces.count != 0 {
-//            createRouteline()
-//        }
     }
 
     /// addView 실패 이벤트 delegate - 실패에 대한 오류 처리를 진행
@@ -347,9 +351,16 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             return
         }
         let manager = mapView.getLabelManager()
-        /// Poi생성을 위한 LabelLayer 생성
-        let layerOption = LabelLayerOptions(layerID: "PoiLayer", competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 0)
-        let _ = manager.addLabelLayer(option: layerOption)
+        
+        /// Poi layer가 존재할때
+        if let _: LabelLayer = manager.getLabelLayer(layerID: POI_LAYER_ID) {
+            print("기존 Poi layer 존재 / 로드")
+            
+        } else {
+            print("새로운 Poi layer 생성")
+            let layerOption = LabelLayerOptions(layerID: POI_LAYER_ID, competitionType: .none, competitionUnit: .symbolFirst, orderType: .rank, zOrder: 0)
+            let _ = manager.addLabelLayer(option: layerOption)
+        }
         
         /// ZoomLevel에 따라 스타일 구분 및 PoiBadge 설정
         let iconStyle1 = PoiIconStyle(symbol: UIImage(systemName: "figure.walk.motion"), anchorPoint: CGPoint(x: 0.0, y: 0.5))
@@ -370,7 +381,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             return
         }
         let manager = mapView.getLabelManager()
-        let layer = manager.getLabelLayer(layerID: "PoiLayer")
+        let layer = manager.getLabelLayer(layerID: POI_LAYER_ID)
         let poiOption = PoiOptions(styleID: "PerLevelStyle")
         poiOption.rank = 0
         
@@ -402,7 +413,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             return
         }
         let manager = mapView.getLabelManager()
-        let layer = manager.getLabelLayer(layerID: "PoiLayer")
+        let layer = manager.getLabelLayer(layerID: POI_LAYER_ID)
         let poiOption = PoiOptions(styleID: "PerLevelStyle")
         poiOption.rank = 0
         
@@ -419,7 +430,16 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         /// RouteLines을 표시할 Layer를 생성
         let mapView = mapController?.getView("mapview") as? KakaoMap
         let manager = mapView?.getRouteManager()
-        let _ = manager?.addRouteLayer(layerID: "RouteLayer", zOrder: 0)
+        
+        /// Route layer가 존재할 때
+        if let _: RouteLayer = manager?.getRouteLayer(layerID: ROUTE_LAYER_ID) {
+            print("기존 Route layer 존재 / 로드")
+            
+        } else {
+            print("새로운 Route layer 생성")
+            let _ = manager?.addRouteLayer(layerID: ROUTE_LAYER_ID, zOrder: 0)
+        }
+        
         /// Route Pattern 종류
         let patternImage = UIImage(named: "route_pattern_arrow.png")
         
@@ -433,15 +453,15 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             PerLevelRouteStyle(width: 18, color: color, strokeWidth: 4, strokeColor: strokeColor, level: 0, patternIndex: 0)
         ])
         styleSet.addStyle(routeStyle)
-        
         manager?.addRouteStyleSet(styleSet)
-        }
+    }
     
     /// Routeline 생성
     func createRouteline() {
         let mapView = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getRouteManager()
-        let layer = manager.addRouteLayer(layerID: "RouteLayer", zOrder: 0)
+        /// Route layer는 이전 function에서 없는 경우 생성했기 때문에 반드시 존재함
+        let layer = manager.getRouteLayer(layerID: ROUTE_LAYER_ID)
         /// Route 초기화
         layer?.clearAllRoutes()
         /// Point 만들기
@@ -460,7 +480,16 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         route?.show()
         
         /// 특정 경로 포인트로 카메라 이동
-        let pnt = segments[0].points[0]
+        let position: MapPoint
+        if let location = locationManager.location {
+            let latitude: Double? = location.coordinate.latitude
+            let longitude: Double? = location.coordinate.longitude
+            position = MapPoint(longitude: longitude!, latitude: latitude!)
+            //            MapPoint(longitude: 126.977458, latitude: 37.56664)
+        } else {
+            position = MapPoint(longitude: 127.108678, latitude: 37.402001)
+        }
+        let pnt: MapPoint = segments.last?.points.last ?? position
         mapView.moveCamera(CameraUpdate.make(target: pnt, zoomLevel: 15, mapView: mapView))
     }
     

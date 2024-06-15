@@ -357,8 +357,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
                     self?.mapViewController.selectedPlaces = self?.mapInfoList ?? []
                     /// 삭제된 경로 반영하여 경로 다시 그리기
                     self?.mapViewController.createRouteline()
-                    /// mapView 렌더링 활성화
-                    self?.mapViewController.viewDidAppear(true)
                 }
                 alertController.addAction(deleteAction)
                 /// 삭제 취소
