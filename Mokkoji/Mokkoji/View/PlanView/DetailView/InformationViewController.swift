@@ -84,8 +84,8 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
             
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "HH:mm"
-//            let formattedDate = timeFormatter.string(from: plan.time)
-//            cell.timeLabel.text = formattedDate
+            let formattedDate = timeFormatter.string(from: plan.time ?? Date())
+            cell.timeLabel.text = formattedDate
 //            
 //            cell.clockImage.image = UIImage(systemName: "clock.fill")
         }
