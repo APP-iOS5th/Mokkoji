@@ -358,13 +358,13 @@ class LoginViewController: UIViewController {
             passwordLabel.heightAnchor.constraint(equalToConstant: 20),
             
             // clearAllPasswordButton Constraints
-            clearAllPasswordButton.topAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: 4),
+            clearAllPasswordButton.topAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: 6.5),
             clearAllPasswordButton.trailingAnchor.constraint(equalTo: passwordTextField.trailingAnchor, constant: -5),
             clearAllPasswordButton.widthAnchor.constraint(equalToConstant: 25),
             clearAllPasswordButton.heightAnchor.constraint(equalToConstant: 25),
             
             // hiddenToggleButton Constraints
-            hiddenToggleButton.topAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: 4),
+            hiddenToggleButton.topAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: 6.5),
             hiddenToggleButton.trailingAnchor.constraint(equalTo: clearAllPasswordButton.leadingAnchor, constant: -10),
             hiddenToggleButton.widthAnchor.constraint(equalToConstant: 25),
             hiddenToggleButton.heightAnchor.constraint(equalToConstant: 25),
