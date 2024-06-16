@@ -57,10 +57,20 @@ class SignUpViewController: UIViewController {
         return button
     }()
     
+    ///회원가입 이름 Label
+    private lazy var signUpNameLabel: UILabel = {
+        var label = UILabel()
+        label.text = "이름"
+        label.textColor = .black
+        label.font = .systemFont(ofSize: UIFont.smallSystemFontSize)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     ///회원가입 이름
     private lazy var signUpNameTextField: UITextField = {
         var textField = UITextField()
-        textField.placeholder = "Name"
+        textField.placeholder = "이름을 입력해 주세요."
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
@@ -75,7 +85,7 @@ class SignUpViewController: UIViewController {
     ///회원가입 이메일
     private lazy var signUpEmailTextField: UITextField = {
         var textField = UITextField()
-        textField.placeholder = "Email"
+        textField.placeholder = "이메일을 입력해 주세요."
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
@@ -87,10 +97,20 @@ class SignUpViewController: UIViewController {
         return textField
     }()
     
+    ///회원가입 이메일 Label
+    private lazy var signUpEmailLabel: UILabel = {
+        var label = UILabel()
+        label.text = "이메일"
+        label.textColor = .black
+        label.font = .systemFont(ofSize: UIFont.smallSystemFontSize)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     ///회원가입 비밀번호
     private lazy var signUpPasswordTextField: UITextField = {
         var textField = UITextField()
-        textField.placeholder = "password"
+        textField.placeholder = "비밀번호를 입력해 주세요."
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
@@ -100,6 +120,16 @@ class SignUpViewController: UIViewController {
         textField.textContentType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
+    }()
+    
+    ///회원가입 비밀번호 Label
+    private lazy var signUpPasswordLabel: UILabel = {
+        var label = UILabel()
+        label.text = "비밀번호"
+        label.textColor = .black
+        label.font = .systemFont(ofSize: UIFont.smallSystemFontSize)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     ///회원가입 버튼
@@ -129,13 +159,17 @@ class SignUpViewController: UIViewController {
             signUpProfileImage,
             signUpProfileImageSetButton,
             signUpNameTextField,
+            signUpNameLabel,
             signUpEmailTextField,
+            signUpEmailLabel,
             signUpPasswordTextField,
+            signUpPasswordLabel,
             signUpButton
         ])
         
         NSLayoutConstraint.activate([
             
+            //signUpProfileImage Constraint
             signUpProfileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             signUpProfileImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 130),
             signUpProfileImage.widthAnchor.constraint(equalToConstant: 150),
@@ -154,17 +188,35 @@ class SignUpViewController: UIViewController {
             signUpNameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             signUpNameTextField.heightAnchor.constraint(equalToConstant: 40),
             
+            //signUpNameLabel Constraint
+            signUpNameLabel.bottomAnchor.constraint(equalTo: signUpNameTextField.topAnchor, constant: -3),
+            signUpNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            signUpNameLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            signUpNameLabel.heightAnchor.constraint(equalToConstant: 20),
+            
             //signUpEmailTextField Constraint
-            signUpEmailTextField.topAnchor.constraint(equalTo: signUpNameTextField.bottomAnchor, constant: 20),
+            signUpEmailTextField.topAnchor.constraint(equalTo: signUpNameTextField.bottomAnchor, constant: 30),
             signUpEmailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             signUpEmailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             signUpEmailTextField.heightAnchor.constraint(equalToConstant: 40),
             
+            //signUpEmailLabel Constraint
+            signUpEmailLabel.bottomAnchor.constraint(equalTo: signUpEmailTextField.topAnchor, constant: -3),
+            signUpEmailLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            signUpEmailLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            signUpEmailLabel.heightAnchor.constraint(equalToConstant: 20),
+            
             //signUpPasswordTextField Constraint
-            signUpPasswordTextField.topAnchor.constraint(equalTo: signUpEmailTextField.bottomAnchor, constant: 20),
+            signUpPasswordTextField.topAnchor.constraint(equalTo: signUpEmailTextField.bottomAnchor, constant: 30),
             signUpPasswordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             signUpPasswordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             signUpPasswordTextField.heightAnchor.constraint(equalToConstant: 40),
+            
+            //signUpPasswordLabel Constraint
+            signUpPasswordLabel.bottomAnchor.constraint(equalTo: signUpPasswordTextField.topAnchor, constant: -3),
+            signUpPasswordLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            signUpPasswordLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            signUpPasswordLabel.heightAnchor.constraint(equalToConstant: 20),
             
             //signUpButton Constraint
             signUpButton.topAnchor.constraint(equalTo: signUpPasswordTextField.bottomAnchor, constant: 50),

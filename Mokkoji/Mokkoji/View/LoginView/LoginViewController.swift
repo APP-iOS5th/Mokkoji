@@ -48,9 +48,10 @@ class LoginViewController: UIViewController {
         return imageView
     }()
     
+    ///로그인 이메일
     private lazy var emailTextField: UITextField = {
         var textField = UITextField()
-        textField.placeholder = "Email"
+        textField.placeholder = "이메일을 입력해 주세요."
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
@@ -60,9 +61,20 @@ class LoginViewController: UIViewController {
         return textField
     }()
     
+    ///로그인 이메일 Label
+    private lazy var emailLabel: UILabel = {
+        var label = UILabel()
+        label.text = "이메일"
+        label.textColor = .black
+        label.font = .systemFont(ofSize: UIFont.smallSystemFontSize)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    ///로그인 비밀번호
     private lazy var passwordTextField: UITextField = {
         var textField = UITextField()
-        textField.placeholder = "password"
+        textField.placeholder = "비밀번호를 입력해 주세요."
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
@@ -74,6 +86,17 @@ class LoginViewController: UIViewController {
         return textField
     }()
     
+    ///로그인 비밀번호 Label
+    private lazy var passwordLabel: UILabel = {
+        var label = UILabel()
+        label.text = "비밀번호"
+        label.textColor = .black
+        label.font = .systemFont(ofSize: UIFont.smallSystemFontSize)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    //비밀번호 전체 삭제 버튼
     private lazy var clearAllPasswordButton: UIButton = {
         var button = UIButton()
         button.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
@@ -87,6 +110,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    ///비밀번호 표시 토글 버튼
     private lazy var hiddenToggleButton: UIButton = {
         var button = UIButton()
         button.setImage(UIImage(systemName: "eye.slash.fill"), for: .normal)
@@ -100,6 +124,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    ///로그인 버튼
     private lazy var loginButton: UIButton = {
         var button = UIButton()
         button.setTitle("로그인", for: .normal)
@@ -112,6 +137,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    ///아이디 찾기 버튼
     private lazy var searchEmailButton: UIButton = {
         var button = UIButton()
         button.setTitle("아이디 찾기", for: .normal)
@@ -122,6 +148,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    ///비밀번호 찾기 버튼
     private lazy var searchPasswordButton: UIButton = {
         var button = UIButton()
         button.setTitle("비밀번호 찾기", for: .normal)
@@ -132,6 +159,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    ///signUpLabel
     private lazy var signUpLabel: UILabel = {
         var label = UILabel()
         label.text = "계정이 없으신가요?"
@@ -141,6 +169,7 @@ class LoginViewController: UIViewController {
         return label
     }()
     
+    ///회원가입 버튼
     private lazy var signUpButton: UIButton = {
         var button = UIButton()
         button.titleLabel?.font = UIFont.systemFont(ofSize: 15)
@@ -155,6 +184,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    ///Sign Up With SNS 선
     private lazy var signUpWithSNSLeadingLine: UIView = {
         var signUpWithSNSLeadingLine = UIView()
         signUpWithSNSLeadingLine.backgroundColor = .black
@@ -162,6 +192,7 @@ class LoginViewController: UIViewController {
         return signUpWithSNSLeadingLine
     }()
     
+    ///Sign Up With SNS 선
     private lazy var signUpWithSNSTrailingLine: UIView = {
         var signUpWithSNSTrailingLine = UIView()
         signUpWithSNSTrailingLine.backgroundColor = .black
@@ -169,6 +200,7 @@ class LoginViewController: UIViewController {
         return signUpWithSNSTrailingLine
     }()
     
+    ///Sign Up With SNS Label
     private lazy var signInWithSNSLabel: UILabel = {
         var label = UILabel()
         label.text = "Sign Up With SNS"
@@ -177,6 +209,7 @@ class LoginViewController: UIViewController {
         return label
     }()
     
+    ///카카오 로그인 버튼
     private lazy var kakaoLoginButton: UIButton = {
         var button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -185,6 +218,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    ///애플 로그인 버튼
     private lazy var appleLoginButton: UIButton = {
         var button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -193,6 +227,7 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    ///구글 로그인 버튼
     private lazy var googleLoginButton: UIButton = {
         var configuration = UIButton.Configuration.filled()
         configuration.image = UIImage(named: "ios_light_rd_na")
@@ -221,6 +256,7 @@ class LoginViewController: UIViewController {
     //        return button
     //    }()
     
+    ///아이디 찾기, 비밀버튼 찾기 StackView
     private lazy var searchStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -231,7 +267,8 @@ class LoginViewController: UIViewController {
         return stackView
     }()
     
-    private lazy var signInStackView: UIStackView = {
+    ///회원가입 StackView
+    private lazy var signUpStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .horizontal
@@ -241,6 +278,7 @@ class LoginViewController: UIViewController {
         return stackView
     }()
     
+    ///Sign Up With SNS StackView
     private lazy var signUpSNSLabelStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -262,12 +300,14 @@ class LoginViewController: UIViewController {
         
         view.addSubviews([logoImage,
                           emailTextField,
+                          emailLabel,
                           passwordTextField,
+                          passwordLabel,
                           clearAllPasswordButton,
                           hiddenToggleButton,
                           loginButton,
                           searchStackView,
-                          signInStackView,
+                          signUpStackView,
                           signUpSNSLabelStackView,
                           kakaoLoginButton,
                           appleLoginButton,
@@ -279,9 +319,9 @@ class LoginViewController: UIViewController {
         searchStackView.addArrangedSubview(searchStackViewLeftSpacer)
         searchStackView.addArrangedSubview(searchEmailButton)
         searchStackView.addArrangedSubview(searchPasswordButton)
-        signInStackView.addArrangedSubview(signInStackViewLeftSpacer)
-        signInStackView.addArrangedSubview(signUpLabel)
-        signInStackView.addArrangedSubview(signUpButton)
+        signUpStackView.addArrangedSubview(signInStackViewLeftSpacer)
+        signUpStackView.addArrangedSubview(signUpLabel)
+        signUpStackView.addArrangedSubview(signUpButton)
         signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSLeadingLine)
         signUpSNSLabelStackView.addArrangedSubview(signInWithSNSLabel)
         signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSTrailingLine)
@@ -289,7 +329,7 @@ class LoginViewController: UIViewController {
         NSLayoutConstraint.activate([
             // logoImage Constraints
             logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            logoImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             logoImage.widthAnchor.constraint(equalToConstant: 200),
             logoImage.heightAnchor.constraint(equalToConstant: 200),
             
@@ -297,15 +337,25 @@ class LoginViewController: UIViewController {
             emailTextField.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 20),
             emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            emailTextField.heightAnchor.constraint(equalToConstant: 30),
+            emailTextField.heightAnchor.constraint(equalToConstant: 40),
+            
+            //emailLabel Constraint
+            emailLabel.bottomAnchor.constraint(equalTo: emailTextField.topAnchor, constant: -3),
+            emailLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            emailLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            emailLabel.heightAnchor.constraint(equalToConstant: 20),
             
             // passwordTextField Constraints
-            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 5),
+            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 30),
             passwordTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             passwordTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            passwordTextField.heightAnchor.constraint(equalToConstant: 30),
+            passwordTextField.heightAnchor.constraint(equalToConstant: 40),
             
-            
+            //passwordLabel Constraint
+            passwordLabel.bottomAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: -3),
+            passwordLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 25),
+            passwordLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            passwordLabel.heightAnchor.constraint(equalToConstant: 20),
             
             // clearAllPasswordButton Constraints
             clearAllPasswordButton.topAnchor.constraint(equalTo: passwordTextField.topAnchor, constant: 4),
@@ -320,33 +370,33 @@ class LoginViewController: UIViewController {
             hiddenToggleButton.heightAnchor.constraint(equalToConstant: 25),
             
             // loginButton Constraints
-            loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 10),
+            loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 30),
             loginButton.heightAnchor.constraint(equalToConstant: 50),
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             // searchStackView Constraints
-            searchStackView.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 20),
+            searchStackView.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 10),
             searchStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             searchStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            // signInStackView Constraints
-            signInStackView.topAnchor.constraint(equalTo: searchStackView.bottomAnchor, constant: 10),
-            signInStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            signInStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            // signUpStackView Constraints
+            signUpStackView.topAnchor.constraint(equalTo: searchStackView.bottomAnchor, constant: 5),
+            signUpStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            signUpStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             // signUpSNSLabelStackView Constraints
             signUpWithSNSLeadingLine.widthAnchor.constraint(equalToConstant: 100),
             signUpWithSNSLeadingLine.heightAnchor.constraint(equalToConstant: 2),
             signUpWithSNSTrailingLine.widthAnchor.constraint(equalToConstant: 100),
             signUpWithSNSTrailingLine.heightAnchor.constraint(equalToConstant: 2),
-            signUpSNSLabelStackView.topAnchor.constraint(equalTo: signInStackView.bottomAnchor, constant: 30),
+            signUpSNSLabelStackView.topAnchor.constraint(equalTo: signUpStackView.bottomAnchor, constant: 10),
             signUpSNSLabelStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             signUpSNSLabelStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             // kakaoLoginButton Constraints
             kakaoLoginButton.heightAnchor.constraint(equalToConstant: 50),
-            kakaoLoginButton.topAnchor.constraint(equalTo: signUpSNSLabelStackView.bottomAnchor, constant: 30),
+            kakaoLoginButton.topAnchor.constraint(equalTo: signUpSNSLabelStackView.bottomAnchor, constant: 15),
             kakaoLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             kakaoLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
