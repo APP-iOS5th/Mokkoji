@@ -138,20 +138,17 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             mapController?.activateEngine()
             print("Engine activate!")
         }
+        
+        /// 삭제된 poi 반영하여 다시 그리기
+        clearPoi()
+        /// 삭제된 route 반영하여 다시 그리기
+        clearRoute()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
-        
-        if mapController?.isEngineActive == false {
-            mapController?.activateEngine()
-            print("Engine activate!")
             
-            /// Poi 다시 그리기
-//            for place in selectedPlaces {
-//                createPois(place: place)
-//            }
-        }
+
     }
         
     override func viewWillDisappear(_ animated: Bool) {
@@ -159,7 +156,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         _appear = false
         mapController?.pauseEngine() /// 렌더링 중지
     }
-//
+
 //    override func viewDidDisappear(_ animated: Bool) {
 //        removeObservers()
 //        mapController?.resetEngine() /// 엔진 정지 - 추가되었던 ViewBase들이 삭제됨
@@ -261,9 +258,15 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     // MARK: - SearchResultsSelectionDelegate
     func didSelectPlace(place: MapInfo) {
         print("didSelectPlace")
+        
+        if !selectedPlaces.contains(place) {
+            selectedPlaces.append(place)
+        }
+        
         /// Poi 생성
         createPoiStyle()
-        createPois(place: place)
+        let placeCount = selectedPlaces.count
+        createPois(poiNum: placeCount, place: place)
 
         /// Route 생성
         createRouteStyleSet()
@@ -325,14 +328,14 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         let mapviewInfo: MapviewInfo
         /// poi 정의
         let position: MapPoint
-        let selectedCnt = selectedPlaces.count
+        let placeCount = selectedPlaces.count
         
-        if selectedCnt == 0 {
+        if placeCount == 0 {
             position = MapPoint(longitude: 127.108678, latitude: 37.402001)
         } else {
             position = MapPoint(
-                longitude: Double(selectedPlaces[selectedCnt-1].placeLongitude) ?? 127.108678,
-                latitude: Double(selectedPlaces[selectedCnt-1].placeLatitude) ?? 37.402001)
+                longitude: Double(selectedPlaces[placeCount - 1].placeLongitude) ?? 127.108678,
+                latitude: Double(selectedPlaces[placeCount - 1].placeLatitude) ?? 37.402001)
         }
         mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: position, defaultLevel: 15)
         mapController?.addView(mapviewInfo)
@@ -375,7 +378,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     }
     
     /// Poi 개별 뱃지 추가
-    func createPois(place: MapInfo) {
+    func createPois(poiNum: Int, place: MapInfo) {
         guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
             print("Failed to get map view")
             return
@@ -390,17 +393,17 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             let position = MapPoint(longitude: x, latitude: y)
             let poi = layer?.addPoi(option: poiOption, at: position)
             
-            var mapInfo = place
-            mapInfo.poiId = poi?.itemID
-            selectedPlaces.append(mapInfo)
+//            var mapInfo = place
+//            mapInfo.poiId = poi?.itemID
+
             
-            let poiCnt: Int = layer?.getAllPois()?.count ?? 0
+//            let poiCnt: Int = layer?.getAllPois()?.count ?? 0
             
             /// Poi 개별 Badge추가 - 아래에서 생성된 Poi는 Style에 빌트인되어있는 badge와, Poi가 개별적으로 가지고 있는 Badge를 갖게 됨
-            let badge = PoiBadge(badgeID: "noti\(poiCnt)", image: UIImage(systemName: "\(poiCnt).circle.fill"), offset: CGPoint(x: 1.25, y: 0), zOrder: 0)
+            let badge = PoiBadge(badgeID: "noti\(poiNum)", image: UIImage(systemName: "\(poiNum).circle.fill"), offset: CGPoint(x: 1.25, y: 0), zOrder: 0)
             poi?.addBadge(badge)
             poi?.show()
-            poi?.showBadge(badgeID: "noti\(poiCnt)")
+            poi?.showBadge(badgeID: "noti\(poiNum)")
         } else {
             print("장소에 위도, 경도가 없습니다.")
         }
@@ -420,7 +423,22 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         if let poiId = selectedPlaces[index].poiId {
             layer?.removePoi(poiID: poiId)
         } else { return }
-        
+    }
+    
+    /// Poi 초기화
+    func clearPoi() {
+        guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
+            print("Failed to get map view")
+            return
+        }
+        let manager = mapView.getLabelManager()
+        let layer = manager.getLabelLayer(layerID: POI_LAYER_ID)
+        layer?.clearAllItems()
+//        manager.clearAllLabelLayers()
+        createPoiStyle()
+        for (i, place) in selectedPlaces.enumerated() {
+            createPois(poiNum: i + 1, place: place)
+        }
     }
     
     // MARK: - Route Methods
@@ -437,7 +455,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             
         } else {
             print("새로운 Route layer 생성")
-            let _ = manager?.addRouteLayer(layerID: ROUTE_LAYER_ID, zOrder: 0)
+            let _ = manager?.addRouteLayer(layerID: ROUTE_LAYER_ID, zOrder: 1)
         }
         
         /// Route Pattern 종류
@@ -463,7 +481,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         /// Route layer는 이전 function에서 없는 경우 생성했기 때문에 반드시 존재함
         let layer = manager.getRouteLayer(layerID: ROUTE_LAYER_ID)
         /// Route 초기화
-        layer?.clearAllRoutes()
+//        layer?.clearAllRoutes()
         /// Point 만들기
         let segmentPoints = routeSegmentPoints()
         var segments: [RouteSegment] = [RouteSegment]()
@@ -474,7 +492,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             segments.append(seg)
         }
         /// route 추가
-        let options = RouteOptions(routeID: "routes"+String(layer?.getAllRoutes()?.count ?? 0), styleID: "routeStyleSet", zOrder: layer?.getAllRoutes()?.count ?? 0)
+        let options = RouteOptions(routeID: "routes"+String(layer?.getAllRoutes()?.count ?? 0), styleID: "routeStyleSet", zOrder: 1)
         options.segments = segments
         let route = layer?.addRoute(option : options)
         route?.show()
@@ -507,6 +525,20 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         }
         segments.append(points)
         return segments
+    }
+    
+    /// Route 초기화
+    func clearRoute() {
+        guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
+            print("Failed to get map view")
+            return
+        }
+        let manager = mapView.getRouteManager()
+        let layer = manager.getRouteLayer(layerID: ROUTE_LAYER_ID)
+        layer?.clearAllRoutes()
+
+        createRouteStyleSet()
+        createRouteline()
     }
     
 }

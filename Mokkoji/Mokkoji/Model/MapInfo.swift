@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct MapInfo: Codable {
+struct MapInfo: Codable, Hashable {
     var placeId: String
     var roadAddressName: String
     var placeLatitude: String /// y
