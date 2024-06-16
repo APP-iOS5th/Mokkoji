@@ -14,6 +14,7 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         User(id: "1234", name: "김홍만", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
         User(id: "1235", name: "김홍기", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
     ]
+    
     var filteredFriends = [User]()
     
     private lazy var friendSearchBar: UISearchBar = {
@@ -68,7 +69,6 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         }
     }
     
-    // Search bar functionality
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             filteredFriends = allFriends
@@ -93,7 +93,6 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         return cell
     }
     
-    // MARK: - Cell selection handling
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
