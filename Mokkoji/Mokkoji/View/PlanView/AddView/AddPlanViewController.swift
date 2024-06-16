@@ -22,19 +22,17 @@ extension UIImageView {
                 }
                 return
             }
-            
             DispatchQueue.main.async {
                 self.image = downloadedImage
                 completion?(downloadedImage)
             }
         }
-        
         task.resume()
     }
 }
 
-class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate, UINavigationControllerDelegate {
-    let db = Firestore.firestore()  //firestore
+class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate {
+    let db = Firestore.firestore()
     let mapViewController = MapViewController()
     
     var selectedTimes: [Date] = []
@@ -149,21 +147,23 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.dataSource = self
         tableView.register(PlaceListTableViewCell.self, forCellReuseIdentifier: "placeListCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        
         return tableView
     }()
     
+    /// tableView의 동적 높이 설정
     var tableViewHeightConstraint: NSLayoutConstraint?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
+        /// Title 및 BarButton 설정
         self.navigationItem.title = "약속 추가"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
         
         mapViewController.delegate = self
         
+        /// tableView 행 삭제를 위한 gesture 설정
         let deleteLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         tableView.addGestureRecognizer(deleteLongPressRecognizer)
         
@@ -189,6 +189,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
+            /// ScrollView에 맞춰 제약조건 설정
             titleText.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
             titleText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             titleText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
@@ -233,6 +234,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         /// tableView의 동적 높이 설정
         tableViewHeightConstraint = tableView.heightAnchor.constraint(equalToConstant: 0)
         tableViewHeightConstraint?.isActive = true
+        
         /// tableVIew의 contentSize 관찰 시작
         tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         tableViewHeightConstraint?.constant = tableView.contentSize.height
@@ -252,6 +254,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
     }
         
+    /// tableView의 동적 높이 설정을 위한 옵저버 설정 - tableVIew의 contentSize 관찰
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == "contentSize", let tableView = object as? UITableView {
             tableViewHeightConstraint?.constant = tableView.contentSize.height
@@ -268,24 +271,25 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         /// 큰 타이틀 설정
         self.navigationController?.navigationBar.prefersLargeTitles = true
         mapViewController.mapController?.activateEngine()
-        
-
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-    
+        
+        /// 선택한 장소를 삭제했을 때 부모 뷰와 자식 뷰의 장소 리스트가 같도록 설정
+        /// 선택한 장소 반영 전에 이전 버튼 눌렀을 때 부모 뷰와 자식 뷰의 장소 리스트가 같도록 설정
         self.mapViewController.selectedPlaces = self.mapInfoList
-//        /// 부모 뷰 컨트롤러가 사라질 때 엔진 일시 중지
+        
+        /// 부모 뷰 컨트롤러가 사라질 때 엔진 일시 중지
 //        mapViewController.mapController?.pauseEngine()
 //        /// PlanListView의 title은 inline으로 유지
 //        self.navigationController?.navigationBar.prefersLargeTitles = false
     }
-//    
+  
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-//        /// 부모 뷰 컨트롤러가 사라질 때 엔진 정지
+        /// 부모 뷰 컨트롤러가 사라질 때 엔진 정지
 //        mapViewController.mapController?.resetEngine()
     }
 
@@ -298,16 +302,19 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // MARK: - UITableViewDataSource
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         /// 커스텀 셀을 생성하여 장소 리스트에 재사용
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "placeListCell", for: indexPath) as? PlaceListTableViewCell else {
             return UITableViewCell()
         }
         
+        /// tableView 데이터 출력 형태 지정
         let placeOrder = "\(indexPath.row + 1).circle.fill"
         let numbering = UIImage(systemName: placeOrder)
         let placeName = "\(mapInfoList[indexPath.row].placeName)"
         cell.configure(number: numbering, placeInfo: placeName)
         
+        /// 선택된 각 장소의 시간 저장
         if let selectedTime = cell.selectedTime {
             selectedTimes.append(selectedTime)
         }
@@ -321,14 +328,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.reloadData()
     }
     
-    // MARK: - UINavigationControllerDelegate
-//    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-//        if viewController == self {
-//            mapViewController.selectedPlaces = []
-//        }
-//
-//    }
-    
     // MARK: - Methods
     @objc func saveButtonTapped() {
         /// Plan 객체 생성
@@ -336,12 +335,15 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             return
         }
         
+        /// User 정보 불러오기
         guard var user = UserInfo.shared.user else {
             return
         }
         
         /// User에 Plan 추가
         user.plan = newPlans
+        
+        /// User의 plan 데이터 firestore에 저장
         DispatchQueue.main.async {
             self.saveUserToFirestore(user: user, userId: String(user.id))
         }
@@ -349,6 +351,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     @objc func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
+        /// tableView의 행을 꾹 눌렀을 때 이벤트 발생
         if gestureRecognizer.state == .began {
             let point = gestureRecognizer.location(in: tableView)
             if let indexPath = tableView.indexPathForRow(at: point) {
@@ -360,14 +363,9 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
                     /// 테이블 뷰에서 행 삭제
                     self?.tableView.deleteRows(at: [indexPath], with: .automatic)
                     self?.tableView.reloadData()
-                    /// 삭제된 장소의 poi 삭제
-//                    self?.mapViewController.deletePoi(at: indexPath.row)
-                    /// mapViewController 선택 장소 삭제
-                    self?.mapViewController.selectedPlaces = self?.mapInfoList ?? []
-                    /// 삭제된 route 반영하여 다시 그리기
-//                    self?.mapViewController.createRouteline()
                 }
                 alertController.addAction(deleteAction)
+                
                 /// 삭제 취소
                 let cancelAction = UIAlertAction(title: "취소", style: .cancel)
                 alertController.addAction(cancelAction)
@@ -377,17 +375,21 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
+    /// Firestore에 데이터 저장
     func saveUserToFirestore(user: User, userId: String) {
         let userRef = db.collection("users").document(userId)
         do {
             try userRef.setData(from: user)
-            print("Plan data saved.")
+            print("Plan data saved")
         } catch let error {
             print("Firestore Writing Error: \(error)")
         }
     }
     
+    /// Plan 객체 생성
     func makePlan() -> [Plan]? {
+        
+        /// plan에 필요한 프로퍼티
         guard let title = titleText.text, !title.isEmpty else {
             return nil
         }
@@ -406,15 +408,18 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         var newPlans = [Plan]()
         
+        /// User가 이미 plan을 가지고 있을 때
         if let currentPlan = user.plan {
             newPlans = currentPlan
         }
+        
         let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes, mapInfo: mapInfoList)
         newPlans.append(newPlan)
         
         return newPlans
     }
     
+    /// datePicker에서 선택한 날짜 formatting
     func dateChanged() {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "ko_KR")
@@ -426,14 +431,15 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         dateField.resignFirstResponder()
     }
     
+    /// 친구 초대 버튼 눌렀을 때
     func inviteButtonTapped() {
         let inviteFriendTableViewController = InviteFriendTableViewController()
         let navigationController = UINavigationController(rootViewController: inviteFriendTableViewController)
         present(navigationController, animated: true)
     }
-
+    
+    /// 지도 추가 버튼 눌렀을 때
     func addMapButtonTapped() {
-//        show(mapViewController, sender: nil)
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
 }

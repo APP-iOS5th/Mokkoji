@@ -21,6 +21,7 @@ class PlaceListTableViewCell: UITableViewCell {
         return imageView
     }()
     
+    // TODO: - 글씨 길이 조정
     lazy var placeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 24, weight: .bold)

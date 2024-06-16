@@ -14,5 +14,4 @@ struct MapInfo: Codable, Hashable {
     var placeLatitude: String /// y
     var placeLongitude: String /// x
     var placeName: String
-    var poiId: String?
 }

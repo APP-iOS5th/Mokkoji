@@ -49,7 +49,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     let locationManager = CLLocationManager()
     
     /// 핀 꼽기
-//    var positions: [MapPoint] = []
     var selectedPlaces: [MapInfo] = []
     
     /// 검색창 만들기
@@ -136,7 +135,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         
         if mapController?.isEngineActive == false {
             mapController?.activateEngine()
-            print("Engine activate!")
+            print("Engine activate")
         }
         
         /// 삭제된 poi 반영하여 다시 그리기
@@ -148,7 +147,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     override func viewDidAppear(_ animated: Bool) {
         print("viewDidAppear")
             
-
     }
         
     override func viewWillDisappear(_ animated: Bool) {
@@ -158,11 +156,13 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     }
 
 //    override func viewDidDisappear(_ animated: Bool) {
+//        print("viewDidDisappear")
 //        removeObservers()
 //        mapController?.resetEngine() /// 엔진 정지 - 추가되었던 ViewBase들이 삭제됨
 //    }
 
     // MARK: - MapControllerDelegate
+    
     /// 인증 실패시 호출
     func authenticationFailed(_ errorCode: Int, desc: String) {
         print("error code: \(errorCode)")
@@ -186,7 +186,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             
             /// 인증 실패 delegate 호출 이후 5초뒤에 재인증 시도
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-                print("retry auth...")
+                print("Retry auth...")
                 
                 self.mapController?.prepareEngine()
             }
@@ -195,10 +195,10 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             break;
         }
     }
-
+    
+    /// 여기에서 그릴 View(KakaoMap, Roadview)들을 추가
     func addViews() {
         print("addViews")
-        /// 여기에서 그릴 View(KakaoMap, Roadview)들을 추가
         
         let position: MapPoint
         let mapviewInfo: MapviewInfo
@@ -230,18 +230,19 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     /// addView 성공 이벤트 delegate - 추가적으로 수행할 작업을 진행
     func addViewSucceeded(_ viewName: String, viewInfoName: String) {
-        print("addViewSucceeded : OK")
+        print("addViewSucceeded")
     }
 
     /// addView 실패 이벤트 delegate - 실패에 대한 오류 처리를 진행
     func addViewFailed(_ viewName: String, viewInfoName: String) {
-        print("addViewFailed : Failed")
+        print("addViewFailed")
     }
 
     /// Container 뷰가 리사이즈 되었을때 호출 - 변경된 크기에 맞게 ViewBase들의 크기를 조절할 필요가 있는 경우 여기에서 수행
     func containerDidResized(_ size: CGSize) {
         print("containerDidResized")
         let mapView: KakaoMap? = mapController?.getView("mapview") as? KakaoMap
+        
         /// 지도뷰의 크기를 리사이즈된 크기로 지정
         mapView?.viewRect = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: size)
     }
@@ -259,6 +260,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     func didSelectPlace(place: MapInfo) {
         print("didSelectPlace")
         
+        /// 선택 장소 중복 방지
         if !selectedPlaces.contains(place) {
             selectedPlaces.append(place)
         }
@@ -271,7 +273,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         /// Route 생성
         createRouteStyleSet()
         createRouteline()
-//        createPosition()
     }
     
     // MARK: - Methods
@@ -300,7 +301,8 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         /// 뷰가 active 상태가 되면 렌더링 시작. 엔진은 미리 시작된 상태여야 함
         mapController?.activateEngine()
     }
-
+    
+    /// 토스트 메세지
     func showToast(_ view: UIView, message: String, duration: TimeInterval = 2.0) {
         let toastLabel = UILabel(frame: CGRect(x: view.frame.size.width/2 - 150, y: view.frame.size.height-100, width: 300, height: 35))
         toastLabel.backgroundColor = UIColor.black
@@ -341,12 +343,15 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         mapController?.addView(mapviewInfo)
     }
     
+    /// Done 버튼 눌렀을 때
     @objc func doneTapped() {
+        /// 선택한 장소 부모 뷰에 데이터 전달
         delegate?.didAppendPlace(places: selectedPlaces)
         self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Poi Methods
+    
     /// Poi 표시 스타일 생성
     func createPoiStyle() {
         guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
@@ -357,7 +362,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         
         /// Poi layer가 존재할때
         if let _: LabelLayer = manager.getLabelLayer(layerID: POI_LAYER_ID) {
-            print("기존 Poi layer 존재 / 로드")
+            print("기존 Poi layer 존재-로드")
             
         } else {
             print("새로운 Poi layer 생성")
@@ -374,6 +379,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             PerLevelPoiStyle(iconStyle: iconStyle1, level: 5),
             PerLevelPoiStyle(iconStyle: iconStyle2, level: 12)
         ])
+        
         manager.addPoiStyle(poiStyle)
     }
     
@@ -383,21 +389,17 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             print("Failed to get map view")
             return
         }
+        
         let manager = mapView.getLabelManager()
         let layer = manager.getLabelLayer(layerID: POI_LAYER_ID)
         let poiOption = PoiOptions(styleID: "PerLevelStyle")
         poiOption.rank = 0
         
+        /// 선택한 장소의 좌표 값으로 poi 생성 후 PoiLayer에 추가
         if let x = Double(place.placeLongitude),
            let y = Double(place.placeLatitude) {
             let position = MapPoint(longitude: x, latitude: y)
             let poi = layer?.addPoi(option: poiOption, at: position)
-            
-//            var mapInfo = place
-//            mapInfo.poiId = poi?.itemID
-
-            
-//            let poiCnt: Int = layer?.getAllPois()?.count ?? 0
             
             /// Poi 개별 Badge추가 - 아래에서 생성된 Poi는 Style에 빌트인되어있는 badge와, Poi가 개별적으로 가지고 있는 Badge를 갖게 됨
             let badge = PoiBadge(badgeID: "noti\(poiNum)", image: UIImage(systemName: "\(poiNum).circle.fill"), offset: CGPoint(x: 1.25, y: 0), zOrder: 0)
@@ -409,22 +411,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         }
     }
     
-    /// Poi 삭제
-    func deletePoi(at index: Int) {
-        guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
-            print("Failed to get map view")
-            return
-        }
-        let manager = mapView.getLabelManager()
-        let layer = manager.getLabelLayer(layerID: POI_LAYER_ID)
-        let poiOption = PoiOptions(styleID: "PerLevelStyle")
-        poiOption.rank = 0
-        
-        if let poiId = selectedPlaces[index].poiId {
-            layer?.removePoi(poiID: poiId)
-        } else { return }
-    }
-    
     /// Poi 초기화
     func clearPoi() {
         guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
@@ -433,15 +419,21 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         }
         let manager = mapView.getLabelManager()
         let layer = manager.getLabelLayer(layerID: POI_LAYER_ID)
+        
+        /// Poi 모두 삭제
         layer?.clearAllItems()
-//        manager.clearAllLabelLayers()
+        
+        /// Poi 스타일 생성
         createPoiStyle()
+        
+        /// 현재 장소 리스트로 poi 생성
         for (i, place) in selectedPlaces.enumerated() {
             createPois(poiNum: i + 1, place: place)
         }
     }
     
     // MARK: - Route Methods
+    
     /// RouteStyleSet을 생성
     /// RouteSegment마다 RouteStyleSet에 있는 다른 RouteStyle을 적용할 수 있음
     func createRouteStyleSet() {
@@ -471,6 +463,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             PerLevelRouteStyle(width: 18, color: color, strokeWidth: 4, strokeColor: strokeColor, level: 0, patternIndex: 0)
         ])
         styleSet.addStyle(routeStyle)
+        
         manager?.addRouteStyleSet(styleSet)
     }
     
@@ -478,10 +471,10 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     func createRouteline() {
         let mapView = mapController?.getView("mapview") as! KakaoMap
         let manager = mapView.getRouteManager()
-        /// Route layer는 이전 function에서 없는 경우 생성했기 때문에 반드시 존재함
+        
+        /// Route layer는 이전 route style set을 생성할 때 이미 생성됨
         let layer = manager.getRouteLayer(layerID: ROUTE_LAYER_ID)
-        /// Route 초기화
-//        layer?.clearAllRoutes()
+
         /// Point 만들기
         let segmentPoints = routeSegmentPoints()
         var segments: [RouteSegment] = [RouteSegment]()
@@ -491,8 +484,9 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             let seg = RouteSegment(points: points, styleIndex: styleIndex)
             segments.append(seg)
         }
+        
         /// route 추가
-        let options = RouteOptions(routeID: "routes"+String(layer?.getAllRoutes()?.count ?? 0), styleID: "routeStyleSet", zOrder: 1)
+        let options = RouteOptions(routeID: "routes" + String(layer?.getAllRoutes()?.count ?? 0), styleID: "routeStyleSet", zOrder: 1)
         options.segments = segments
         let route = layer?.addRoute(option : options)
         route?.show()
@@ -507,13 +501,18 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         } else {
             position = MapPoint(longitude: 127.108678, latitude: 37.402001)
         }
+        
+        /// 마지막 선택한 장소로 카메라 이동
         let pnt: MapPoint = segments.last?.points.last ?? position
         mapView.moveCamera(CameraUpdate.make(target: pnt, zoomLevel: 15, mapView: mapView))
     }
     
+    /// 구역의 지점 생성
     func routeSegmentPoints() -> [[MapPoint]] {
+       
         /// 전체 구역
         var segments = [[MapPoint]]()
+        
         /// 각 구역의 지점들
         var points = [MapPoint]()
         for place in selectedPlaces {
@@ -524,6 +523,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
             points.append(newPoint)
         }
         segments.append(points)
+        
         return segments
     }
     
@@ -542,4 +542,3 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     }
     
 }
-
