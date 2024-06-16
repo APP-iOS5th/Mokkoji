@@ -85,7 +85,7 @@ class SignUpViewController: UIViewController {
     ///회원가입 이메일
     private lazy var signUpEmailTextField: UITextField = {
         var textField = UITextField()
-        textField.placeholder = "이메일을 입력해 주세요."
+        textField.placeholder = "example@mokkoji.com"
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
@@ -110,7 +110,7 @@ class SignUpViewController: UIViewController {
     ///회원가입 비밀번호
     private lazy var signUpPasswordTextField: UITextField = {
         var textField = UITextField()
-        textField.placeholder = "비밀번호를 입력해 주세요."
+        textField.placeholder = "영문, 숫자 6자리 이상 입력해 주세요."
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
