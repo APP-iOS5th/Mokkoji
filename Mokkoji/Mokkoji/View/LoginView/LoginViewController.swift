@@ -394,6 +394,7 @@ class LoginViewController: UIViewController {
             signUpSNSLabelStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             signUpSNSLabelStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
+            //TODO: - SNS로그인 버튼 원형으로 Stack에 쌓기.
             // kakaoLoginButton Constraints
             kakaoLoginButton.heightAnchor.constraint(equalToConstant: 50),
             kakaoLoginButton.topAnchor.constraint(equalTo: signUpSNSLabelStackView.bottomAnchor, constant: 15),
@@ -405,7 +406,6 @@ class LoginViewController: UIViewController {
             appleLoginButton.topAnchor.constraint(equalTo: kakaoLoginButton.bottomAnchor, constant: 10),
             appleLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             appleLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
             
             // googleLoginButton Constraints
             googleLoginButton.heightAnchor.constraint(equalToConstant: 50),
