@@ -127,8 +127,10 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
         print("\(friend.name)에게 약속을 공유했습니다.")
         print("\(plan)")
         
-        UserInfo.shared.user?.sharedPlan = [plan]
+        // 공유된 약속을 Firestore에 저장합니다.
+        saveUserToFirestore(user: friend, userId: friend.id)
         
         dismiss(animated: true, completion: nil)
     }
+
 }
