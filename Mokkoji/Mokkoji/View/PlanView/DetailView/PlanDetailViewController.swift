@@ -23,7 +23,7 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
         super.viewDidLoad()
         
         // 네비게이션 바 설정
-        self.title = "Detail View"
+        self.title = "상세 약속"
         if let navigationBar = self.navigationController?.navigationBar {
             navigationBar.isTranslucent = false
             navigationBar.barTintColor = .white // 네비게이션 바 배경색 설정
@@ -75,7 +75,7 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
             
             tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor, constant: 8),
             tableView.bottomAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.bottomAnchor)
         ])
     }
@@ -127,7 +127,7 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
             timeFormatter.dateFormat = "HH:mm"
             let formattedDate = timeFormatter.string(from: plan.time ?? Date())
             cell.timeLabel.text = formattedDate
-            
+                
             cell.clockImage.image = UIImage(systemName: "clock.fill")
         }
         
