@@ -103,6 +103,8 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
             if UserInfo.shared.user?.name != nil {
                 UserInfo.shared.user?.friendList?.append(selectedFriend)
                 self.navigationController?.popViewController(animated: true)
+            } else {
+                // 이미 있는 사람은 추가하면 안됨 ..
             }
         }
 

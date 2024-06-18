@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import KakaoSDKUser
+import FirebaseAuth
 
 extension UIImageView {
     func load(url: URL) {
@@ -25,7 +27,7 @@ extension UIImageView {
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var userProfileImage = UserInfo.shared.user!.profileImageUrl
-    //var myName: String = "육현서"
+    
     var myMail: String? {
         didSet {
             mailCheck.text = myMail
@@ -43,7 +45,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             profileImageView.image = myImage
         }
     }
-//    var myImage: UIImage? = UIImage(named: "sponge")
     
     // MARK: - 프로필 사진
     let profileImageView: UIImageView! = {
@@ -55,62 +56,62 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         image.contentMode = .scaleAspectFill
         image.layer.borderColor = UIColor.white.cgColor
         image.layer.cornerRadius = 50
-       
+        
         return image
-       }()
+    }()
     
     // MARK: - 로그아웃 버튼
     let logoutButton: UIButton = {
         let button = UIButton()
-    
+        
         button.setTitle("LOGOUT", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.backgroundColor = UIColor.systemBlue.cgColor
         button.layer.cornerRadius = 10
         
-        button.addTarget(self, action: #selector(tapLogoutButton), for: .touchUpInside)
-            
+        button.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
+        
         return button
     }()
     
+    // MARK: - 이름 라벨
     private lazy var nameLabel: UILabel = {
         let nameL = UILabel()
         nameL.text = "Name:"
-            
+        
         return nameL
     }()
     
-    // MARK: - 이름 확인 라벨 (기능 없음)
     private lazy var nameCheck: UILabel! = {
-       let nameLabel = UILabel()
+        let nameLabel = UILabel()
         if let userName = UserInfo.shared.user?.name {
             nameLabel.text = "\(userName)"
         } else {
             nameLabel.text = "No Name"
         }
-
+        
         nameLabel.numberOfLines = 2
         nameLabel.lineBreakMode = .byWordWrapping
         
         return nameLabel
     }()
     
+    // MARK: - 이메일 라벨
     private lazy var mailLabel: UILabel = {
         let mailL = UILabel()
         mailL.text = "E-mail:"
-            
+        
         return mailL
     }()
     
-    // MARK: - 이메일 확인 라벨 (기능 없음)
     private lazy var mailCheck: UILabel! = {
-       let mailLabel = UILabel()
+        let mailLabel = UILabel()
         if let userEmail = UserInfo.shared.user?.email {
             mailLabel.text = "\(userEmail)"
         } else {
             mailLabel.text = "No Email"
         }
-
+        
         mailLabel.numberOfLines = 2
         mailLabel.lineBreakMode = .byWordWrapping
         
@@ -127,19 +128,19 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return plusButton
     }()
     
-    
+    // MARK: - 친구 삭제 버튼
     private lazy var deleteFriendButton: UIButton = {
         let deleteButton = UIButton()
         
         deleteButton.setTitle("친구삭제", for: .normal)
         deleteButton.setTitle("완료", for: .selected)
-                
+        
         deleteButton.setTitleColor(.systemBlue, for: .normal)
         deleteButton.setTitleColor(.blue, for: [.normal, .highlighted])
-                
+        
         deleteButton.setTitleColor(.systemRed, for: .selected)
         deleteButton.setTitleColor(.red, for: [.selected, .highlighted])
-                
+        
         deleteButton.addTarget(self, action: #selector(friendsDeleteButton), for: .touchUpInside)
         
         
@@ -152,7 +153,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         return tableView
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -163,12 +164,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.navigationItem.largeTitleDisplayMode = .always
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: #selector(tapButtonProfileEdit))
         
-        // MARK: - 테이블 뷰
         friendsTableView.dataSource = self
         friendsTableView.delegate = self
         friendsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
-        
-        
         
         view.addSubview(profileImageView)
         view.addSubview(nameLabel)
@@ -179,7 +177,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         view.addSubview(addFriendButton)
         view.addSubview(deleteFriendButton)
         view.addSubview(friendsTableView)
-
+        
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -192,7 +190,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         NSLayoutConstraint.activate([
             profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            profileImageView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 30),
+            profileImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             profileImageView.widthAnchor.constraint(equalToConstant: 100),
             profileImageView.heightAnchor.constraint(equalToConstant: 100),
             
@@ -201,44 +199,45 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             nameCheck.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
             nameCheck.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            nameCheck.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            nameCheck.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             mailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
             mailLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
             
             mailCheck.topAnchor.constraint(equalTo: nameCheck.bottomAnchor, constant: 10),
             mailCheck.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
-            mailCheck.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            mailCheck.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            logoutButton.topAnchor.constraint(equalTo: profileImageView.safeAreaLayoutGuide.topAnchor, constant: 120),
+            logoutButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 20),
             logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoutButton.widthAnchor.constraint(equalToConstant: 320),
-            logoutButton.heightAnchor.constraint(equalToConstant: 40),
+            logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            addFriendButton.topAnchor.constraint(equalTo: logoutButton.safeAreaLayoutGuide.topAnchor, constant: 50),
-            addFriendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -120),
+            addFriendButton.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 10),
+            addFriendButton.trailingAnchor.constraint(equalTo: deleteFriendButton.leadingAnchor, constant: -10),
             
-            deleteFriendButton.topAnchor.constraint(equalTo: logoutButton.safeAreaLayoutGuide.topAnchor, constant: 49),
-            deleteFriendButton.trailingAnchor.constraint(equalTo: addFriendButton.safeAreaLayoutGuide.trailingAnchor, constant: 80),
+            deleteFriendButton.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 10),
+            deleteFriendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            friendsTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 230),
-            friendsTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            friendsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            friendsTableView.topAnchor.constraint(equalTo: deleteFriendButton.bottomAnchor, constant: 10),
+            friendsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            friendsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             friendsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
         ])
     }
+    
     override func viewIsAppearing(_ animated: Bool) {
         profileImageView.load(url: userProfileImage)
         if let userFriend = UserInfo.shared.user?.friendList {
             
-        } else {
-            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)]
+        } else { // TODO: - 친구 목록이 비어있을땐 이미지가 나오면 안됨 (수정중)
+            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl: URL(string: "")!)]
             UserInfo.shared.user?.friendList = emptyFriend
         }
         friendsTableView.reloadData()
     }
     
-    // MARK: - 프로필 편집 페이지로 이동 + edit에서 저장한 name, email(아직), image(아직) 불러오기
+    // TODO: - 프로필 편집 페이지로 이동 & 편집 저장된 데이터 불러오기 기능 (?) 확인 필요
     @objc private func tapButtonProfileEdit() {
         let profileEditViewController = ProfileEditViewController()
         let navController = UINavigationController(rootViewController: profileEditViewController)
@@ -251,22 +250,39 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         present(navController, animated: true)
     }
     
-    // MARK: - 버튼 눌리는지 확인 (로그아웃으로 바꿀것)
-    @objc func tapLogoutButton() {
-        print("로그아웃 버튼.. ~")
+    // MARK: - 로그아웃 버튼 기능
+    @objc func kakaoLogoutButtonTapped() {
+        //kakaoLogout
+        UserApi.shared.logout{(error) in
+            if let error = error {
+                print(error)
+            } else {
+                print("kakao logout success")
+            }
+        }
+        
+        //firebase logout
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+            print("firebase logout success")
+        } catch let signOutError as NSError {
+            print("Error signing out: \(signOutError)")
+        }
+        self.transitionToLoginView()
     }
     
-    // MARK: - 친구 추가 페이지 이동 (모달)
+    // 로그인 화면으로 전환하는 함수
+    func transitionToLoginView() {
+        let loginViewController = LoginViewController()
+        loginViewController.modalPresentationStyle = .fullScreen
+        self.present(loginViewController, animated: true, completion: nil)
+    }
+    
+    // MARK: - 친구 추가 페이지 이동
     @objc func friendsPlusButton() {
         let friendsViewController = AddFriendViewController()
         self.navigationController?.pushViewController(friendsViewController, animated: true)
-        
-    }
-    
-    @objc func friendsDeleteButton() {
-        let shouldBeEdited = !friendsTableView.isEditing
-        friendsTableView.setEditing(shouldBeEdited, animated: true)
-        deleteFriendButton.isSelected = shouldBeEdited
         
     }
     
@@ -284,17 +300,25 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         cell.textLabel?.text = UserInfo.shared.user?.friendList?[indexPath.row].name
         cell.imageView?.image = UIImage(systemName: "person.circle")
         cell.imageView?.load(url: cellImage)
-
+        
         return cell
     }
     
-    // MARK: - 친구 삭제 (저장은 안됨) ? -> 버튼 안눌러도 삭제가 됨..? 
+    // MARK: - 친구 삭제
+    @objc func friendsDeleteButton() {
+        let shouldBeEdited = !friendsTableView.isEditing
+        friendsTableView.setEditing(shouldBeEdited, animated: true)
+        deleteFriendButton.isSelected = shouldBeEdited
+    }
+    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        indexPath.row > -1
+        return tableView.isEditing
     }
+    
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        indexPath.row > -1 ? .delete : .none
+        return tableView.isEditing ? .delete : .none
     }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
         UserInfo.shared.user?.friendList?.remove(at: indexPath.row)
