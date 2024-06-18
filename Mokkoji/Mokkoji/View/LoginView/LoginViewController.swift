@@ -658,6 +658,7 @@ class LoginViewController: UIViewController {
         }
     }
     
+    // MARK: - 로그아웃 버튼 기능 
     @objc func kakaoLogoutButtonTapped() {
         //kakaoLogout
         UserApi.shared.logout{(error) in

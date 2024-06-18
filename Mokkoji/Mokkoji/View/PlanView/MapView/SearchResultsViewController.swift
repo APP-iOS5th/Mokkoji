@@ -13,6 +13,7 @@ protocol SearchResultsSelectionDelegate {
 
 class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UITableViewDelegate, UITableViewDataSource {
     
+    /// 검색 결과
     var results: [MapInfo] = []
     
     var delegate: SearchResultsSelectionDelegate?
@@ -43,6 +44,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     
     // MARK: - UISearchResultsUpdating
     func updateSearchResults(for searchController: UISearchController) {
+        /// 검색어로 검색 결과 받기
         guard let searchText = searchController.searchBar.text, !searchText.isEmpty else {
             updateResults([])
             return
@@ -58,6 +60,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPlace = results[indexPath.row]
+        /// 부모 뷰에 선택한 행(장소) 전달
         delegate?.didSelectPlace(place: selectedPlace)
         dismiss(animated: true)
     }
@@ -74,6 +77,8 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     }
     
     // MARK: - Methods
+    
+    /// 검색 결과 업데이트
     func updateResults(_ results: [MapInfo]) {
         self.results = results
         DispatchQueue.main.async {
@@ -84,7 +89,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     func getSearchResults(searchText: String) {
         /// 카카오 검색 API 연결
         guard let restApiKey = Bundle.main.restApiKey else {
-            print("No Rest Api key")
+            print("No REST API Key")
             return
         }
         
@@ -92,7 +97,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
         let encodedQuery = userQuery.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let urlString = "https://dapi.kakao.com/v2/local/search/keyword.json?page=1&size=15&sort=accuracy&query=\(encodedQuery)"
         guard let url = URL(string: urlString) else {
-            print("Invalid URL")
+            print("Invalid Search API URL")
             return
         }
         
@@ -109,7 +114,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
             
             guard let httpResponse = response as? HTTPURLResponse,
                   (200...299).contains(httpResponse.statusCode) else {
-                print("search Invalid response")
+                print("Search Invalid response")
                 return
             }
             
@@ -121,6 +126,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
                         
                         var places: [MapInfo] = []
                         for (index, document) in documents.enumerated() {
+                            /// MapInfo에 필요한 프로퍼티 값 가져오기
                             if let id = document["id"] as? String,
                                let placeName = document["place_name"] as? String,
                                let addressName = document["road_address_name"] as? String,
@@ -128,7 +134,6 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
                                let yString = document["y"] as? String {
                                 let place = MapInfo(placeId: id, roadAddressName: addressName, placeLatitude: yString, placeLongitude: xString, placeName: placeName)
                                 places.append(place)
-                                print("Index: \(index), Place Name: \(placeName), Address Name: \(addressName)")
                             }
                         }
                         self.updateResults(places)
