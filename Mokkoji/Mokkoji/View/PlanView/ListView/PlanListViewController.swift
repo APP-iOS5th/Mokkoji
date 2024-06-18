@@ -20,6 +20,9 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         view.backgroundColor = .white
         self.navigationItem.title = "약속 리스트"
         
+        setupNavigationBarAppearance()
+
+        
         // 왼쪽에 Add 버튼 추가
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
         self.navigationItem.leftBarButtonItem = addButton
@@ -37,6 +40,18 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         
         // isSelectArray 초기화
         initializeSelectArray()
+    }
+    
+    func setupNavigationBarAppearance() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white // 배경색을 흰색으로 설정
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.black] // 타이틀 색상을 검정색으로 설정
+
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.tintColor = .black // 버튼 아이템 색상 설정
     }
     
     // Firestore에 plan 정보 저장

@@ -20,9 +20,9 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
         super.viewDidLoad()
 
         view.backgroundColor = .white
-        
-        promissTitle.text = "약속"
-        promissTitle.font = UIFont.boldSystemFont(ofSize: 40)
+        self.title = "공유"
+        promissTitle.text = "상세 약속"
+        promissTitle.font = UIFont.boldSystemFont(ofSize: 30)
         promissTitle.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(promissTitle)
         
