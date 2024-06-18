@@ -1,10 +1,3 @@
-//
-//  PmListViewController.swift
-//  Mokkoji
-//
-//  Created by 차지용 on 6/10/24.
-//
-
 import UIKit
 import FirebaseFirestore
 import Firebase
@@ -17,9 +10,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     var plans: [Plan] = []
     var sharedPlans: [Plan] = []
-    
     var users: [User] = []
-    
     
     let db = Firestore.firestore()
     
@@ -27,7 +18,6 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
         self.navigationItem.title = "약속 리스트"
         
         // 왼쪽에 Add 버튼 추가
@@ -45,17 +35,8 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.frame = view.bounds
         view.addSubview(tableView)
         
-        //        UserInfo.shared.user?.plan = plans
-        //        UserInfo.shared.user?.sharedPlan = sharedPlans
-        
-        plans = UserInfo.shared.user?.plan ?? []
-        sharedPlans = UserInfo.shared.user?.sharedPlan ?? []
-        
-        
         // isSelectArray 초기화
         initializeSelectArray()
-        //Firestore에 plan 정보 저장
-        
     }
     
     // Firestore에 plan 정보 저장
@@ -87,12 +68,9 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
-
-    
     
     func initializeSelectArray() {
         isSelectArray = [Bool](repeating: false, count: plans.count)
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,8 +86,10 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
                 self.plans = user.plan ?? []
                 self.sharedPlans = user.sharedPlan ?? []
                 UserInfo.shared.user?.sharedPlan = self.sharedPlans
+                
                 // isSelectArray 초기화
                 self.initializeSelectArray()
+                
                 // 테이블 뷰 리로드
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
@@ -117,11 +97,6 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
-
-    
-    
-    
-    
     
     // Add 버튼 클릭 시 실행될 메서드
     @objc func addButtonTapped() {
@@ -142,7 +117,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.reloadData()
     }
     
-    //체크되면 삭제될 메서드
+    // 체크되면 삭제될 메서드
     @objc func doneButtonTapped() {
         var indexesToDelete = [Int]() // 삭제할 인덱스 배열
         
@@ -171,7 +146,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         editButtonTapped() // Edit 모드 종료
     }
     
-    //체크박스 추가
+    // 체크박스 추가
     func setNeedsUpdateConfiguration(_ cell: CustomTableViewCell, at indexPath: IndexPath) {
         if indexPath.section == 0 {
             if isEditMode {
@@ -192,7 +167,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
     
-    //체크박스 생성
+    // 체크박스 생성
     @objc func checkBoxTapped(_ sender: UIButton) {
         let row = sender.tag
         isSelectArray[row].toggle()
@@ -200,7 +175,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         sender.setImage(UIImage(systemName: imageName), for: .normal)
     }
     
-    //선택한 셀을 tap하면 이동
+    // 선택한 셀을 tap하면 이동
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
             let selectedPlan = plans[indexPath.row]
@@ -208,14 +183,12 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
             pmDetailViewController.plans = [selectedPlan] // 선택된 계획만 전달
             navigationController?.pushViewController(pmDetailViewController, animated: true)
         } else {
-            let sharedPlans = users.flatMap { $0.sharedPlan ?? [] }
             let selectedSharedPlan = sharedPlans[indexPath.row]
             let sharedDetailViewController = SharedDetailViewController()
             sharedDetailViewController.plan = selectedSharedPlan // 선택한 약속만 포함하는 속성으로 설정
             navigationController?.pushViewController(sharedDetailViewController, animated: true)
         }
     }
-
     
     // 섹션 수 설정
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -226,17 +199,16 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         if section == 0 {
             return plans.count
         } else {
-            let sharedPlans = users.flatMap { $0.sharedPlan ?? [] }
             return sharedPlans.count
         }
     }
-
     
     // 셀 구성
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
+        
         if indexPath.section == 0 {
             let plan = plans[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
             cell.titleLabel.text = plan.title
             cell.dateLabel.text = plan.date
             
@@ -246,30 +218,22 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
                     cell.profileimage.image = image ?? UIImage(systemName: "person.crop.circle")
                 }
             }
-            setNeedsUpdateConfiguration(cell, at: indexPath)
-            return cell
         } else {
-            // 공유 받은 약속 셀 구성
-            let sharedPlans = users.flatMap { $0.sharedPlan ?? [] }
             let sharedPlan = sharedPlans[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
-
             cell.titleLabel.text = sharedPlan.title
             cell.dateLabel.text = sharedPlan.date
-
+            
             // 사용자 정보가 UserInfo.shared.user에 있으므로 해당 정보를 사용합니다.
             loadImage(from: UserInfo.shared.user?.profileImageUrl) { image in
                 DispatchQueue.main.async {
                     cell.profileimage.image = image ?? UIImage(systemName: "person.crop.circle")
                 }
             }
-            setNeedsUpdateConfiguration(cell, at: indexPath)
-            return cell
         }
-
+        
+        setNeedsUpdateConfiguration(cell, at: indexPath)
+        return cell
     }
-    
-    
     
     // 섹션 헤더 타이틀 설정
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
