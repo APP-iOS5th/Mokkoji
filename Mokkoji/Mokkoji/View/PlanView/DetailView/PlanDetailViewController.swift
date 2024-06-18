@@ -127,7 +127,7 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
             timeFormatter.dateFormat = "HH:mm"
             let formattedDate = timeFormatter.string(from: plan.time ?? Date())
             cell.timeLabel.text = formattedDate
-            
+                
             cell.clockImage.image = UIImage(systemName: "clock.fill")
         }
         

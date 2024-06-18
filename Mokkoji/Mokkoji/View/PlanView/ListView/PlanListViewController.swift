@@ -51,7 +51,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.tintColor = .black // 버튼 아이템 색상 설정
+        navigationController?.navigationBar.tintColor = .systemBlue // 버튼 아이템 색상 설정
     }
     
     // Firestore에 plan 정보 저장
