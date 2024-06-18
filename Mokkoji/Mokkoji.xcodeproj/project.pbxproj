@@ -7,22 +7,76 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3B01467A2C195EFF009CF0D7 /* InfoFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */; };
+		3B0146862C19BE58009CF0D7 /* SharedDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0146852C19BE58009CF0D7 /* SharedDetailViewController.swift */; };
+		3B605C0F2C168E7200D3603C /* PlanListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C0E2C168E7200D3603C /* PlanListViewController.swift */; };
+		3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */; };
+		3B605C142C16C2C200D3603C /* PlanDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C132C16C2C200D3603C /* PlanDetailViewController.swift */; };
+		3B605C162C16E28000D3603C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C152C16E28000D3603C /* MapViewController.swift */; };
+		3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 3B605C182C16E3A300D3603C /* KakaoMapsSDK-SPM */; };
+		3B605C1E2C16F07200D3603C /* PlanDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */; };
+		3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */; };
 		4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */; };
 		4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */; };
-		4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE72C0F06EE00F5C2EE /* ViewController.swift */; };
+		4A187EE82C0F06EE00F5C2EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE72C0F06EE00F5C2EE /* LoginViewController.swift */; };
 		4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */; };
 		4A187EF02C0F06EF00F5C2EE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEF2C0F06EF00F5C2EE /* Base */; };
+		4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9E2C1958390001470C /* AddPlanViewController.swift */; };
+		4A21EDA22C1958390001470C /* InviteFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */; };
+		4A7CDB552C1D68CF004A8B40 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 4A7CDB542C1D68CF004A8B40 /* FirebaseStorage */; };
+		4A9E41402C16843A00DE424A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E413F2C16843A00DE424A /* User.swift */; };
+		4A9E41422C16843F00DE424A /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41412C16843F00DE424A /* Plan.swift */; };
+		4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41432C16844C00DE424A /* MapInfo.swift */; };
+		4A9E41522C16B40D00DE424A /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41512C16B40D00DE424A /* UserInfo.swift */; };
+		4A9E415D2C1884E900DE424A /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E415C2C1884E900DE424A /* SignUpViewController.swift */; };
+		584EEBE82C1967E100538F55 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 584EEBE72C1967E100538F55 /* FirebaseAuth */; };
+		584EEBEA2C1967E100538F55 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 584EEBE92C1967E100538F55 /* FirebaseFirestore */; };
+		584EEBEC2C1967E100538F55 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 584EEBEB2C1967E100538F55 /* FirebaseFirestoreSwift */; };
+		584EEBEE2C19689000538F55 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 584EEBED2C19689000538F55 /* Config.xcconfig */; };
+		584EEBF22C197AF700538F55 /* PlaceListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */; };
+		5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5882714E2C194A13006D65FB /* SearchResultsViewController.swift */; };
+		588271512C194C7B006D65FB /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 588271502C194C7B006D65FB /* GoogleSignIn */; };
+		588271532C194C7B006D65FB /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 588271522C194C7B006D65FB /* GoogleSignInSwift */; };
+		588271552C194CE4006D65FB /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 588271542C194CE4006D65FB /* FirebaseAuth */; };
+		588271572C194CE4006D65FB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 588271562C194CE4006D65FB /* FirebaseFirestore */; };
+		588271592C194CE4006D65FB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 588271582C194CE4006D65FB /* FirebaseFirestoreSwift */; };
+		5882715B2C194D89006D65FB /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5882715A2C194D89006D65FB /* KakaoSDK */; };
+		C1236CF02C1B1AF2005694A5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1236CEF2C1B1AF2005694A5 /* GoogleService-Info.plist */; };
+		C1B688462C180B5C00B76DCD /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688452C180B5C00B76DCD /* ProfileViewController.swift */; };
+		C1B688482C180BBB00B76DCD /* AddFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */; };
+		C1B6884A2C180BFF00B76DCD /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688492C180BFF00B76DCD /* ProfileEditViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoFriendViewController.swift; sourceTree = "<group>"; };
+		3B0146852C19BE58009CF0D7 /* SharedDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedDetailViewController.swift; sourceTree = "<group>"; };
+		3B605C0E2C168E7200D3603C /* PlanListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanListViewController.swift; sourceTree = "<group>"; };
+		3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
+		3B605C132C16C2C200D3603C /* PlanDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailViewController.swift; sourceTree = "<group>"; };
+		3B605C152C16E28000D3603C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailViewCell.swift; sourceTree = "<group>"; };
+		3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
 		4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mokkoji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		4A187EE72C0F06EE00F5C2EE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		4A187EE72C0F06EE00F5C2EE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4A187EEF2C0F06EF00F5C2EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A187EF12C0F06EF00F5C2EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		4A9E413D2C167D6A00DE424A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		4A21ED9E2C1958390001470C /* AddPlanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPlanViewController.swift; sourceTree = "<group>"; };
+		4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteFriendViewController.swift; sourceTree = "<group>"; };
+		4A9E413F2C16843A00DE424A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		4A9E41412C16843F00DE424A /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
+		4A9E41432C16844C00DE424A /* MapInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapInfo.swift; sourceTree = "<group>"; };
+		4A9E41512C16B40D00DE424A /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
+		4A9E415C2C1884E900DE424A /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		584EEBED2C19689000538F55 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListTableViewCell.swift; sourceTree = "<group>"; };
+		5882714E2C194A13006D65FB /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		C1236CEF2C1B1AF2005694A5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		C1B688452C180B5C00B76DCD /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewController.swift; sourceTree = "<group>"; };
+		C1B688492C180BFF00B76DCD /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,17 +84,80 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */,
+				588271552C194CE4006D65FB /* FirebaseAuth in Frameworks */,
+				588271532C194C7B006D65FB /* GoogleSignInSwift in Frameworks */,
+				588271592C194CE4006D65FB /* FirebaseFirestoreSwift in Frameworks */,
+				588271512C194C7B006D65FB /* GoogleSignIn in Frameworks */,
+				584EEBEC2C1967E100538F55 /* FirebaseFirestoreSwift in Frameworks */,
+				584EEBEA2C1967E100538F55 /* FirebaseFirestore in Frameworks */,
+				588271572C194CE4006D65FB /* FirebaseFirestore in Frameworks */,
+				4A7CDB552C1D68CF004A8B40 /* FirebaseStorage in Frameworks */,
+				5882715B2C194D89006D65FB /* KakaoSDK in Frameworks */,
+				584EEBE82C1967E100538F55 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3B605C072C168C1000D3603C /* PlanView */ = {
+			isa = PBXGroup;
+			children = (
+				4A21EDA02C1958390001470C /* AddView */,
+				3B7B45602C1921AD00C8DEA2 /* ListView */,
+				3B605C1B2C16EF8200D3603C /* DetailView */,
+				3B605C1C2C16EF9800D3603C /* MapView */,
+			);
+			path = PlanView;
+			sourceTree = "<group>";
+		};
+		3B605C1B2C16EF8200D3603C /* DetailView */ = {
+			isa = PBXGroup;
+			children = (
+				3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */,
+				3B605C132C16C2C200D3603C /* PlanDetailViewController.swift */,
+				3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */,
+				3B0146792C195EFF009CF0D7 /* InfoFriendViewController.swift */,
+				3B0146852C19BE58009CF0D7 /* SharedDetailViewController.swift */,
+			);
+			path = DetailView;
+			sourceTree = "<group>";
+		};
+		3B605C1C2C16EF9800D3603C /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				5882714E2C194A13006D65FB /* SearchResultsViewController.swift */,
+				3B605C152C16E28000D3603C /* MapViewController.swift */,
+			);
+			path = MapView;
+			sourceTree = "<group>";
+		};
+		3B7B45602C1921AD00C8DEA2 /* ListView */ = {
+			isa = PBXGroup;
+			children = (
+				3B605C112C16B7E300D3603C /* CustomTableViewCell.swift */,
+				3B605C0E2C168E7200D3603C /* PlanListViewController.swift */,
+			);
+			path = ListView;
+			sourceTree = "<group>";
+		};
+		3B7B45612C1921C400C8DEA2 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				584EEBF82C1AD7C000538F55 /* LoginView */,
+				C1B6884B2C180F4F00B76DCD /* ProfileView */,
+				3B605C072C168C1000D3603C /* PlanView */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		4A187ED72C0F06EE00F5C2EE = {
 			isa = PBXGroup;
 			children = (
 				4A187EE22C0F06EE00F5C2EE /* Mokkoji */,
 				4A187EE12C0F06EE00F5C2EE /* Products */,
+				584EEBE62C1966D900538F55 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -55,15 +172,64 @@
 		4A187EE22C0F06EE00F5C2EE /* Mokkoji */ = {
 			isa = PBXGroup;
 			children = (
+				4A9E413E2C16842A00DE424A /* Model */,
+				3B7B45612C1921C400C8DEA2 /* View */,
 				4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */,
 				4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */,
-				4A187EE72C0F06EE00F5C2EE /* ViewController.swift */,
 				4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */,
 				4A187EEE2C0F06EF00F5C2EE /* LaunchScreen.storyboard */,
 				4A187EF12C0F06EF00F5C2EE /* Info.plist */,
-				4A9E413D2C167D6A00DE424A /* Config.xcconfig */,
 			);
 			path = Mokkoji;
+			sourceTree = "<group>";
+		};
+		4A21EDA02C1958390001470C /* AddView */ = {
+			isa = PBXGroup;
+			children = (
+				4A21ED9E2C1958390001470C /* AddPlanViewController.swift */,
+				4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */,
+				584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */,
+			);
+			path = AddView;
+			sourceTree = "<group>";
+		};
+		4A9E413E2C16842A00DE424A /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4A9E41512C16B40D00DE424A /* UserInfo.swift */,
+				4A9E413F2C16843A00DE424A /* User.swift */,
+				4A9E41412C16843F00DE424A /* Plan.swift */,
+				4A9E41432C16844C00DE424A /* MapInfo.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		584EEBE62C1966D900538F55 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				584EEBED2C19689000538F55 /* Config.xcconfig */,
+				C1236CEF2C1B1AF2005694A5 /* GoogleService-Info.plist */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		584EEBF82C1AD7C000538F55 /* LoginView */ = {
+			isa = PBXGroup;
+			children = (
+				4A9E415C2C1884E900DE424A /* SignUpViewController.swift */,
+				4A187EE72C0F06EE00F5C2EE /* LoginViewController.swift */,
+			);
+			path = LoginView;
+			sourceTree = "<group>";
+		};
+		C1B6884B2C180F4F00B76DCD /* ProfileView */ = {
+			isa = PBXGroup;
+			children = (
+				C1B688452C180B5C00B76DCD /* ProfileViewController.swift */,
+				C1B688492C180BFF00B76DCD /* ProfileEditViewController.swift */,
+				C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */,
+			);
+			path = ProfileView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -82,6 +248,18 @@
 			dependencies = (
 			);
 			name = Mokkoji;
+			packageProductDependencies = (
+				588271502C194C7B006D65FB /* GoogleSignIn */,
+				588271522C194C7B006D65FB /* GoogleSignInSwift */,
+				588271542C194CE4006D65FB /* FirebaseAuth */,
+				588271562C194CE4006D65FB /* FirebaseFirestore */,
+				588271582C194CE4006D65FB /* FirebaseFirestoreSwift */,
+				5882715A2C194D89006D65FB /* KakaoSDK */,
+				584EEBE72C1967E100538F55 /* FirebaseAuth */,
+				584EEBE92C1967E100538F55 /* FirebaseFirestore */,
+				584EEBEB2C1967E100538F55 /* FirebaseFirestoreSwift */,
+				4A7CDB542C1D68CF004A8B40 /* FirebaseStorage */,
+			);
 			productName = Mokkoji;
 			productReference = 4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */;
 			productType = "com.apple.product-type.application";
@@ -110,6 +288,12 @@
 				Base,
 			);
 			mainGroup = 4A187ED72C0F06EE00F5C2EE;
+			packageReferences = (
+				3B605C172C16E3A300D3603C /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */,
+				4A9CECA82C19432D00E0F029 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				4A9CECAD2C19435400E0F029 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				4A9CECB42C19435F00E0F029 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+			);
 			productRefGroup = 4A187EE12C0F06EE00F5C2EE /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -125,7 +309,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */,
+				584EEBEE2C19689000538F55 /* Config.xcconfig in Resources */,
 				4A187EF02C0F06EF00F5C2EE /* Base in Resources */,
+				C1236CF02C1B1AF2005694A5 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,9 +322,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A187EE82C0F06EE00F5C2EE /* ViewController.swift in Sources */,
+				C1B688482C180BBB00B76DCD /* AddFriendViewController.swift in Sources */,
+				C1B6884A2C180BFF00B76DCD /* ProfileEditViewController.swift in Sources */,
+				3B605C142C16C2C200D3603C /* PlanDetailViewController.swift in Sources */,
+				4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */,
+				4A21EDA22C1958390001470C /* InviteFriendViewController.swift in Sources */,
+				584EEBF22C197AF700538F55 /* PlaceListTableViewCell.swift in Sources */,
+				4A9E41402C16843A00DE424A /* User.swift in Sources */,
+				4A9E415D2C1884E900DE424A /* SignUpViewController.swift in Sources */,
+				3B605C1E2C16F07200D3603C /* PlanDetailViewCell.swift in Sources */,
+				3B605C162C16E28000D3603C /* MapViewController.swift in Sources */,
+				4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */,
+				5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */,
+				3B605C122C16B7E300D3603C /* CustomTableViewCell.swift in Sources */,
+				4A187EE82C0F06EE00F5C2EE /* LoginViewController.swift in Sources */,
+				3B01467A2C195EFF009CF0D7 /* InfoFriendViewController.swift in Sources */,
 				4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */,
+				C1B688462C180B5C00B76DCD /* ProfileViewController.swift in Sources */,
+				3B0146862C19BE58009CF0D7 /* SharedDetailViewController.swift in Sources */,
 				4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */,
+				4A9E41522C16B40D00DE424A /* UserInfo.swift in Sources */,
+				3B605C0F2C168E7200D3603C /* PlanListViewController.swift in Sources */,
+				4A9E41422C16843F00DE424A /* Plan.swift in Sources */,
+				3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -158,7 +364,7 @@
 /* Begin XCBuildConfiguration section */
 		4A187EF22C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
+			baseConfigurationReference = 584EEBED2C19689000538F55 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -222,7 +428,7 @@
 		};
 		4A187EF32C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
+			baseConfigurationReference = 584EEBED2C19689000538F55 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -279,7 +485,7 @@
 		};
 		4A187EF52C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
+			baseConfigurationReference = 584EEBED2C19689000538F55 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -288,9 +494,11 @@
 				DEVELOPMENT_TEAM = 2TXBC7N5Q5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mokkoji/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 정보 앱 사용중 백그라운드에서 허용";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 정보 항상 허용";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 정보 앱 사용중에만 허용";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -308,7 +516,7 @@
 		};
 		4A187EF62C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A9E413D2C167D6A00DE424A /* Config.xcconfig */;
+			baseConfigurationReference = 584EEBED2C19689000538F55 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -317,9 +525,11 @@
 				DEVELOPMENT_TEAM = 2TXBC7N5Q5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Mokkoji/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "위치 정보 앱 사용중 백그라운드에서 허용";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "위치 정보 항상 허용";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "위치 정보 앱 사용중에만 허용";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -357,6 +567,93 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3B605C172C16E3A300D3603C /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao-mapsSDK/KakaoMapsSDK-SPM.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.5;
+			};
+		};
+		4A9CECA82C19432D00E0F029 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.0;
+			};
+		};
+		4A9CECAD2C19435400E0F029 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 10.27.0;
+			};
+		};
+		4A9CECB42C19435F00E0F029 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.22.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3B605C182C16E3A300D3603C /* KakaoMapsSDK-SPM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B605C172C16E3A300D3603C /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */;
+			productName = "KakaoMapsSDK-SPM";
+		};
+		4A7CDB542C1D68CF004A8B40 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4A9CECAD2C19435400E0F029 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		584EEBE72C1967E100538F55 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseAuth;
+		};
+		584EEBE92C1967E100538F55 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseFirestore;
+		};
+		584EEBEB2C1967E100538F55 /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseFirestoreSwift;
+		};
+		588271502C194C7B006D65FB /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4A9CECA82C19432D00E0F029 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		588271522C194C7B006D65FB /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4A9CECA82C19432D00E0F029 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		588271542C194CE4006D65FB /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseAuth;
+		};
+		588271562C194CE4006D65FB /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseFirestore;
+		};
+		588271582C194CE4006D65FB /* FirebaseFirestoreSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseFirestoreSwift;
+		};
+		5882715A2C194D89006D65FB /* KakaoSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4A9CECB42C19435F00E0F029 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4A187ED82C0F06EE00F5C2EE /* Project object */;
 }
