@@ -231,7 +231,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let userFriend = UserInfo.shared.user?.friendList {
             
         } else { // TODO: - 친구 목록이 비어있을땐 이미지가 나오면 안됨 (수정중)
-            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl: URL(string: "")!)]
+            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)]
             UserInfo.shared.user?.friendList = emptyFriend
         }
         friendsTableView.reloadData()
