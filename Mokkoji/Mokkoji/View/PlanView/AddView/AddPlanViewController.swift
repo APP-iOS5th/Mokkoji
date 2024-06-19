@@ -87,7 +87,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     lazy var profileImage: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "person.circle.fill") /// 임시 이미지
-        imageView.tintColor = .black
+        imageView.tintColor = .gray
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -97,7 +97,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let button = UIButton(type: .system)
         button.setTitle("친구 초대", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = UIColor(named: "Primary_Color")
         button.layer.cornerRadius = 7
         button.addAction(UIAction { [weak self] _ in
             self?.inviteButtonTapped()
@@ -125,7 +125,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let button = UIButton()
         button.setTitle("장소 추가", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .black
+        button.backgroundColor = UIColor(named: "Primary_Color")
         button.layer.cornerRadius = 7
         button.addAction(UIAction { [weak self] _ in
             self?.addMapButtonTapped()
@@ -155,12 +155,14 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.view.backgroundColor = .white
         
         /// Title 및 BarButton 설정
         self.navigationItem.title = "약속 추가"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
-        
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.largeTitleDisplayMode = .always
         mapViewController.delegate = self
         
         /// tableView 행 삭제를 위한 gesture 설정
@@ -268,8 +270,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        /// 큰 타이틀 설정
-        self.navigationController?.navigationBar.prefersLargeTitles = true
         mapViewController.mapController?.activateEngine()
     }
     

@@ -11,25 +11,35 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
     
     var onSave: ((String, String, UIImage) -> Void)?
     
-    private lazy var profileEditName: UITextField! = {
-        let textfield = UITextField()
-        textfield.placeholder = "Name"
-        
-        return textfield
-    }()
-    
-    private lazy var profileEditMail: UITextField! = {
-        let textfield = UITextField()
-        textfield.placeholder = "E-mail"
-        
-        return textfield
-    }()
+     private lazy var profileEditImage: UIImageView! = {
+         let imageEdit = UIImageView()
+         imageEdit.image = UIImage(systemName: "person.circle")
+         imageEdit.isUserInteractionEnabled = true
+         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
+         imageEdit.addGestureRecognizer(tapGestureRecognizer)
+         
+         imageEdit.clipsToBounds = true
+         imageEdit.contentMode = .scaleAspectFill
+         imageEdit.layer.borderWidth = 2
+         imageEdit.layer.borderColor = UIColor.white.cgColor
+         imageEdit.layer.cornerRadius = 150
+         imageEdit.backgroundColor = .white
+         
+         return imageEdit
+     }()
     
     private lazy var profileEditNameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.text = "Name: "
         
         return nameLabel
+    }()
+    
+    private lazy var profileEditName: UITextField! = {
+        let textfield = UITextField()
+        textfield.placeholder = "Name"
+        
+        return textfield
     }()
     
     private lazy var profileEditMailLabel: UILabel = {
@@ -39,22 +49,11 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         return mailLabel
     }()
     
-    private lazy var profileEditImage: UIImageView! = {
-        let imageEdit = UIImageView()
-        imageEdit.image = UIImage(systemName: "person.circle")
-        imageEdit.isUserInteractionEnabled = true
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
-        imageEdit.addGestureRecognizer(tapGestureRecognizer)
+    private lazy var profileEditMail: UITextField! = {
+        let textfield = UITextField()
+        textfield.placeholder = "E-mail"
         
-        imageEdit.clipsToBounds = true
-        imageEdit.contentMode = .scaleAspectFill
-        imageEdit.layer.borderWidth = 2
-        imageEdit.layer.borderColor = UIColor.white.cgColor
-        imageEdit.layer.cornerRadius = 150
-        imageEdit.backgroundColor = .white
-        
-        return imageEdit
-        
+        return textfield
     }()
     
     
@@ -62,38 +61,40 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        self.view.addSubview(profileEditImage)
-        self.view.addSubview(profileEditName)
-        self.view.addSubview(profileEditMail)
-        self.view.addSubview(profileEditNameLabel)
-        self.view.addSubview(profileEditMailLabel)
-        
-        
         self.navigationItem.title = "PROFILE EDIT"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "cancel", style: .plain, target: self, action: #selector(cancelButton))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "save", style: .plain, target: self, action: #selector(tapSaveButton))
         
-        profileEditMail.translatesAutoresizingMaskIntoConstraints = false
-        profileEditName.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(profileEditImage)
+        self.view.addSubview(profileEditNameLabel)
+        self.view.addSubview(profileEditName)
+        self.view.addSubview(profileEditMailLabel)
+        self.view.addSubview(profileEditMail)
+        
         profileEditImage.translatesAutoresizingMaskIntoConstraints = false
-        profileEditMailLabel.translatesAutoresizingMaskIntoConstraints = false
         profileEditNameLabel.translatesAutoresizingMaskIntoConstraints = false
+        profileEditName.translatesAutoresizingMaskIntoConstraints = false
+        profileEditMailLabel.translatesAutoresizingMaskIntoConstraints = false
+        profileEditMail.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            profileEditName.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 350),
-            profileEditName.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 110),
-            profileEditMail.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 400),
-            profileEditMail.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 110),
-            
-            profileEditNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 350),
-            profileEditNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            profileEditMailLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 400),
-            profileEditMailLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             
             profileEditImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             profileEditImage.widthAnchor.constraint(equalToConstant: 300),
             profileEditImage.heightAnchor.constraint(equalToConstant: 300),
             profileEditImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            profileEditNameLabel.topAnchor.constraint(equalTo: profileEditImage.bottomAnchor, constant: 10),
+            profileEditNameLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            
+            profileEditName.topAnchor.constraint(equalTo: profileEditImage.bottomAnchor, constant: 10),
+            profileEditName.leadingAnchor.constraint(equalTo: profileEditNameLabel.trailingAnchor),
+            
+            profileEditMailLabel.topAnchor.constraint(equalTo: profileEditNameLabel.bottomAnchor, constant: 10),
+            profileEditMailLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            
+            profileEditMail.topAnchor.constraint(equalTo: profileEditName.bottomAnchor, constant: 10),
+            profileEditMail.leadingAnchor.constraint(equalTo: profileEditMailLabel.trailingAnchor),
             ])
        }
     
@@ -110,7 +111,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         dismiss(animated: true)
     }
 
-    // MARK: - Methods
+    // MARK: - 이미지 피커 (플리스트 추가 필요)
     @objc func imageTapped() {
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
@@ -124,7 +125,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         dismiss(animated: true)
     }
     
-    // TODO: - 구현방식 맞는지 확인 필요
+    // 이름, 메일, 프로필 사진 변경 값 저장
     @objc func tapSaveButton() {
         guard let text = profileEditName.text, 
               let text2 = profileEditMail.text,

@@ -20,9 +20,9 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
         super.viewDidLoad()
 
         view.backgroundColor = .white
-        
-        promissTitle.text = "약속"
-        promissTitle.font = UIFont.boldSystemFont(ofSize: 40)
+        self.title = "공유"
+        promissTitle.text = "상세 약속"
+        promissTitle.font = UIFont.boldSystemFont(ofSize: 30)
         promissTitle.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(promissTitle)
         
@@ -84,8 +84,8 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
             
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "HH:mm"
-//            let formattedDate = timeFormatter.string(from: plan.time)
-//            cell.timeLabel.text = formattedDate
+            let formattedDate = timeFormatter.string(from: plan.time ?? Date())
+            cell.timeLabel.text = formattedDate
 //            
 //            cell.clockImage.image = UIImage(systemName: "clock.fill")
         }

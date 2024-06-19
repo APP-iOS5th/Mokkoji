@@ -23,6 +23,7 @@
 		4A187EF02C0F06EF00F5C2EE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEF2C0F06EF00F5C2EE /* Base */; };
 		4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9E2C1958390001470C /* AddPlanViewController.swift */; };
 		4A21EDA22C1958390001470C /* InviteFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */; };
+		4A7CDB552C1D68CF004A8B40 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 4A7CDB542C1D68CF004A8B40 /* FirebaseStorage */; };
 		4A9E41402C16843A00DE424A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E413F2C16843A00DE424A /* User.swift */; };
 		4A9E41422C16843F00DE424A /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41412C16843F00DE424A /* Plan.swift */; };
 		4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41432C16844C00DE424A /* MapInfo.swift */; };
@@ -32,7 +33,6 @@
 		584EEBEA2C1967E100538F55 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 584EEBE92C1967E100538F55 /* FirebaseFirestore */; };
 		584EEBEC2C1967E100538F55 /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 584EEBEB2C1967E100538F55 /* FirebaseFirestoreSwift */; };
 		584EEBEE2C19689000538F55 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 584EEBED2C19689000538F55 /* Config.xcconfig */; };
-		584EEBF02C19689700538F55 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 584EEBEF2C19689700538F55 /* GoogleService-Info.plist */; };
 		584EEBF22C197AF700538F55 /* PlaceListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */; };
 		5882714F2C194A13006D65FB /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5882714E2C194A13006D65FB /* SearchResultsViewController.swift */; };
 		588271512C194C7B006D65FB /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 588271502C194C7B006D65FB /* GoogleSignIn */; };
@@ -41,6 +41,7 @@
 		588271572C194CE4006D65FB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 588271562C194CE4006D65FB /* FirebaseFirestore */; };
 		588271592C194CE4006D65FB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 588271582C194CE4006D65FB /* FirebaseFirestoreSwift */; };
 		5882715B2C194D89006D65FB /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5882715A2C194D89006D65FB /* KakaoSDK */; };
+		C1236CF02C1B1AF2005694A5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1236CEF2C1B1AF2005694A5 /* GoogleService-Info.plist */; };
 		C1B688462C180B5C00B76DCD /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688452C180B5C00B76DCD /* ProfileViewController.swift */; };
 		C1B688482C180BBB00B76DCD /* AddFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */; };
 		C1B6884A2C180BFF00B76DCD /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688492C180BFF00B76DCD /* ProfileEditViewController.swift */; };
@@ -70,9 +71,9 @@
 		4A9E41512C16B40D00DE424A /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		4A9E415C2C1884E900DE424A /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		584EEBED2C19689000538F55 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		584EEBEF2C19689700538F55 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListTableViewCell.swift; sourceTree = "<group>"; };
 		5882714E2C194A13006D65FB /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		C1236CEF2C1B1AF2005694A5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C1B688452C180B5C00B76DCD /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewController.swift; sourceTree = "<group>"; };
 		C1B688492C180BFF00B76DCD /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
@@ -91,6 +92,7 @@
 				584EEBEC2C1967E100538F55 /* FirebaseFirestoreSwift in Frameworks */,
 				584EEBEA2C1967E100538F55 /* FirebaseFirestore in Frameworks */,
 				588271572C194CE4006D65FB /* FirebaseFirestore in Frameworks */,
+				4A7CDB552C1D68CF004A8B40 /* FirebaseStorage in Frameworks */,
 				5882715B2C194D89006D65FB /* KakaoSDK in Frameworks */,
 				584EEBE82C1967E100538F55 /* FirebaseAuth in Frameworks */,
 			);
@@ -206,7 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				584EEBED2C19689000538F55 /* Config.xcconfig */,
-				584EEBEF2C19689700538F55 /* GoogleService-Info.plist */,
+				C1236CEF2C1B1AF2005694A5 /* GoogleService-Info.plist */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -256,6 +258,7 @@
 				584EEBE72C1967E100538F55 /* FirebaseAuth */,
 				584EEBE92C1967E100538F55 /* FirebaseFirestore */,
 				584EEBEB2C1967E100538F55 /* FirebaseFirestoreSwift */,
+				4A7CDB542C1D68CF004A8B40 /* FirebaseStorage */,
 			);
 			productName = Mokkoji;
 			productReference = 4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */;
@@ -306,9 +309,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */,
-				584EEBF02C19689700538F55 /* GoogleService-Info.plist in Resources */,
 				584EEBEE2C19689000538F55 /* Config.xcconfig in Resources */,
 				4A187EF02C0F06EF00F5C2EE /* Base in Resources */,
+				C1236CF02C1B1AF2005694A5 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -605,6 +608,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3B605C172C16E3A300D3603C /* XCRemoteSwiftPackageReference "KakaoMapsSDK-SPM" */;
 			productName = "KakaoMapsSDK-SPM";
+		};
+		4A7CDB542C1D68CF004A8B40 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4A9CECAD2C19435400E0F029 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
 		};
 		584EEBE72C1967E100538F55 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
