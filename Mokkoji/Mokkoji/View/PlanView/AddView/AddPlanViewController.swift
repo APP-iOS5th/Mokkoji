@@ -11,7 +11,8 @@ import FirebaseCore
 import FirebaseFirestore
 import KakaoMapsSDK
 
-class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate {
+class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate /*SelectedFriendListDelegate*/ {
+    
     let db = Firestore.firestore()
     let mapViewController = MapViewController()
     
@@ -306,6 +307,11 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     func didAppendPlace(places: [MapInfo]) {
         self.mapInfoList = places
         tableView.reloadData()
+    }
+    
+    // MARK: - SelectedFriendListDelegate
+    func didInviteFriends(users: [User]) {
+        self.profileImage.image = UIImage(systemName: "person.circle.fill")
     }
     
     // MARK: - Methods

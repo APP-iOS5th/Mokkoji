@@ -46,11 +46,18 @@ class FriendListTableViewCell: UITableViewCell {
         return emailLabel
     }()
     
-    lazy var checkBox: UIButton = {
+    lazy var inviteButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "checkmark.circle"), for: .normal)
+        let config = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular, scale: .default) /// 버튼 이미지 크기 설정
+        let buttonImage = UIImage(systemName: "plus.circle", withConfiguration: config)
+        button.setImage(buttonImage, for: .normal)
+        button.imageView?.contentMode = .scaleAspectFill
         button.imageView?.contentMode = .scaleAspectFill
         button.translatesAutoresizingMaskIntoConstraints = false
+        /// 버튼 액션
+        button.addAction(UIAction { [weak self] _ in
+            self?.addButtonTapped()
+        }, for: .touchUpInside)
         
         return button
     }()
@@ -63,7 +70,7 @@ class FriendListTableViewCell: UITableViewCell {
         
         self.contentView.addSubview(profileImage)
         self.contentView.addSubview(stackView)
-        self.contentView.addSubview(checkBox)
+        self.contentView.addSubview(inviteButton)
         
         /// 제약조건 설정
         NSLayoutConstraint.activate([
@@ -77,25 +84,17 @@ class FriendListTableViewCell: UITableViewCell {
             friendEmailLabel.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
             
             stackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
-            stackView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 10),
-            stackView.trailingAnchor.constraint(equalTo: checkBox.leadingAnchor, constant: -10),
+            stackView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 20),
+            stackView.trailingAnchor.constraint(equalTo: inviteButton.leadingAnchor, constant: -10),
             stackView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
             
-            checkBox.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -20),
-            checkBox.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-            checkBox.widthAnchor.constraint(equalToConstant: 50),
-            checkBox.heightAnchor.constraint(equalToConstant: 50)
+            inviteButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -20),
+            inviteButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
         ])
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
     // MARK: - Methods
@@ -106,7 +105,7 @@ class FriendListTableViewCell: UITableViewCell {
     }
     
     func loadImage(from url: URL) {
-        // 이미지 로드를 위한 비동기 URL 세션 사용
+        /// 이미지 로드를 위한 비동기 URL 세션 사용
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil, let image = UIImage(data: data) else {
                 return
@@ -115,6 +114,11 @@ class FriendListTableViewCell: UITableViewCell {
                 self.profileImage.image = image
             }
         }.resume()
+    }
+    
+    /// 친구 초대 + 버튼 눌렀을 때
+    func addButtonTapped() {
+
     }
 
 }
