@@ -21,6 +21,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let mainViewController = LoginViewController()
         let navigationVC = UINavigationController(rootViewController: mainViewController)
         
+        UINavigationBar.appearance().barTintColor = .white
+        UINavigationBar.appearance().tintColor = UIColor(named: "Primary_Color")
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black ]
+        
         window.rootViewController = navigationVC
         window.makeKeyAndVisible()
         self.window = window
@@ -38,6 +42,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([navigationController, profilController], animated: true)
+        
+        // 기본 색상 설정
+        UINavigationBar.appearance().barTintColor = .white
+        UINavigationBar.appearance().tintColor = UIColor(named: "Primary_Color")
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black ]
+        
+        UITabBar.appearance().barTintColor = .white
+        UITabBar.appearance().tintColor = UIColor(named: "Primary_Color")
+        UITabBar.appearance().unselectedItemTintColor = .lightGray
         
         if let items = tabBarController.tabBar.items {
             items[0].selectedImage = UIImage(systemName: "star.fill")
