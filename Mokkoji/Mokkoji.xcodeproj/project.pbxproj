@@ -41,6 +41,7 @@
 		588271572C194CE4006D65FB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 588271562C194CE4006D65FB /* FirebaseFirestore */; };
 		588271592C194CE4006D65FB /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 588271582C194CE4006D65FB /* FirebaseFirestoreSwift */; };
 		5882715B2C194D89006D65FB /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 5882715A2C194D89006D65FB /* KakaoSDK */; };
+		58A318182C22E0F6003CA86B /* FriendListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58A318172C22E0F6003CA86B /* FriendListTableViewCell.swift */; };
 		C1236CF02C1B1AF2005694A5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C1236CEF2C1B1AF2005694A5 /* GoogleService-Info.plist */; };
 		C1B688462C180B5C00B76DCD /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688452C180B5C00B76DCD /* ProfileViewController.swift */; };
 		C1B688482C180BBB00B76DCD /* AddFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */; };
@@ -73,6 +74,7 @@
 		584EEBED2C19689000538F55 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceListTableViewCell.swift; sourceTree = "<group>"; };
 		5882714E2C194A13006D65FB /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		58A318172C22E0F6003CA86B /* FriendListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListTableViewCell.swift; sourceTree = "<group>"; };
 		C1236CEF2C1B1AF2005694A5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C1B688452C180B5C00B76DCD /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendViewController.swift; sourceTree = "<group>"; };
@@ -189,6 +191,7 @@
 				4A21ED9E2C1958390001470C /* AddPlanViewController.swift */,
 				4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */,
 				584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */,
+				58A318172C22E0F6003CA86B /* FriendListTableViewCell.swift */,
 			);
 			path = AddView;
 			sourceTree = "<group>";
@@ -329,6 +332,7 @@
 				4A21EDA22C1958390001470C /* InviteFriendViewController.swift in Sources */,
 				584EEBF22C197AF700538F55 /* PlaceListTableViewCell.swift in Sources */,
 				4A9E41402C16843A00DE424A /* User.swift in Sources */,
+				58A318182C22E0F6003CA86B /* FriendListTableViewCell.swift in Sources */,
 				4A9E415D2C1884E900DE424A /* SignUpViewController.swift in Sources */,
 				3B605C1E2C16F07200D3603C /* PlanDetailViewCell.swift in Sources */,
 				3B605C162C16E28000D3603C /* MapViewController.swift in Sources */,

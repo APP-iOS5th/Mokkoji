@@ -83,7 +83,7 @@ class PlaceListTableViewCell: UITableViewCell {
             stackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10),
             
             detailTextField.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 10),
-            detailTextField.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            detailTextField.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20),
             detailTextField.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 20),
             detailTextField.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10)
         ])

@@ -11,26 +11,6 @@ import FirebaseCore
 import FirebaseFirestore
 import KakaoMapsSDK
 
-extension UIImageView {
-    /// 이미지 로딩 후 completion 클로저 실행
-    func loadImage(from url: URL, completion: ((UIImage?) -> Void)? = nil) {
-        /// URLSession을 사용한 비동기적 이미지 다운로드
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, error == nil, let downloadedImage = UIImage(data: data) else {
-                DispatchQueue.main.async {
-                    completion?(nil)
-                }
-                return
-            }
-            DispatchQueue.main.async {
-                self.image = downloadedImage
-                completion?(downloadedImage)
-            }
-        }
-        task.resume()
-    }
-}
-
 class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate {
     let db = Firestore.firestore()
     let mapViewController = MapViewController()
@@ -145,7 +125,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(PlaceListTableViewCell.self, forCellReuseIdentifier: "placeListCell")
+        tableView.register(PlaceListTableViewCell.self, forCellReuseIdentifier: "placeCell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -304,7 +284,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         /// 커스텀 셀을 생성하여 장소 리스트에 재사용
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "placeListCell", for: indexPath) as? PlaceListTableViewCell else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "placeCell", for: indexPath) as? PlaceListTableViewCell else {
             return UITableViewCell()
         }
         
