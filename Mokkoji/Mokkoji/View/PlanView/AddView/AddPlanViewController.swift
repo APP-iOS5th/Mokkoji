@@ -162,7 +162,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.navigationItem.title = "약속 추가"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
         self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.navigationItem.largeTitleDisplayMode = .always
+        self.navigationItem.largeTitleDisplayMode = .automatic
         mapViewController.delegate = self
         
         /// tableView 행 삭제를 위한 gesture 설정
