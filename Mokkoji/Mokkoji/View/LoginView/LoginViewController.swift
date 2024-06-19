@@ -219,7 +219,7 @@ class LoginViewController: UIViewController {
     private lazy var kakaoLoginButton: UIButton = {
         var button = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .light)
-        let image = UIImage(named: "Property 1=Default")
+        let image = UIImage(named: "kakao_login_button")
         button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
@@ -230,7 +230,7 @@ class LoginViewController: UIViewController {
     private lazy var appleLoginButton: UIButton = {
         var button = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .light)
-        let image = UIImage(named: "Sign in with Apple - Logo Only - Black - Circle")
+        let image = UIImage(named: "apple_signup_button")
         button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.imageView?.contentMode = .scaleAspectFill
