@@ -44,11 +44,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarController.setViewControllers([navigationController, profilController], animated: true)
         
         // 기본 색상 설정
-        UINavigationBar.appearance().barTintColor = .red
+        UINavigationBar.appearance().barTintColor = .white
         UINavigationBar.appearance().tintColor = UIColor(named: "Primary_Color")
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black ]
         
-        UITabBar.appearance().barTintColor = .red
+        UITabBar.appearance().barTintColor = .white
         UITabBar.appearance().tintColor = UIColor(named: "Primary_Color")
         UITabBar.appearance().unselectedItemTintColor = .lightGray
         
