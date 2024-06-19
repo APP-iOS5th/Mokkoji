@@ -40,10 +40,8 @@ class InviteFriendTableViewController: UITableViewController, UISearchResultsUpd
         self.navigationItem.searchController = searchController
         definesPresentationContext = true
         
-        /// 테이블 뷰 설정
+        /// FriendListViewCell 등록
         tableView.register(FriendListTableViewCell.self, forCellReuseIdentifier: "friendCell")
-        
-
     }
 
     // MARK: - Table view data source

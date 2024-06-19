@@ -11,9 +11,10 @@ class FriendListTableViewCell: UITableViewCell {
         
     lazy var profileImage: UIImageView = {
         let profileImage = UIImageView()
-        profileImage.contentMode = .scaleAspectFit
-        profileImage.layer.cornerRadius = 50
-        profileImage.clipsToBounds = true
+        profileImage.frame = CGRect(x: 0, y: 0, width: 50, height: 50) /// 제약조건과 동일하게 지정
+        profileImage.layer.cornerRadius = profileImage.frame.height/2 /// 원 만들기
+        profileImage.clipsToBounds = true /// 뷰 영역에 따라 자르기
+        profileImage.contentMode = .scaleAspectFill /// 비율 유지, 꽉 채우기
         profileImage.translatesAutoresizingMaskIntoConstraints = false
         
         return profileImage
