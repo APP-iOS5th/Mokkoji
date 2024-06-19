@@ -66,7 +66,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         button.setTitle("LOGOUT", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.layer.backgroundColor = UIColor.systemBlue.cgColor
+        button.layer.backgroundColor = UIColor(named: "Primary_Color")?.cgColor
         button.layer.cornerRadius = 10
         
         button.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
@@ -122,7 +122,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     private lazy var addFriendButton: UIButton = {
         let plusButton = UIButton()
         plusButton.setTitle("친구추가 +", for: .normal)
-        plusButton.setTitleColor(.systemBlue, for: .normal)
+        plusButton.setTitleColor(UIColor(named: "Primary_Color"), for: .normal)
         plusButton.addTarget(self, action: #selector(friendsPlusButton), for: .touchUpInside)
         
         return plusButton
@@ -135,7 +135,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         deleteButton.setTitle("친구삭제", for: .normal)
         deleteButton.setTitle("완료", for: .selected)
         
-        deleteButton.setTitleColor(.systemBlue, for: .normal)
+        deleteButton.setTitleColor(UIColor(named: "Primary_Color"), for: .normal)
         deleteButton.setTitleColor(.blue, for: [.normal, .highlighted])
         
         deleteButton.setTitleColor(.systemRed, for: .selected)
@@ -274,9 +274,9 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // 로그인 화면으로 전환하는 함수
     func transitionToLoginView() {
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
         let loginViewController = LoginViewController()
-        loginViewController.modalPresentationStyle = .fullScreen
-        self.present(loginViewController, animated: true, completion: nil)
+        sceneDelegate.changeRootViewController(loginViewController, animated: true)
     }
     
     // MARK: - 친구 추가 페이지 이동

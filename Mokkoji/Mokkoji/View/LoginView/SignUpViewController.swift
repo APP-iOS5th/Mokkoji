@@ -74,8 +74,10 @@ class SignUpViewController: UIViewController {
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
-        textField.backgroundColor = .systemGray4
+        textField.backgroundColor = .white
         textField.layer.cornerRadius = 5
+        textField.layer.borderColor = UIColor.systemGray4.cgColor
+        textField.layer.borderWidth = 1
         textField.keyboardType = .namePhonePad
         textField.autocorrectionType = .no //자동완성 비활성화
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -89,7 +91,9 @@ class SignUpViewController: UIViewController {
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
-        textField.backgroundColor = .systemGray4
+        textField.backgroundColor = .white
+        textField.layer.borderColor = UIColor.systemGray4.cgColor
+        textField.layer.borderWidth = 1
         textField.layer.cornerRadius = 5
         textField.textContentType = .emailAddress
         textField.keyboardType = .emailAddress
@@ -114,7 +118,8 @@ class SignUpViewController: UIViewController {
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
-        textField.backgroundColor = .systemGray4
+        textField.layer.borderColor = UIColor.systemGray4.cgColor
+        textField.layer.borderWidth = 1
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true
         textField.textContentType = .none
@@ -136,10 +141,9 @@ class SignUpViewController: UIViewController {
     private lazy var signUpButton: UIButton = {
         var button = UIButton()
         button.setTitle("가입하기", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UIColor(named: "Primary_Color")
         button.layer.cornerRadius = 10
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.lightGray.cgColor
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         return button
@@ -148,6 +152,8 @@ class SignUpViewController: UIViewController {
     //MARK: - ViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = "회원가입"
         
         self.hideKeyboardWhenTappedAround()
         
@@ -171,7 +177,7 @@ class SignUpViewController: UIViewController {
             
             //signUpProfileImage Constraint
             signUpProfileImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            signUpProfileImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 130),
+            signUpProfileImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             signUpProfileImage.widthAnchor.constraint(equalToConstant: 150),
             signUpProfileImage.heightAnchor.constraint(equalToConstant: 150),
             
@@ -183,7 +189,7 @@ class SignUpViewController: UIViewController {
             signUpProfileImageSetButton.heightAnchor.constraint(equalToConstant: 60),
             
             //signUpNameTextField Constraint
-            signUpNameTextField.topAnchor.constraint(equalTo: signUpProfileImageSetButton.bottomAnchor, constant: 20),
+            signUpNameTextField.topAnchor.constraint(equalTo: signUpProfileImageSetButton.bottomAnchor, constant: 50),
             signUpNameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             signUpNameTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             signUpNameTextField.heightAnchor.constraint(equalToConstant: 40),
@@ -440,8 +446,8 @@ extension SignUpViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.layer.borderWidth = 0
-        textField.layer.borderColor = .none
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.systemGray4.cgColor
         switch textField {
         case signUpEmailTextField:
             checkEmailValidation()

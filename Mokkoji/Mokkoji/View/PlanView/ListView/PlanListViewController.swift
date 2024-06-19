@@ -25,6 +25,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         
         // 왼쪽에 Add 버튼 추가
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
+        addButton.tintColor = UIColor(named: "Primary_Color")
         self.navigationItem.leftBarButtonItem = addButton
         
         // 오른쪽에 Edit 버튼 추가
@@ -42,6 +43,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         initializeSelectArray()
     }
     
+    
     func setupNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -51,7 +53,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
-        navigationController?.navigationBar.tintColor = .systemBlue // 버튼 아이템 색상 설정
+        navigationController?.navigationBar.tintColor = UIColor(named: "Primary_Color") // 버튼 아이템 색상 설정
     }
     
     // Firestore에 plan 정보 저장
@@ -94,6 +96,8 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         if let navigationBar = self.navigationController?.navigationBar {
             navigationBar.overrideUserInterfaceStyle = .light
         }
+        self.navigationController?.navigationBar.prefersLargeTitles = false
+        self.navigationItem.largeTitleDisplayMode = .always
         
         fetchPlanFromFirestore(userId: UserInfo.shared.user!.id) { [weak self] user in
             guard let self = self else { return }

@@ -41,9 +41,11 @@ class LoginViewController: UIViewController {
     var allValid = false
     
     //MARK: - UIComponents
+    ///로그인 로고
     private lazy var logoImage: UIImageView = {
-        var imageView = UIImageView(image: UIImage(systemName: "hand.point.up.left.and.text.fill"))
-        imageView.backgroundColor = .lightGray
+        var imageView = UIImageView(image: UIImage(named: "MokkojiLogo"))
+        imageView.sizeToFit()
+        imageView.backgroundColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -55,7 +57,9 @@ class LoginViewController: UIViewController {
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
-        textField.backgroundColor = .systemGray4
+        textField.backgroundColor = .white
+        textField.layer.borderColor = UIColor.systemGray4.cgColor
+        textField.layer.borderWidth = 1
         textField.layer.cornerRadius = 5
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
@@ -78,7 +82,9 @@ class LoginViewController: UIViewController {
         let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: textField.frame.height))
         textField.leftViewMode = .always
         textField.leftView = leftPadding
-        textField.backgroundColor = .systemGray4
+        textField.backgroundColor = .white
+        textField.layer.borderColor = UIColor.systemGray4.cgColor
+        textField.layer.borderWidth = 1
         textField.layer.cornerRadius = 5
         textField.isSecureTextEntry = true
         textField.textContentType = .none
@@ -128,10 +134,9 @@ class LoginViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         var button = UIButton()
         button.setTitle("로그인", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 10
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.backgroundColor = UIColor(named: "Primary_Color")
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
@@ -187,7 +192,7 @@ class LoginViewController: UIViewController {
     ///Sign Up With SNS 선
     private lazy var signUpWithSNSLeadingLine: UIView = {
         var signUpWithSNSLeadingLine = UIView()
-        signUpWithSNSLeadingLine.backgroundColor = .black
+        signUpWithSNSLeadingLine.backgroundColor = .gray
         signUpWithSNSLeadingLine.translatesAutoresizingMaskIntoConstraints = false
         return signUpWithSNSLeadingLine
     }()
@@ -195,7 +200,7 @@ class LoginViewController: UIViewController {
     ///Sign Up With SNS 선
     private lazy var signUpWithSNSTrailingLine: UIView = {
         var signUpWithSNSTrailingLine = UIView()
-        signUpWithSNSTrailingLine.backgroundColor = .black
+        signUpWithSNSTrailingLine.backgroundColor = .gray
         signUpWithSNSTrailingLine.translatesAutoresizingMaskIntoConstraints = false
         return signUpWithSNSTrailingLine
     }()
@@ -205,56 +210,43 @@ class LoginViewController: UIViewController {
         var label = UILabel()
         label.text = "Sign Up With SNS"
         label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = .gray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     ///카카오 로그인 버튼
     private lazy var kakaoLoginButton: UIButton = {
-        var button = UIButton()
+        var button = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .light)
+        let image = UIImage(named: "Property 1=Default")
+        button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "kakao_login_large_wide"), for: .normal)
         button.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
         return button
     }()
     
     ///애플 로그인 버튼
     private lazy var appleLoginButton: UIButton = {
-        var button = UIButton()
+        var button = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .light)
+        let image = UIImage(named: "Sign in with Apple - Logo Only - Black - Circle")
+        button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "appleid_button"), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFill
         button.addTarget(self, action: #selector(appleLoginButtonTapped), for: .touchUpInside)
         return button
     }()
     
     ///구글 로그인 버튼
     private lazy var googleLoginButton: UIButton = {
-        var configuration = UIButton.Configuration.filled()
-        configuration.image = UIImage(named: "ios_light_rd_na")
-        configuration.imagePlacement = .leading
-        configuration.imagePadding = 10
-        configuration.title = "Continue with Google"
-        configuration.baseForegroundColor = .black
-        configuration.baseBackgroundColor = .white
-        var button = UIButton(configuration: configuration)
-        button.translatesAutoresizingMaskIntoConstraints = false
+        var button = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
+        button.setImage(UIImage(named: "ios_light_rd_na"), for: .normal)
         button.backgroundColor = .white
-        button.layer.cornerRadius = 10
-        button.layer.borderWidth = 1
-        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(googleLoginButtonTapped), for: .touchUpInside)
         return button
     }()
-    
-    //TODO: Test
-    //    private lazy var kakaoLogoutButton: UIButton = {
-    //        var button = UIButton()
-    //        button.translatesAutoresizingMaskIntoConstraints = false
-    //        button.setTitle("Logout", for: .normal)
-    //        button.setTitleColor(.black, for: .normal)
-    //        button.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
-    //        return button
-    //    }()
     
     ///아이디 찾기, 비밀버튼 찾기 StackView
     private lazy var searchStackView: UIStackView = {
@@ -288,6 +280,16 @@ class LoginViewController: UIViewController {
         return stackView
     }()
     
+    ///SNS Buttons StackView
+    private lazy var snsButtonsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .equalSpacing
+        return stackView
+    }()
+    
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -309,13 +311,13 @@ class LoginViewController: UIViewController {
                           searchStackView,
                           signUpStackView,
                           signUpSNSLabelStackView,
-                          kakaoLoginButton,
-                          appleLoginButton,
-                          googleLoginButton
+                          snsButtonsStackView
                          ])
         
         let searchStackViewLeftSpacer = UIView()
         let signInStackViewLeftSpacer = UIView()
+        let snsLeftSpacer = UIView()
+        let snsRightSpacer = UIView()
         searchStackView.addArrangedSubview(searchStackViewLeftSpacer)
         searchStackView.addArrangedSubview(searchEmailButton)
         searchStackView.addArrangedSubview(searchPasswordButton)
@@ -325,16 +327,22 @@ class LoginViewController: UIViewController {
         signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSLeadingLine)
         signUpSNSLabelStackView.addArrangedSubview(signInWithSNSLabel)
         signUpSNSLabelStackView.addArrangedSubview(signUpWithSNSTrailingLine)
+        snsButtonsStackView.addArrangedSubview(snsLeftSpacer)
+        snsButtonsStackView.addArrangedSubview(kakaoLoginButton)
+        snsButtonsStackView.addArrangedSubview(appleLoginButton)
+        snsButtonsStackView.addArrangedSubview(googleLoginButton)
+        snsButtonsStackView.addArrangedSubview(snsRightSpacer)
+
         
         NSLayoutConstraint.activate([
             // logoImage Constraints
             logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            logoImage.widthAnchor.constraint(equalToConstant: 200),
+            logoImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+            logoImage.widthAnchor.constraint(equalToConstant: 180),
             logoImage.heightAnchor.constraint(equalToConstant: 200),
             
             // emailTextField Constraints
-            emailTextField.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 20),
+            emailTextField.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 50),
             emailTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             emailTextField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             emailTextField.heightAnchor.constraint(equalToConstant: 40),
@@ -376,7 +384,7 @@ class LoginViewController: UIViewController {
             loginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             // searchStackView Constraints
-            searchStackView.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 10),
+            searchStackView.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 30),
             searchStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             searchStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
@@ -390,28 +398,14 @@ class LoginViewController: UIViewController {
             signUpWithSNSLeadingLine.heightAnchor.constraint(equalToConstant: 2),
             signUpWithSNSTrailingLine.widthAnchor.constraint(equalToConstant: 100),
             signUpWithSNSTrailingLine.heightAnchor.constraint(equalToConstant: 2),
-            signUpSNSLabelStackView.topAnchor.constraint(equalTo: signUpStackView.bottomAnchor, constant: 10),
+            signUpSNSLabelStackView.topAnchor.constraint(equalTo: signUpStackView.bottomAnchor, constant: 30),
             signUpSNSLabelStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             signUpSNSLabelStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            //TODO: - SNS로그인 버튼 원형으로 Stack에 쌓기.
-            // kakaoLoginButton Constraints
-            kakaoLoginButton.heightAnchor.constraint(equalToConstant: 50),
-            kakaoLoginButton.topAnchor.constraint(equalTo: signUpSNSLabelStackView.bottomAnchor, constant: 15),
-            kakaoLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            kakaoLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
-            // appleLoginButton Constraints
-            appleLoginButton.heightAnchor.constraint(equalToConstant: 50),
-            appleLoginButton.topAnchor.constraint(equalTo: kakaoLoginButton.bottomAnchor, constant: 10),
-            appleLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            appleLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
-            // googleLoginButton Constraints
-            googleLoginButton.heightAnchor.constraint(equalToConstant: 50),
-            googleLoginButton.topAnchor.constraint(equalTo: appleLoginButton.bottomAnchor, constant: 10),
-            googleLoginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            googleLoginButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            //snsButtonsStackView Constraints
+            snsButtonsStackView.topAnchor.constraint(equalTo: signUpSNSLabelStackView.bottomAnchor, constant: 20),
+            snsButtonsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            snsButtonsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
         ])
         
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
@@ -488,6 +482,11 @@ class LoginViewController: UIViewController {
     func hideKeyboardWhenTappedAround() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tap.cancelsTouchesInView = false
+        emailTextField.layer.borderColor = UIColor.systemGray4.cgColor
+        emailTextField.layer.borderWidth = 1
+        passwordTextField.layer.borderColor = UIColor.systemGray4.cgColor
+        passwordTextField.layer.borderWidth = 1
+
         view.addGestureRecognizer(tap)
     }
     
@@ -841,8 +840,8 @@ extension LoginViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.layer.borderWidth = 0
-        textField.layer.borderColor = .none
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.systemGray4.cgColor
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
