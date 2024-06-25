@@ -205,10 +205,11 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         } else {
             let selectedSharedPlan = sharedPlans[indexPath.row]
             let sharedDetailViewController = SharedDetailViewController()
-            sharedDetailViewController.user?.sharedPlan? = [selectedSharedPlan] // 선택한 약속만 포함하는 속성으로 설정
+            sharedDetailViewController.selectedPlan = selectedSharedPlan // 선택한 공유 약속을 전달
             navigationController?.pushViewController(sharedDetailViewController, animated: true)
         }
     }
+
     
     // 섹션 수 설정
     func numberOfSections(in tableView: UITableView) -> Int {
