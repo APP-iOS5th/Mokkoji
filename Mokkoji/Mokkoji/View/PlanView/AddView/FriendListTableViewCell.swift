@@ -54,10 +54,6 @@ class FriendListTableViewCell: UITableViewCell {
         button.imageView?.contentMode = .scaleAspectFill
         button.imageView?.contentMode = .scaleAspectFill
         button.translatesAutoresizingMaskIntoConstraints = false
-        /// 버튼 액션
-        button.addAction(UIAction { [weak self] _ in
-            self?.addButtonTapped()
-        }, for: .touchUpInside)
         
         return button
     }()
@@ -70,7 +66,7 @@ class FriendListTableViewCell: UITableViewCell {
         
         self.contentView.addSubview(profileImage)
         self.contentView.addSubview(stackView)
-        self.contentView.addSubview(inviteButton)
+//        self.contentView.addSubview(inviteButton)
         
         /// 제약조건 설정
         NSLayoutConstraint.activate([
@@ -85,11 +81,12 @@ class FriendListTableViewCell: UITableViewCell {
             
             stackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
             stackView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 20),
-            stackView.trailingAnchor.constraint(equalTo: inviteButton.leadingAnchor, constant: -10),
+            stackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -20),
+//            stackView.trailingAnchor.constraint(equalTo: inviteButton.leadingAnchor, constant: -10),
             stackView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
             
-            inviteButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -20),
-            inviteButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
+//            inviteButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -20),
+//            inviteButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
         ])
     }
     
@@ -114,11 +111,6 @@ class FriendListTableViewCell: UITableViewCell {
                 self.profileImage.image = image
             }
         }.resume()
-    }
-    
-    /// 친구 초대 + 버튼 눌렀을 때
-    func addButtonTapped() {
-
     }
 
 }

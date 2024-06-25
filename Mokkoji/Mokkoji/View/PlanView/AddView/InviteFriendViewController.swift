@@ -57,6 +57,14 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // 행 삭제
+            selectedFriends.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
     // MARK: - SelectedFriendListDelegate
     func didInviteFriends(user: User) {
 //        self.selectedFriends = users
