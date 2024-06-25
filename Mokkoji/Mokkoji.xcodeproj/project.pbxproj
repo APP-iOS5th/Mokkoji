@@ -22,7 +22,7 @@
 		4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEC2C0F06EF00F5C2EE /* Assets.xcassets */; };
 		4A187EF02C0F06EF00F5C2EE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEF2C0F06EF00F5C2EE /* Base */; };
 		4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9E2C1958390001470C /* AddPlanViewController.swift */; };
-		4A21EDA22C1958390001470C /* InviteFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */; };
+		4A21EDA22C1958390001470C /* InviteFriendTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9F2C1958390001470C /* InviteFriendTableViewController.swift */; };
 		4A7CDB552C1D68CF004A8B40 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 4A7CDB542C1D68CF004A8B40 /* FirebaseStorage */; };
 		4A9E41402C16843A00DE424A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E413F2C16843A00DE424A /* User.swift */; };
 		4A9E41422C16843F00DE424A /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41412C16843F00DE424A /* Plan.swift */; };
@@ -66,7 +66,7 @@
 		4A187EEF2C0F06EF00F5C2EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4A187EF12C0F06EF00F5C2EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A21ED9E2C1958390001470C /* AddPlanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPlanViewController.swift; sourceTree = "<group>"; };
-		4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteFriendViewController.swift; sourceTree = "<group>"; };
+		4A21ED9F2C1958390001470C /* InviteFriendTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteFriendTableViewController.swift; sourceTree = "<group>"; };
 		4A9E413F2C16843A00DE424A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4A9E41412C16843F00DE424A /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		4A9E41432C16844C00DE424A /* MapInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapInfo.swift; sourceTree = "<group>"; };
@@ -191,7 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				4A21ED9E2C1958390001470C /* AddPlanViewController.swift */,
-				4A21ED9F2C1958390001470C /* InviteFriendViewController.swift */,
+				4A21ED9F2C1958390001470C /* InviteFriendTableViewController.swift */,
 				584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */,
 				58A318172C22E0F6003CA86B /* FriendListTableViewCell.swift */,
 				5898EB192C23437300A411A4 /* SearchFriendsTableViewController.swift */,
@@ -332,7 +332,7 @@
 				C1B6884A2C180BFF00B76DCD /* ProfileEditViewController.swift in Sources */,
 				3B605C142C16C2C200D3603C /* PlanDetailViewController.swift in Sources */,
 				4A9E41442C16844C00DE424A /* MapInfo.swift in Sources */,
-				4A21EDA22C1958390001470C /* InviteFriendViewController.swift in Sources */,
+				4A21EDA22C1958390001470C /* InviteFriendTableViewController.swift in Sources */,
 				584EEBF22C197AF700538F55 /* PlaceListTableViewCell.swift in Sources */,
 				4A9E41402C16843A00DE424A /* User.swift in Sources */,
 				58A318182C22E0F6003CA86B /* FriendListTableViewCell.swift in Sources */,

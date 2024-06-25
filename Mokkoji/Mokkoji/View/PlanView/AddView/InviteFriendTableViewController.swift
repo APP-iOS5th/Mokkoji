@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SelectDoneFriendListDelegate {
-    func didInviteFriends(names: [String])
+    func didInviteFriends(names: String)
 }
 
 class InviteFriendTableViewController: UITableViewController, SelectedFriendListDelegate {
@@ -32,6 +32,7 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
         let searchController = UISearchController(searchResultsController: searchFriendsTableViewController)
         /// 텍스트가 변경될 때마다 업데이트를 처리
         searchController.searchResultsUpdater = searchFriendsTableViewController
+        
         searchFriendsTableViewController.delegate = self
 
         searchController.searchBar.placeholder = "친구 이름을 검색해보세요."
@@ -89,7 +90,10 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
         for friend in selectedFriends {
             friends.append(friend.name)
         }
-        delegate?.didInviteFriends(names: friends)
+        
+        /// 리스트의 요소들을 하나의 문자열로 합치기
+        let combinedString = friends.joined(separator: ", ")
+        delegate?.didInviteFriends(names: combinedString)
         dismiss(animated: true)
     }
         

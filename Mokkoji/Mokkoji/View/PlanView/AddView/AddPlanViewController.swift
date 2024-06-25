@@ -14,6 +14,7 @@ import KakaoMapsSDK
 class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate, SelectDoneFriendListDelegate {    
     
     let db = Firestore.firestore()
+    let inviteFriendTableViewController = InviteFriendTableViewController()
     let mapViewController = MapViewController()
     
     var selectedTimes: [Date] = []
@@ -67,6 +68,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     lazy var friendList: UILabel = {
         let textLabel = UILabel()
+        textLabel.numberOfLines = 0 /// 여러 줄 표시
+        textLabel.lineBreakMode = .byWordWrapping /// 단어 단위로 줄바꿈
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         return textLabel
     }()
@@ -126,6 +129,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.largeTitleDisplayMode = .automatic
+        
+        inviteFriendTableViewController.delegate = self
         mapViewController.delegate = self
         
         /// tableView 행 삭제를 위한 gesture 설정
@@ -164,7 +169,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             dateField.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             dateField.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
-            friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor),
+            friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
             friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
@@ -187,19 +192,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
         ])
-        
-        /// 초대된 친구 추가 후 제약조건 수정
-        if ((friendList.text?.isEmpty) == nil) {
-//            friendList.text = "이름1, 이름2"
-            /// friendList 제약조건 초기화
-            friendList.removeConstraints(friendList.constraints)
-            
-            NSLayoutConstraint.activate([
-                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
-                friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-                friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor)
-            ])
-        }
         
         /// tableView의 동적 높이 설정
         tableViewHeightConstraint = tableView.heightAnchor.constraint(equalToConstant: 0)
@@ -226,7 +218,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+    
         mapViewController.mapController?.activateEngine()
     }
     
@@ -286,9 +278,28 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     // MARK: - SelectDoneFriendListDelegate
-    func didInviteFriends(names: [String]) {
-        // TODO: - 친구 리스트로 수정
-        self.friendList.text = names[0]
+    func didInviteFriends(names: String) {
+        self.friendList.text = names
+        
+        /// 초대된 친구 추가 후 제약조건 수정
+        if ((self.friendList.text?.isEmpty) == nil) {
+            /// friendList 제약조건 비활성화
+            NSLayoutConstraint.deactivate([
+                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor),
+                friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+                friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor)
+            ])
+            /// friendList 제약조건 다시 활성화
+            NSLayoutConstraint.activate([
+                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
+                friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+                friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            ])
+            
+//            self.view.setNeedsLayout()
+//            self.view.layoutIfNeeded()
+            
+        }
     }
     
     // MARK: - Methods
@@ -396,7 +407,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     /// 친구 초대 버튼 눌렀을 때
     func inviteButtonTapped() {
-        let inviteFriendTableViewController = InviteFriendTableViewController()
         let navigationController = UINavigationController(rootViewController: inviteFriendTableViewController)
         present(navigationController, animated: true)
     }
