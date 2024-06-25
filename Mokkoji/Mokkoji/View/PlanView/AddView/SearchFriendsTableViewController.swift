@@ -17,7 +17,7 @@ struct sampleFriend {
 }
 
 protocol SelectedFriendListDelegate {
-    func didInviteFriends(users: [User])
+    func didInviteFriends(user: User)
 }
 
 class SearchFriendsTableViewController: UITableViewController, UISearchResultsUpdating {
@@ -25,13 +25,11 @@ class SearchFriendsTableViewController: UITableViewController, UISearchResultsUp
 //    var friends: [User] = UserInfo.shared.user?.friendList ?? []
     var friends: [User] = sampleFriend.friends
     var filteredFriends: [User] = []
-    var selectedFriends: [User] = []
     
     var delegate: SelectedFriendListDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.view.backgroundColor = .white
         
         /// FriendListViewCell 등록
         tableView.register(FriendListTableViewCell.self, forCellReuseIdentifier: "friendCell")
@@ -67,24 +65,22 @@ class SearchFriendsTableViewController: UITableViewController, UISearchResultsUp
         cell.inviteButton.setImage(buttonImage, for: .normal)
         
         /// 선택한 친구 목록 저장 및 전달
-        selectedFriends.append(filteredFriends[indexPath.row])
-        delegate?.didInviteFriends(users: selectedFriends)
+        delegate?.didInviteFriends(user: filteredFriends[indexPath.row])
         
         dismiss(animated: true)
     }
     
     // MARK: - UISearchResultsUpdating
     func updateSearchResults(for searchController: UISearchController) {
-        guard let searchText = searchController.searchBar.text,
-              !searchText.isEmpty else {
-            filteredFriends = []
-            tableView.reloadData()
-            return
+        if let searchText = searchController.searchBar.text,
+              !searchText.isEmpty {
+            filteredFriends = friends.filter { friend in
+                return friend.name.contains(searchText)
+            }
+        } else {
+            filteredFriends.removeAll()
         }
         
-        filteredFriends = friends.filter { friend in
-            return friend.name.contains(searchText)
-        }
         tableView.reloadData()
     }
                         

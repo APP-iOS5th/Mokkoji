@@ -26,7 +26,8 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
         let searchController = UISearchController(searchResultsController: searchFriendsTableViewController)
         /// 텍스트가 변경될 때마다 업데이트를 처리
         searchController.searchResultsUpdater = searchFriendsTableViewController
-//        searchController.obscuresBackgroundDuringPresentation = false
+        searchFriendsTableViewController.delegate = self
+
         searchController.searchBar.placeholder = "친구 이름을 검색해보세요."
         /// 스크롤 시 searchBar를 숨기지 않도록 설정
         self.navigationItem.hidesSearchBarWhenScrolling = false
@@ -57,8 +58,9 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
     }
     
     // MARK: - SelectedFriendListDelegate
-    func didInviteFriends(users: [User]) {
-        self.selectedFriends = users
+    func didInviteFriends(user: User) {
+//        self.selectedFriends = users
+        selectedFriends.append(user)
         
         tableView.reloadData()
     }
