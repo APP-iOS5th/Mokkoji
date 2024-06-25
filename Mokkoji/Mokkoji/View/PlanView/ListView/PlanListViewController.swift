@@ -116,6 +116,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
+
     
     // Add 버튼 클릭 시 실행될 메서드
     @objc func addButtonTapped() {
@@ -204,7 +205,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         } else {
             let selectedSharedPlan = sharedPlans[indexPath.row]
             let sharedDetailViewController = SharedDetailViewController()
-            sharedDetailViewController.plan = selectedSharedPlan // 선택한 약속만 포함하는 속성으로 설정
+            sharedDetailViewController.user?.sharedPlan? = [selectedSharedPlan] // 선택한 약속만 포함하는 속성으로 설정
             navigationController?.pushViewController(sharedDetailViewController, animated: true)
         }
     }

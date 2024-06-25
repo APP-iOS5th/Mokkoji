@@ -118,16 +118,13 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
             return
         }
 
+        // 사용자의 sharedPlans에 공유된 약속 추가
         if friend.sharedPlan == nil {
             friend.sharedPlan = []
         }
-        
         friend.sharedPlan?.append(plan)
         
-        print("\(friend.name)에게 약속을 공유했습니다.")
-        print("\(plan)")
-        
-        // 공유된 약속을 Firestore에 저장합니다.
+        // Firestore에 공유된 약속 저장
         saveUserToFirestore(user: friend, userId: friend.id)
         
         dismiss(animated: true, completion: nil)
