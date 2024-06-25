@@ -7,12 +7,18 @@
 
 import UIKit
 
+protocol SelectDoneFriendListDelegate {
+    func didInviteFriends(names: [String])
+}
+
 class InviteFriendTableViewController: UITableViewController, SelectedFriendListDelegate {
 
     var selectedFriends: [User] = []
-    
+        
     /// 검색 결과 컨트롤러
     let searchFriendsTableViewController = SearchFriendsTableViewController()
+    
+    var delegate: SelectDoneFriendListDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,8 +72,7 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
     }
     
     // MARK: - SelectedFriendListDelegate
-    func didInviteFriends(user: User) {
-//        self.selectedFriends = users
+    func didSelectFriends(user: User) {
         selectedFriends.append(user)
         
         tableView.reloadData()
@@ -79,6 +84,12 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
     }
     
     @objc func doneTapped() {
+        /// 최종 선택된 친구 목록 저장 및 전달
+        var friends: [String] = []
+        for friend in selectedFriends {
+            friends.append(friend.name)
+        }
+        delegate?.didInviteFriends(names: friends)
         dismiss(animated: true)
     }
         

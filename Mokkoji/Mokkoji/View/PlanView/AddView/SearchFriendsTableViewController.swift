@@ -17,7 +17,7 @@ struct sampleFriend {
 }
 
 protocol SelectedFriendListDelegate {
-    func didInviteFriends(user: User)
+    func didSelectFriends(user: User)
 }
 
 class SearchFriendsTableViewController: UITableViewController, UISearchResultsUpdating {
@@ -65,7 +65,7 @@ class SearchFriendsTableViewController: UITableViewController, UISearchResultsUp
         cell.inviteButton.setImage(buttonImage, for: .normal)
         
         /// 선택한 친구 목록 저장 및 전달
-        delegate?.didInviteFriends(user: filteredFriends[indexPath.row])
+        delegate?.didSelectFriends(user: filteredFriends[indexPath.row])
         
         dismiss(animated: true)
     }

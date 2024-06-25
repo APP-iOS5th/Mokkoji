@@ -11,7 +11,7 @@ import FirebaseCore
 import FirebaseFirestore
 import KakaoMapsSDK
 
-class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate /*SelectedFriendListDelegate*/ {
+class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate, SelectDoneFriendListDelegate {    
     
     let db = Firestore.firestore()
     let mapViewController = MapViewController()
@@ -65,41 +65,23 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         return datePicker
     }()
     
-    lazy var profileImage: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person.circle.fill") /// 임시 이미지
-        imageView.tintColor = .gray
-        imageView.contentMode = .scaleAspectFit
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    lazy var friendList: UILabel = {
+        let textLabel = UILabel()
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        return textLabel
     }()
     
     lazy var inviteButton: UIButton = {
-        let button = UIButton(type: .system)
+        let button = UIButton()
         button.setTitle("친구 초대", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(named: "Primary_Color")
+        button.backgroundColor = .black
         button.layer.cornerRadius = 7
         button.addAction(UIAction { [weak self] _ in
             self?.inviteButtonTapped()
         }, for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
-    }()
-    
-    lazy var spacerView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    lazy var stackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.distribution = .fill
-        stackView.alignment = .fill
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
     }()
     
     lazy var addMapButton: UIButton = {
@@ -152,16 +134,13 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         mapView.addSubview(mapViewController.view)
         
-        stackView.addArrangedSubview(profileImage)
-        stackView.addArrangedSubview(inviteButton)
-        stackView.addArrangedSubview(spacerView)
-        
         self.view.addSubview(mainContainer)
         
         mainContainer.addSubview(titleText)
         mainContainer.addSubview(bodyText)
         mainContainer.addSubview(dateField)
-        mainContainer.addSubview(stackView)
+        mainContainer.addSubview(friendList)
+        mainContainer.addSubview(inviteButton)
         mainContainer.addSubview(addMapButton)
         mainContainer.addSubview(mapView)
         mainContainer.addSubview(tableView)
@@ -185,20 +164,15 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             dateField.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             dateField.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
-            profileImage.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 5),
-            profileImage.widthAnchor.constraint(equalToConstant: 50),
-            profileImage.heightAnchor.constraint(equalToConstant: 50),
+            friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor),
+            friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
-            inviteButton.topAnchor.constraint(equalTo: stackView.topAnchor, constant: 5),
-            inviteButton.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor),
-            inviteButton.widthAnchor.constraint(equalToConstant: 70),
-            inviteButton.heightAnchor.constraint(equalToConstant: 30),
-            
-            stackView.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
-            stackView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            
-            addMapButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 15),
+            inviteButton.topAnchor.constraint(equalTo: friendList.bottomAnchor, constant: 15),
+            inviteButton.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            inviteButton.widthAnchor.constraint(equalToConstant: 80),
+
+            addMapButton.topAnchor.constraint(equalTo: inviteButton.bottomAnchor, constant: 15),
             addMapButton.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             addMapButton.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
@@ -214,6 +188,19 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
         ])
         
+        /// 초대된 친구 추가 후 제약조건 수정
+        if ((friendList.text?.isEmpty) == nil) {
+//            friendList.text = "이름1, 이름2"
+            /// friendList 제약조건 초기화
+            friendList.removeConstraints(friendList.constraints)
+            
+            NSLayoutConstraint.activate([
+                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
+                friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+                friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor)
+            ])
+        }
+        
         /// tableView의 동적 높이 설정
         tableViewHeightConstraint = tableView.heightAnchor.constraint(equalToConstant: 0)
         tableViewHeightConstraint?.isActive = true
@@ -223,17 +210,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         tableViewHeightConstraint?.constant = tableView.contentSize.height
         
         mapViewController.didMove(toParent: self)
-        
-        // TODO: - 친구 초대를 통해 선택된 user의 profileUrl을 전달받아 이미지를 그림
-//        let user =
-//        profileImage.loadImage(from: user.profileImageUrl) { [weak self] image in
-//            if let image = image {
-//                print("Success image loading")
-//            } else {
-//                print("Fail image loading")
-//                self.profileImage.image = UIImage(systemName: "person.circle.fill")
-//            }
-//        }
         
     }
         
@@ -309,9 +285,10 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.reloadData()
     }
     
-    // MARK: - SelectedFriendListDelegate
-    func didInviteFriends(users: [User]) {
-        self.profileImage.image = UIImage(systemName: "person.circle.fill")
+    // MARK: - SelectDoneFriendListDelegate
+    func didInviteFriends(names: [String]) {
+        // TODO: - 친구 리스트로 수정
+        self.friendList.text = names[0]
     }
     
     // MARK: - Methods
