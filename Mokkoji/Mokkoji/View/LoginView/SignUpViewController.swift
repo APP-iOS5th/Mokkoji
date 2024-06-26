@@ -365,8 +365,8 @@ class SignUpViewController: UIViewController {
             
             if let result = result {
                 print("[createUser] result.user.uid: \(result.user.uid)")
-                //TODO: - result.user.uid로 saveUserToFirestore의 userID전달.
-                //Firestore에 저장`
+                //Firestore에 저장
+                self.user.id = result.user.uid
                 self.saveUserToFirestore(user: self.user, userId: result.user.uid)
             }
             print("FB: Success Create user \(self.user)")
@@ -469,6 +469,13 @@ extension SignUpViewController: UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if textField == self.signUpNameTextField {
+            self.signUpEmailTextField.becomeFirstResponder()
+        } else if textField == self.signUpEmailTextField {
+            self.signUpPasswordTextField.becomeFirstResponder()
+        }
+        
         textField.resignFirstResponder()
         
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)

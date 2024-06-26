@@ -336,7 +336,7 @@ class LoginViewController: UIViewController {
         snsButtonsStackView.addArrangedSubview(appleLoginButton)
         snsButtonsStackView.addArrangedSubview(googleLoginButton)
         snsButtonsStackView.addArrangedSubview(snsRightSpacer)
-
+        
         
         NSLayoutConstraint.activate([
             // logoImage Constraints
@@ -479,7 +479,7 @@ class LoginViewController: UIViewController {
                     print("Email Login Error: \(error.localizedDescription)")
                 } else {
                     // 로그인에 성공했다면 여기서 처리...
-                    guard let authResult = authResult else { 
+                    guard let authResult = authResult else {
                         print("[loginButtonTapped] authResult error")
                         return
                     }
@@ -509,7 +509,7 @@ class LoginViewController: UIViewController {
         emailTextField.layer.borderWidth = 1
         passwordTextField.layer.borderColor = UIColor.systemGray4.cgColor
         passwordTextField.layer.borderWidth = 1
-
+        
         view.addGestureRecognizer(tap)
     }
     
@@ -549,7 +549,7 @@ class LoginViewController: UIViewController {
             if let error = error {
                 print("setUserInfo Error: \(error.localizedDescription)")
             } else {
-//                UserInfo.shared.user?.id =  String((user?.id)!)
+                //                UserInfo.shared.user?.id =  String((user?.id)!)
                 
                 //TODO: - fetchSignInMethods deprecated, 이메일로 확인하는것은 보안에 문제가됨.
                 // Firebase에 사용자 등록 전에 이미 가입된 사용자인지 확인
@@ -686,7 +686,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    // MARK: - 로그아웃 버튼 기능 
+    // MARK: - 로그아웃 버튼 기능
     @objc func kakaoLogoutButtonTapped() {
         //kakaoLogout
         UserApi.shared.logout{(error) in
@@ -897,11 +897,10 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
         // 애플 로그인 실패 처리
         print("Apple 로그인 실패: \(error.localizedDescription)")
     }
-        
-        //MARK: - ASAuthorizationControllerPresentationContextProviding Methods
-        func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-            return self.view.window!
-        }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
     
     //로그인 요청마다 임의의 문자열인 'nonce'가 생성되며, 이 nonce는 앱의 인증 요청에 대한 응답으로 ID 토큰이 명시적으로 부여되었는지 확인하는 데 사용됩니다. 재전송 공격을 방지하려면 이 단계가 필요합니다.
     private func randomNonceString(length: Int = 32) -> String {
@@ -928,13 +927,13 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
     //로그인 요청과 함께 nonce의 SHA256 해시를 전송하면 Apple은 이에 대한 응답으로 원래의 값을 전달합니다. Firebase는 원래의 nonce를 해싱하고 Apple에서 전달한 값과 비교하여 응답을 검증합니다.
     @available(iOS 13, *)
     private func sha256(_ input: String) -> String {
-      let inputData = Data(input.utf8)
-      let hashedData = SHA256.hash(data: inputData)
-      let hashString = hashedData.compactMap {
-        String(format: "%02x", $0)
-      }.joined()
-
-      return hashString
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap {
+            String(format: "%02x", $0)
+        }.joined()
+        
+        return hashString
     }
 }
 
@@ -978,6 +977,11 @@ extension LoginViewController: UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if textField == self.emailTextField {
+            self.passwordTextField.becomeFirstResponder()
+        }
+        
         textField.resignFirstResponder()
         
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
