@@ -7,7 +7,8 @@
 
 
 import UIKit
-
+import AuthenticationServices
+import CryptoKit
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
@@ -29,6 +30,7 @@ class LoginViewController: UIViewController {
     
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
+    var currentNonce: String? //Apple Login Property
     
     //정규식
     ///@ 앞에 알파벳, 숫자, 특수문자가 포함될 수 있고 @ 뒤에는 알파벳, 숫자, 그리고 . 뒤에는 알파벳 2자리 이상
@@ -61,6 +63,8 @@ class LoginViewController: UIViewController {
         textField.layer.borderColor = UIColor.systemGray4.cgColor
         textField.layer.borderWidth = 1
         textField.layer.cornerRadius = 5
+        textField.keyboardType = .emailAddress
+        textField.autocapitalizationType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -778,12 +782,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-    //MARK: - Apple Login Methods
-    @objc func appleLoginButtonTapped() {
-        //TODO: - 애플 로그인 구현
-        loginSuccess()
-    }
-    
     //MARK: - FireStore Methods
     func saveUserToFirestore(user: User, userId: String) {
         let userRef = db.collection("users").document(userId)
@@ -813,9 +811,110 @@ class LoginViewController: UIViewController {
     }
 }
 
+//TODO: - 애플 로그인 구현
+//MARK: - Apple Login Methods
+extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    
+    @objc func appleLoginButtonTapped() {
+        let nonce = randomNonceString()
+        currentNonce = nonce
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = sha256(nonce)
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            let userIdentifier = appleIDCredential.user
+            let fullName = appleIDCredential.fullName
+            let email = appleIDCredential.email
+            
+            // Firebase에 사용자 인증 정보 저장
+            let credential = OAuthProvider.credential(withProviderID: "apple.com",
+                                                      idToken: String(data: appleIDCredential.identityToken!, encoding: .utf8)!,
+                                                      rawNonce: currentNonce)
+            Auth.auth().signIn(with: credential) { (authResult, error) in
+                if let error = error {
+                    // 로그인 오류 처리
+                    print("Apple 로그인 오류: \(error.localizedDescription)")
+                    return
+                }
+                
+                // 사용자 정보 저장 및 Firestore 업데이트
+                self.fetchUserFromFirestore(userId: userIdentifier) { user in
+                    if let user = user {
+                        UserInfo.shared.user = user
+                        print("이미 사용자가 존재하는 경우 currentUser 정보: \(String(describing: UserInfo.shared.user))")
+                        self.loginSuccess()
+                    } else {
+                        //Apple은 사진 URL을 제공하지 않습니다.
+                        let newUser = User(id: userIdentifier, name: (fullName?.givenName ?? "No") + (fullName?.familyName ?? " Name"), email: email ?? "No Email", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
+                        UserInfo.shared.user = newUser
+                        self.saveUserToFirestore(user: newUser, userId: userIdentifier)
+                        print("[Apple Login] 새 사용자 정보 저장: \(String(describing: UserInfo.shared.user))")
+                        self.loginSuccess()
+                    }
+                }
+            }
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        // 애플 로그인 실패 처리
+        print("Apple 로그인 실패: \(error.localizedDescription)")
+    }
+        
+        //MARK: - ASAuthorizationControllerPresentationContextProviding Methods
+        func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+            return self.view.window!
+        }
+    
+    //로그인 요청마다 임의의 문자열인 'nonce'가 생성되며, 이 nonce는 앱의 인증 요청에 대한 응답으로 ID 토큰이 명시적으로 부여되었는지 확인하는 데 사용됩니다. 재전송 공격을 방지하려면 이 단계가 필요합니다.
+    private func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        var randomBytes = [UInt8](repeating: 0, count: length)
+        let errorCode = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+        if errorCode != errSecSuccess {
+            fatalError(
+                "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
+            )
+        }
+        
+        let charset: [Character] =
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        
+        let nonce = randomBytes.map { byte in
+            // Pick a random character from the set, wrapping around if needed.
+            charset[Int(byte) % charset.count]
+        }
+        
+        return String(nonce)
+    }
+    
+    //로그인 요청과 함께 nonce의 SHA256 해시를 전송하면 Apple은 이에 대한 응답으로 원래의 값을 전달합니다. Firebase는 원래의 nonce를 해싱하고 Apple에서 전달한 값과 비교하여 응답을 검증합니다.
+    @available(iOS 13, *)
+    private func sha256(_ input: String) -> String {
+      let inputData = Data(input.utf8)
+      let hashedData = SHA256.hash(data: inputData)
+      let hashString = hashedData.compactMap {
+        String(format: "%02x", $0)
+      }.joined()
+
+      return hashString
+    }
+}
+
 //MARK: - TextField Delegate Methods
 extension LoginViewController: UITextFieldDelegate {
     
+    //TODO: - shouldReturn으로 리턴누르면 바로 로그인
+    //TODO: - 이메일에서 리턴누르면 비밀번호로 넘어가는것 구현하기
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField == passwordTextField {
             if let text = textField.text, text.isEmpty {

@@ -80,6 +80,7 @@ class SignUpViewController: UIViewController {
         textField.layer.borderWidth = 1
         textField.keyboardType = .namePhonePad
         textField.autocorrectionType = .no //자동완성 비활성화
+        textField.autocapitalizationType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -471,9 +472,4 @@ extension SignUpViewController: UITextFieldDelegate {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         return true
     }
-}
-
-#Preview {
-    let viewController = SignUpViewController()
-    return viewController
 }
