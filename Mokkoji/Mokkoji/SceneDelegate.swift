@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseFirestore
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -18,15 +20,44 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         //MARK: - Login View (Entry Point)
         
-        let mainViewController = LoginViewController()
-        let navigationVC = UINavigationController(rootViewController: mainViewController)
-        
-        UINavigationBar.appearance().barTintColor = .white
-        UINavigationBar.appearance().tintColor = UIColor(named: "Primary_Color")
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black ]
-        
-        window.rootViewController = navigationVC
-        window.makeKeyAndVisible()
+        //사용자 로그인 유무 확인
+        if let user = Auth.auth().currentUser {
+            // Firestore에서 사용자 정보 가져오기
+            fetchUserFromFirestore(userId: user.uid) { fetchedUser in
+                if let fetchedUser = fetchedUser {
+                    //로그인이 된 상태
+                    print("[SceneDelegate] 로그인 성공")
+                    UserInfo.shared.user = fetchedUser
+                    let tabBarController = self.createTabBarController()
+                    window.rootViewController = tabBarController
+                } else {
+                    // 사용자가 로그인되어 있지만 Firestore에서 사용자 정보를 가져오지 못한 경우, 로그아웃
+                    do {
+                        print("[SceneDelegate] 로그인은 되어있지만 Firestore정보 가져오지 못함")
+                        try Auth.auth().signOut()
+                        let loginViewController = LoginViewController()
+                        let navigationVC = UINavigationController(rootViewController: loginViewController)
+                        window.rootViewController = navigationVC
+                    } catch {
+                        print("[SceneDelegate] Auto Login Error: \(error.localizedDescription)")
+                    }
+                }
+                window.makeKeyAndVisible()
+            }
+            
+        } else {
+            //로그인이 되지 않은 상태 (로그인 뷰로 이동)
+            let mainViewController = LoginViewController()
+            let navigationVC = UINavigationController(rootViewController: mainViewController)
+            
+            UINavigationBar.appearance().barTintColor = .white
+            UINavigationBar.appearance().tintColor = UIColor(named: "Primary_Color")
+            UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.black ]
+            
+            window.rootViewController = navigationVC
+            window.makeKeyAndVisible()
+        }
+
         self.window = window
     }
     
@@ -63,6 +94,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         return tabBarController
+    }
+    
+    //파이어스토어 유저 정보 가져오는 메소드
+    func fetchUserFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
+        let db = Firestore.firestore()
+        let userRef = db.collection("users").document(userId)
+        userRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                do {
+                    let user = try document.data(as: User.self)
+                    completion(user)
+                } catch let error {
+                    print("User Decoding Error: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("Firestore에 User가 존재하지 않음.")
+                completion(nil)
+            }
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
