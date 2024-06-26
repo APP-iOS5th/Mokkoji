@@ -274,7 +274,7 @@ class SignUpViewController: UIViewController {
             guard let selectedImage = self.signUpProfileImage.image else { return }
             self.user.name = name
             self.user.email = email
-            self.user.id = password
+            self.user.id = UUID().uuidString
             
             self.uploadImage(image: selectedImage, pathRoot: self.user.id) { url in
                 if let url = url {
@@ -358,18 +358,20 @@ class SignUpViewController: UIViewController {
     
     //MARK: - FireStore Methods
     func createUser(_ email: String, _ passwrod: String) {
-        Auth.auth().createUser(withEmail: email, password: passwrod) {result,error in
+        Auth.auth().createUser(withEmail: email, password: passwrod) { result, error in
             if let error = error {
                 print(error)
             }
             
             if let result = result {
-                print(result)
+                print("[createUser] result.user.uid: \(result.user.uid)")
+                //TODO: - result.user.uid로 saveUserToFirestore의 userID전달.
+                //Firestore에 저장`
+                self.saveUserToFirestore(user: self.user, userId: result.user.uid)
             }
             print("FB: Success Create user \(self.user)")
         }
-        //Firestore에 저장
-        self.saveUserToFirestore(user: self.user, userId: self.user.id)
+        
         self.navigationController?.popViewController(animated: true)
     }
     
