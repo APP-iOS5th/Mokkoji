@@ -118,16 +118,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         return mailLabel
     }()
     
-    // MARK: - 친구 추가 버튼
-    private lazy var addFriendButton: UIButton = {
-        let plusButton = UIButton()
-        plusButton.setTitle("친구추가 +", for: .normal)
-        plusButton.setTitleColor(UIColor(named: "Primary_Color"), for: .normal)
-        plusButton.addTarget(self, action: #selector(friendsPlusButton), for: .touchUpInside)
-        
-        return plusButton
-    }()
-    
     // MARK: - 친구 삭제 버튼
     private lazy var deleteFriendButton: UIButton = {
         let deleteButton = UIButton()
@@ -174,7 +164,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         view.addSubview(mailLabel)
         view.addSubview(mailCheck)
         view.addSubview(logoutButton)
-        view.addSubview(addFriendButton)
         view.addSubview(deleteFriendButton)
         view.addSubview(friendsTableView)
         
@@ -184,7 +173,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         nameCheck.translatesAutoresizingMaskIntoConstraints = false
         mailLabel.translatesAutoresizingMaskIntoConstraints = false
         mailCheck.translatesAutoresizingMaskIntoConstraints = false
-        addFriendButton.translatesAutoresizingMaskIntoConstraints = false
         deleteFriendButton.translatesAutoresizingMaskIntoConstraints = false
         friendsTableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -198,24 +186,21 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             nameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
             
             nameCheck.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
-            nameCheck.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            nameCheck.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor, constant: 10),
             nameCheck.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             mailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 10),
             mailLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 10),
             
             mailCheck.topAnchor.constraint(equalTo: nameCheck.bottomAnchor, constant: 10),
-            mailCheck.leadingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            mailCheck.leadingAnchor.constraint(equalTo: mailLabel.trailingAnchor, constant: 10),
             mailCheck.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
             logoutButton.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 20),
             logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
-            addFriendButton.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 10),
-            addFriendButton.trailingAnchor.constraint(equalTo: deleteFriendButton.leadingAnchor, constant: -10),
-            
+                        
             deleteFriendButton.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 10),
             deleteFriendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
@@ -231,7 +216,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         if let userFriend = UserInfo.shared.user?.friendList {
             
         } else { // TODO: - 친구 목록이 비어있을땐 이미지가 나오면 안됨 (수정중)
-            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)]
+            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://picsum.photos/200/300")!)]
             UserInfo.shared.user?.friendList = emptyFriend
         }
         friendsTableView.reloadData()
@@ -276,7 +261,8 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     func transitionToLoginView() {
         guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
         let loginViewController = LoginViewController()
-        sceneDelegate.changeRootViewController(loginViewController, animated: true)
+        let navController = UINavigationController(rootViewController: loginViewController)
+        sceneDelegate.changeRootViewController(navController, animated: true)
     }
     
     // MARK: - 친구 추가 페이지 이동
@@ -287,22 +273,32 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     // MARK: - 친구 테이블 뷰
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        guard let friendCount = UserInfo.shared.user?.friendList?.count else { return 0 }
+//        if friendCount > 0 {
+//            return friendCount
+//        } else {
+//            return 1
+//        }
+//    }
+//    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UserInfo.shared.user?.friendList?.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
-        guard let cellImage = UserInfo.shared.user?.friendList?[indexPath.row].profileImageUrl else {
-            return UITableViewCell()
-        }
-        
-        cell.textLabel?.text = UserInfo.shared.user?.friendList?[indexPath.row].name
-        cell.imageView?.image = UIImage(systemName: "person.circle")
-        cell.imageView?.load(url: cellImage)
-        
-        return cell
-    }
+          return UserInfo.shared.user?.friendList?.count ?? 0
+      }
+      
+      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+          let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
+          guard let cellImage = UserInfo.shared.user?.friendList?[indexPath.row].profileImageUrl else {
+              return UITableViewCell()
+          }
+          
+          cell.textLabel?.text = UserInfo.shared.user?.friendList?[indexPath.row].name
+          cell.imageView?.image = UIImage(systemName: "person.circle")
+          cell.imageView?.load(url: cellImage)
+          
+          return cell
+      }
+      
     
     // MARK: - 친구 삭제
     @objc func friendsDeleteButton() {
