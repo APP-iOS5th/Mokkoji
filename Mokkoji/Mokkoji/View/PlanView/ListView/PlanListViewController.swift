@@ -143,29 +143,34 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     // 체크되면 삭제될 메서드
-    // doneButtonTapped 수정 버전
     @objc func doneButtonTapped() {
         var indexesToDeleteFromPlans = [Int]()
         var indexesToDeleteFromSharedPlans = [Int]()
-
+        var plansToDelete = [Plan]()
+        var sharedPlansToDelete = [Plan]()
+        
         // 선택된 항목을 인덱스에 따라 plans와 sharedPlans에 대해 나누어 처리
         for (index, isSelected) in isSelectArray.enumerated() {
             if isSelected {
                 if segmentedControl.selectedSegmentIndex == 0 {
                     indexesToDeleteFromPlans.append(index)
+                    plansToDelete.append(plans[index])
                 } else {
                     indexesToDeleteFromSharedPlans.append(index)
+                    sharedPlansToDelete.append(sharedPlans[index])
                 }
             }
         }
 
-        // plans와 sharedPlans 각각의 삭제 작업 수행
+        // Firestore에서 plans와 sharedPlans 각각의 삭제 작업 수행
         if segmentedControl.selectedSegmentIndex == 0 {
+            deletePlansFromFirestore(plansToDelete)
             for index in indexesToDeleteFromPlans.reversed() {
                 plans.remove(at: index)
                 isSelectArray.remove(at: index)
             }
         } else {
+            deleteSharedPlansFromFirestore(sharedPlansToDelete)
             for index in indexesToDeleteFromSharedPlans.reversed() {
                 sharedPlans.remove(at: index)
                 isSelectArray.remove(at: index)
@@ -181,6 +186,40 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         // UI 업데이트
         editButtonTapped() // Edit 모드 종료
     }
+    
+    // Firestore에서 plans 삭제
+    func deletePlansFromFirestore(_ plansToDelete: [Plan]) {
+        guard let userId = UserInfo.shared.user?.id else { return }
+        let userRef = db.collection("users").document(userId)
+        
+        userRef.updateData([
+            "plan": FieldValue.arrayRemove(plansToDelete.map { try! Firestore.Encoder().encode($0) })
+        ]) { error in
+            if let error = error {
+                print("Error removing plans: \(error)")
+            } else {
+                print("Plans successfully removed!")
+            }
+        }
+    }
+
+    // Firestore에서 sharedPlans 삭제
+    func deleteSharedPlansFromFirestore(_ sharedPlansToDelete: [Plan]) {
+        guard let userId = UserInfo.shared.user?.id else { return }
+        let userRef = db.collection("users").document(userId)
+        
+        userRef.updateData([
+            "sharedPlan": FieldValue.arrayRemove(sharedPlansToDelete.map { try! Firestore.Encoder().encode($0) })
+        ]) { error in
+            if let error = error {
+                print("Error removing shared plans: \(error)")
+            } else {
+                print("Shared plans successfully removed!")
+            }
+        }
+    }
+
+
 
     
     // 체크박스 추가
