@@ -5,6 +5,7 @@ import Firebase
 class PlanListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
+    let segmentedControl = UISegmentedControl(items: ["나의 약속", "공유 받은 약속"])
     var isEditMode = false // Edit 모드 여부를 추적
     var isSelectArray = [Bool]()
     
@@ -21,7 +22,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         self.navigationItem.title = "약속 리스트"
         
         setupNavigationBarAppearance()
-
+        setupSegmentedControl()
         
         // 왼쪽에 Add 버튼 추가
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
@@ -43,6 +44,11 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         initializeSelectArray()
     }
     
+    func setupSegmentedControl() {
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+        navigationItem.titleView = segmentedControl
+    }
     
     func setupNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
@@ -116,7 +122,6 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
             }
         }
     }
-
     
     // Add 버튼 클릭 시 실행될 메서드
     @objc func addButtonTapped() {
@@ -168,20 +173,16 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // 체크박스 추가
     func setNeedsUpdateConfiguration(_ cell: CustomTableViewCell, at indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            if isEditMode {
-                let checkBox = UIButton(type: .custom)
-                let imageName = isSelectArray[indexPath.row] ? "checkmark.square.fill" : "checkmark.square"
-                checkBox.setImage(UIImage(systemName: imageName), for: .normal)
-                checkBox.addTarget(self, action: #selector(checkBoxTapped(_:)), for: .touchUpInside)
-                checkBox.tag = indexPath.row
-                
-                // accessoryView의 frame을 설정하여 셀의 accessoryView로 추가
-                checkBox.frame = CGRect(x: 0, y: 0, width: 20, height: 20) // 적절한 크기 및 위치를 설정하세요
-                cell.accessoryView = checkBox
-            } else {
-                cell.accessoryView = nil
-            }
+        if isEditMode {
+            let checkBox = UIButton(type: .custom)
+            let imageName = isSelectArray[indexPath.row] ? "checkmark.square.fill" : "checkmark.square"
+            checkBox.setImage(UIImage(systemName: imageName), for: .normal)
+            checkBox.addTarget(self, action: #selector(checkBoxTapped(_:)), for: .touchUpInside)
+            checkBox.tag = indexPath.row
+            
+            // accessoryView의 frame을 설정하여 셀의 accessoryView로 추가
+            checkBox.frame = CGRect(x: 0, y: 0, width: 20, height: 20) // 적절한 크기 및 위치를 설정하세요
+            cell.accessoryView = checkBox
         } else {
             cell.accessoryView = nil
         }
@@ -197,7 +198,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // 선택한 셀을 tap하면 이동
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
+        if segmentedControl.selectedSegmentIndex == 0 {
             let selectedPlan = plans[indexPath.row]
             let pmDetailViewController = PlanDetailViewController()
             pmDetailViewController.plans = [selectedPlan] // 선택된 계획만 전달
@@ -210,14 +211,13 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
 
-    
     // 섹션 수 설정
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+        if segmentedControl.selectedSegmentIndex == 0 {
             return plans.count
         } else {
             return sharedPlans.count
@@ -228,7 +228,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         
-        if indexPath.section == 0 {
+        if segmentedControl.selectedSegmentIndex == 0 {
             let plan = plans[indexPath.row]
             cell.titleLabel.text = plan.title
             cell.dateLabel.text = plan.date
@@ -256,13 +256,8 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         return cell
     }
     
-    // 섹션 헤더 타이틀 설정
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return "나의 약속"
-        } else {
-            return "공유 받은 약속"
-        }
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        tableView.reloadData()
     }
     
     func loadImage(from url: URL?, completion: @escaping (UIImage?) -> Void) {
