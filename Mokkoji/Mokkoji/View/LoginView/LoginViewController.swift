@@ -17,12 +17,26 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
-
+//MARK: - Extension
 extension UIView {
     func addSubviews(_ views: [UIView]) {
         for view in views {
             self.addSubview(view)
         }
+    }
+}
+
+extension UIButton {
+    func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
+        UIGraphicsBeginImageContext(CGSize(width: 1.0, height: 1.0))
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.setFillColor(color.cgColor)
+        context.fill(CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0))
+        
+        let backgroundImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+         
+        self.setBackgroundImage(backgroundImage, for: state)
     }
 }
 
@@ -111,7 +125,7 @@ class LoginViewController: UIViewController {
         var button = UIButton()
         button.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
         button.tintColor = .black
-        button.backgroundColor = .systemGray4
+        button.backgroundColor = .white
         button.isHidden = true
         button.addTarget(self, action: #selector(clearAllPasswordButtonTapped), for: .touchUpInside)
         button.layer.zPosition = 1000
@@ -125,7 +139,7 @@ class LoginViewController: UIViewController {
         var button = UIButton()
         button.setImage(UIImage(systemName: "eye.slash.fill"), for: .normal)
         button.tintColor = .black
-        button.backgroundColor = .systemGray4
+        button.backgroundColor = .white
         button.isHidden = true
         button.addTarget(self, action: #selector(hiddenToggleButtonTapped), for: .touchUpInside)
         button.layer.zPosition = 1000
@@ -139,8 +153,10 @@ class LoginViewController: UIViewController {
         var button = UIButton()
         button.setTitle("로그인", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.setBackgroundColor(UIColor(named: "Primary_Color")!, for: .normal)
+        button.setBackgroundColor(.lightGray, for: .selected)
         button.layer.cornerRadius = 10
-        button.backgroundColor = UIColor(named: "Primary_Color")
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
@@ -188,6 +204,7 @@ class LoginViewController: UIViewController {
         button.setAttributedTitle(attributedTitle, for: .normal)
         button.backgroundColor = .white
         button.setTitleColor(.lightGray, for: .normal)
+        button.setBackgroundColor(.lightGray, for: .selected)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         return button

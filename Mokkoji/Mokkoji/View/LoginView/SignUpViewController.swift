@@ -143,8 +143,10 @@ class SignUpViewController: UIViewController {
         var button = UIButton()
         button.setTitle("가입하기", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(named: "Primary_Color")
+        button.setBackgroundColor(UIColor(named: "Primary_Color")!, for: .normal)
+        button.setBackgroundColor(.lightGray, for: .selected)
         button.layer.cornerRadius = 10
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         return button
