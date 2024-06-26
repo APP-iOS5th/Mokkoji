@@ -475,7 +475,7 @@ extension SignUpViewController: PHPickerViewControllerDelegate {
 
 //MARK: - UITextFieldDelegate Methods
 extension SignUpViewController: UITextFieldDelegate {
-    //TODO: UITextFieldDelegate Method 추가하기..
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         //텍스트 필드 강조
         if textField == signUpNameTextField {

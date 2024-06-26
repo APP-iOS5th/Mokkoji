@@ -958,7 +958,6 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
 extension LoginViewController: UITextFieldDelegate {
     
     //TODO: - shouldReturn으로 리턴누르면 바로 로그인
-    //TODO: - 이메일에서 리턴누르면 비밀번호로 넘어가는것 구현하기
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField == passwordTextField {
             if let text = textField.text, text.isEmpty {
@@ -997,6 +996,9 @@ extension LoginViewController: UITextFieldDelegate {
         
         if textField == self.emailTextField {
             self.passwordTextField.becomeFirstResponder()
+        } else if textField == self.passwordTextField {
+            textField.resignFirstResponder()
+            loginButtonTapped()
         }
         
         textField.resignFirstResponder()
