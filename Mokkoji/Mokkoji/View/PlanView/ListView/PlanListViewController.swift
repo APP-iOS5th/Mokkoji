@@ -143,33 +143,45 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     // 체크되면 삭제될 메서드
+    // doneButtonTapped 수정 버전
     @objc func doneButtonTapped() {
-        var indexesToDelete = [Int]() // 삭제할 인덱스 배열
-        
-        // 선택된 항목 삭제
+        var indexesToDeleteFromPlans = [Int]()
+        var indexesToDeleteFromSharedPlans = [Int]()
+
+        // 선택된 항목을 인덱스에 따라 plans와 sharedPlans에 대해 나누어 처리
         for (index, isSelected) in isSelectArray.enumerated() {
             if isSelected {
-                indexesToDelete.append(index)
+                if segmentedControl.selectedSegmentIndex == 0 {
+                    indexesToDeleteFromPlans.append(index)
+                } else {
+                    indexesToDeleteFromSharedPlans.append(index)
+                }
             }
         }
-        
-        // 선택된 항목 삭제
-        for index in indexesToDelete.reversed() {
-            plans.remove(at: index)
-            isSelectArray.remove(at: index)
-            let indexPath = IndexPath(row: index, section: 0)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+
+        // plans와 sharedPlans 각각의 삭제 작업 수행
+        if segmentedControl.selectedSegmentIndex == 0 {
+            for index in indexesToDeleteFromPlans.reversed() {
+                plans.remove(at: index)
+                isSelectArray.remove(at: index)
+            }
+        } else {
+            for index in indexesToDeleteFromSharedPlans.reversed() {
+                sharedPlans.remove(at: index)
+                isSelectArray.remove(at: index)
+            }
         }
-        
+
         // isSelectArray 초기화
         initializeSelectArray()
-        
+
         // 테이블 뷰의 데이터 업데이트
         tableView.reloadData()
-        
+
         // UI 업데이트
         editButtonTapped() // Edit 모드 종료
     }
+
     
     // 체크박스 추가
     func setNeedsUpdateConfiguration(_ cell: CustomTableViewCell, at indexPath: IndexPath) {
