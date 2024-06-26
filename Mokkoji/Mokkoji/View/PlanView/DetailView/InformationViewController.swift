@@ -59,16 +59,8 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
             sharedBtn.heightAnchor.constraint(equalToConstant: 50),
 
         ])
-
-//        let friend1 = User(id: 1, name: "친구 1", email: "friend1@example.com", profileImageUrl: URL(string: "http://example.com/image1")!, plan: nil, friendList: nil)
-//        let friend2 = User(id: 2, name: "친구 2", email: "friend2@example.com", profileImageUrl: URL(string: "http://example.com/image2")!, plan: nil, friendList: nil)
-//        let friend3 = User(id: 3, name: "친구 3", email: "friend3@example.com", profileImageUrl: URL(string: "http://example.com/image3")!, plan: nil, friendList: nil)
-        
-//        friendList = [friend1,friend2,friend3]
-
     }
 
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
@@ -92,9 +84,6 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
         
         return cell
     }
-
-
-    
     //공유 메소드
     @objc func sharedFuntion() {
         print("공유")

@@ -219,9 +219,6 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         }
     }
 
-
-
-    
     // 체크박스 추가
     func setNeedsUpdateConfiguration(_ cell: CustomTableViewCell, at indexPath: IndexPath) {
         if isEditMode {
