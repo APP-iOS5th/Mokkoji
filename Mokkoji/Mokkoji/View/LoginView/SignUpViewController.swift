@@ -98,6 +98,7 @@ class SignUpViewController: UIViewController {
         textField.layer.cornerRadius = 5
         textField.textContentType = .emailAddress
         textField.keyboardType = .emailAddress
+        textField.autocapitalizationType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -261,14 +262,14 @@ class SignUpViewController: UIViewController {
     @objc func signUpButtonTapped() {
 
         if profileImageValid == false {
-            //TODO: Alert로 프로필 이미지 설정해야한다고
-            print("프로필 이미지를 설정 해야합니다.")
+            signUpNameLabel.text = "프로필 이미지를 설정해야 합니다."
+            signUpNameLabel.textColor = .red
         } else if emailValid == false {
-            //TODO: Alert로 이메일 정규식이 맞지 않는다고
-            print("이메일 형식이 올바르지 않습니다.")
+            signUpEmailLabel.text = "이메일 형식이 올바르지 않습니다."
+            signUpEmailLabel.textColor = .red
         } else if passwordValid == false {
-            //TODO: Alert로 비밀번호 정규식이 맞지 않는다고
-            print("비밀번호 형식이 올바르지 않습니다.")
+            signUpPasswordLabel.text = "비밀번호 형식이 올바르지 않습니다."
+            signUpPasswordLabel.textColor = .red
         } else {
             guard let name = self.signUpNameTextField.text else { return }
             guard let email = self.signUpEmailTextField.text else { return }
@@ -335,26 +336,59 @@ class SignUpViewController: UIViewController {
     func checkEmailValidation() {
         if isValid(text: signUpEmailTextField.text!, pattern: emailPattern) {
             emailValid = true
+            signUpEmailLabel.text = "이메일"
+            signUpEmailLabel.textColor = .black
         } else {
             emailValid = false
+            signUpEmailLabel.text = "이메일 형식이 올바르지 않습니다."
+            signUpEmailLabel.textColor = .red
         }
     }
     
     func checkPasswordValidation() {
         if isValid(text: signUpPasswordTextField.text!, pattern: passwordPattern) {
             passwordValid = true
+            signUpPasswordLabel.text = "비밀번호"
+            signUpPasswordLabel.textColor = .black
         } else {
             passwordValid = false
+            signUpPasswordLabel.text = "비밀번호 형식이 올바르지 않습니다."
+            signUpPasswordLabel.textColor = .red
         }
     }
     
-    fileprivate func checkAllValidation() {
-        if emailValid && passwordValid {
-            print("email, password Valid Success")
+    func checkAllValidation() {
+        if emailValid && passwordValid && profileImageValid {
+            print("All fields are valid.")
             allValid = true
         } else {
-            print("email, password Valid Fail")
+            print("One or more fields are invalid.")
             allValid = false
+            
+            // 각 필드의 유효성 검사 결과에 따라 레이블 업데이트
+            if !emailValid {
+                signUpEmailLabel.text = "이메일 형식이 올바르지 않습니다."
+                signUpEmailLabel.textColor = .red
+            } else {
+                signUpEmailLabel.text = "이메일"
+                signUpEmailLabel.textColor = .black
+            }
+            
+            if !passwordValid {
+                signUpPasswordLabel.text = "비밀번호 형식이 올바르지 않습니다."
+                signUpPasswordLabel.textColor = .red
+            } else {
+                signUpPasswordLabel.text = "비밀번호"
+                signUpPasswordLabel.textColor = .black
+            }
+            
+            if !profileImageValid {
+                signUpNameLabel.text = "프로필 이미지를 설정해야 합니다."
+                signUpNameLabel.textColor = .red
+            } else {
+                signUpNameLabel.text = "이름"
+                signUpNameLabel.textColor = .black
+            }
         }
     }
     
@@ -369,18 +403,24 @@ class SignUpViewController: UIViewController {
                 print("[createUser] result.user.uid: \(result.user.uid)")
                 //Firestore에 저장
                 self.user.id = result.user.uid
-                self.saveUserToFirestore(user: self.user, userId: result.user.uid)
+                self.saveUserToFirestore(user: self.user, userId: result.user.uid) {
+                    do {
+                        try Auth.auth().signOut()
+                        self.navigationController?.popViewController(animated: true)
+                    } catch {
+                        print("Error signing out: \(error.localizedDescription)")
+                    }
+                }
             }
             print("FB: Success Create user \(self.user)")
         }
-        
-        self.navigationController?.popViewController(animated: true)
     }
     
-    func saveUserToFirestore(user: User, userId: String) {
+    func saveUserToFirestore(user: User, userId: String, completion: @escaping () -> Void) {
         let userRef = db.collection("users").document(userId)
         do {
             try userRef.setData(from: user)
+            completion()
         } catch let error {
             print("Firestore Writing Error: \(error)")
         }
@@ -453,6 +493,7 @@ extension SignUpViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.systemGray4.cgColor
+        
         switch textField {
         case signUpEmailTextField:
             checkEmailValidation()
