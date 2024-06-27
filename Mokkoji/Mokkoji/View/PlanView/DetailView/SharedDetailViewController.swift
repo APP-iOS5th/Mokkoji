@@ -19,7 +19,7 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
         super.viewDidLoad()
         
         // 네비게이션 바 설정
-        self.title = "상세 약속"
+        self.title = "공유"
         if let navigationBar = self.navigationController?.navigationBar {
             navigationBar.isTranslucent = false
             navigationBar.barTintColor = .white // 네비게이션 바 배경색 설정
