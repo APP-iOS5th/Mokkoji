@@ -14,8 +14,6 @@ class PlanDetailViewCell: UITableViewCell {
     let timeLabel = UILabel()
     let clockImage = UIImageView(image: UIImage(systemName: "clock.fill"))
     
-   
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -53,17 +51,9 @@ class PlanDetailViewCell: UITableViewCell {
             bodyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             bodyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
         ])
-
-
-
-
     }
 
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-
-
 }

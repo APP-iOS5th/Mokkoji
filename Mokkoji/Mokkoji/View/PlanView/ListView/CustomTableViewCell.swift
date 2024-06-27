@@ -24,9 +24,6 @@ class CustomTableViewCell: UITableViewCell {
         profileimage.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(profileimage)
         
-        
-        
-        
         // 제약 조건 설정
         NSLayoutConstraint.activate([
             // iconImageView 설정

@@ -12,6 +12,7 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
     var user: User!
     let db = Firestore.firestore()
     var isSelectArray = [Bool]()
+    var mapInfo: MapInfo? // MapInfo 저장 변수 추가
     
     lazy var mainContainer: UIScrollView = {
         let scrollView = UIScrollView()
@@ -79,6 +80,8 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
             tableView.bottomAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.bottomAnchor)
         ])
     }
+    
+    
     
     // Firestore에서 plan 정보 가져오기
     func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {

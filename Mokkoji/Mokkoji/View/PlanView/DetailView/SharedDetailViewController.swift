@@ -107,5 +107,4 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
         }
         return cell
     }
-    
 }
