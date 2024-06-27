@@ -7,6 +7,7 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
     let tableView = UITableView()
     let mapViewController = MapViewController()
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
+    var selectedPlans: Plan!
     let db = Firestore.firestore()
     
     lazy var mainContainer: UIScrollView = {
@@ -104,6 +105,13 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
             }
             
             cell.clockImage.image = UIImage(systemName: "clock.fill") // 시계 이미지 표시
+        }
+        // mapInfo 배열에서 placeName을 가져와서 출력
+        if indexPath.section == 0 {
+            if selectedPlans.mapInfo.count > 0 { // 배열에 요소가 있는지 확인
+                let placeName = selectedPlans.mapInfo[indexPath.row].placeName
+                cell.placeNameLabel.text = placeName
+            }
         }
         
         return cell

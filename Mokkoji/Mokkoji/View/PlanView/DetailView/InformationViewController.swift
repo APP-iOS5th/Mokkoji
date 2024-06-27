@@ -68,17 +68,27 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PlanDetailViewCell
         
-        // selectedPlan을 사용하여 데이터 출력
-        if let plan = selectedPlan {
-            // titleLabel, bodyLabel 및 timeLabel 설정
-            cell.titleLabel.text = plan.title
-            cell.bodyLabel.text = plan.body
-            
-            if let mapTimeInfo = plan.mapTimeInfo.first {
-                let timeFormatter = DateFormatter()
-                timeFormatter.dateFormat = "HH:mm"
-                let formattedDate = timeFormatter.string(from: mapTimeInfo)
-                cell.timeLabel.text = formattedDate
+        let plan = plans[indexPath.row]
+        cell.titleLabel.text = plan.title
+        cell.bodyLabel.text = plan.body
+        
+        // 특정 날짜를 선택 (예: 첫 번째 날짜)
+        if let mapTimeInfo = plan.mapTimeInfo.first {
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm"
+            let formattedDate = timeFormatter.string(from: mapTimeInfo)
+            cell.timeLabel.text = formattedDate
+        } else {
+            cell.timeLabel.text = "시간 정보 없음"
+        }
+        
+        cell.clockImage.image = UIImage(systemName: "clock.fill")
+        
+        // mapInfo 배열에서 placeName을 가져와서 출력
+        if indexPath.section == 0 {
+            if plan.mapInfo.count > 0 { // 배열에 요소가 있는지 확인
+                let placeName = plan.mapInfo[indexPath.row].placeName
+                cell.placeNameLabel.text = placeName
             }
         }
         

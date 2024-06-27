@@ -74,7 +74,6 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
         
     }
     
-    
     // Firestore에서 plan 정보 가져오기
     func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
         let planRef = db.collection("users").document(userId)
@@ -112,27 +111,35 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PlanDetailViewCell
+        
+        let plan = plans[indexPath.row]
+        cell.titleLabel.text = plan.title
+        cell.bodyLabel.text = plan.body
+        
+        // 특정 날짜를 선택 (예: 첫 번째 날짜)
+        if let mapTimeInfo = plan.mapTimeInfo.first {
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm"
+            let formattedDate = timeFormatter.string(from: mapTimeInfo)
+            cell.timeLabel.text = formattedDate
+        } else {
+            cell.timeLabel.text = "시간 정보 없음"
+        }
+        
+        cell.clockImage.image = UIImage(systemName: "clock.fill")
+        
+        // mapInfo 배열에서 placeName을 가져와서 출력
         if indexPath.section == 0 {
-            // 나의 약속 섹션
-            let plan = plans[indexPath.row]
-            cell.titleLabel.text = plan.title
-            cell.bodyLabel.text = plan.body
-            
-            // 특정 날짜를 선택 (예: 첫 번째 날짜)
-            if let mapTimeInfo = plan.mapTimeInfo.first {
-                let timeFormatter = DateFormatter()
-                timeFormatter.dateFormat = "HH:mm"
-                let formattedDate = timeFormatter.string(from: mapTimeInfo)
-                cell.timeLabel.text = formattedDate
-            } else {
-                cell.timeLabel.text = "시간 정보 없음"
+            if plan.mapInfo.count > 0 { // 배열에 요소가 있는지 확인
+                let placeName = plan.mapInfo[indexPath.row].placeName
+                cell.placeNameLabel.text = placeName
             }
-                
-            cell.clockImage.image = UIImage(systemName: "clock.fill")
         }
         
         return cell
     }
+
+
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
