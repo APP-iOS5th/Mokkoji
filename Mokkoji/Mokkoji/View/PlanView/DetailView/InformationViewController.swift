@@ -62,34 +62,34 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        // 전체 plans 배열에서 mapInfo의 모든 placeName의 수를 합산하여 반환
+        return plans.reduce(0) { $0 + $1.mapInfo.count }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PlanDetailViewCell
         
-        let plan = plans[indexPath.row]
-        cell.titleLabel.text = plan.title
-        cell.bodyLabel.text = plan.body
-        
-        // 특정 날짜를 선택 (예: 첫 번째 날짜)
-        if let mapTimeInfo = plan.mapTimeInfo.first {
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "HH:mm"
-            let formattedDate = timeFormatter.string(from: mapTimeInfo)
-            cell.timeLabel.text = formattedDate
-        } else {
-            cell.timeLabel.text = "시간 정보 없음"
-        }
-        
-        cell.clockImage.image = UIImage(systemName: "clock.fill")
-        
-        // mapInfo 배열에서 placeName을 가져와서 출력
-        if indexPath.section == 0 {
-            if plan.mapInfo.count > 0 { // 배열에 요소가 있는지 확인
-                let placeName = plan.mapInfo[indexPath.row].placeName
+        // plans 배열을 순회하며 mapInfo 배열의 placeName과 시간을 가져오기 위해 인덱스 계산
+        var cumulativeCount = 0
+        for plan in plans {
+            if indexPath.row < cumulativeCount + plan.mapInfo.count {
+                let mapInfoIndex = indexPath.row - cumulativeCount
+                let placeName = plan.mapInfo[mapInfoIndex].placeName
+                cell.titleLabel.text = plan.title
+                cell.bodyLabel.text = plan.body
+                
+                // 해당 place의 시간 가져오기
+                let mapTimeInfo = plan.mapTimeInfo[mapInfoIndex]
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:MM"
+                let formattedDate = timeFormatter.string(from: mapTimeInfo)
+                cell.timeLabel.text = formattedDate
+                
+                cell.clockImage.image = UIImage(systemName: "clock.fill")
                 cell.placeNameLabel.text = placeName
+                break
             }
+            cumulativeCount += plan.mapInfo.count
         }
         
         return cell
