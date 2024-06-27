@@ -1,29 +1,25 @@
-//
-//  SharedDetailViewController.swift
-//  Mokkoji
-//
-//  Created by 차지용 on 6/12/24.
-//
-
 import UIKit
 import FirebaseFirestore
 import Firebase
+
 class SharedDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
     let mapViewController = MapViewController()
-    var plans: [Plan] = []
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
-    var user: User!
-    var plan: Plan!
-    
     let db = Firestore.firestore()
-
+    
+    lazy var mainContainer: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // 네비게이션 바 설정
-        self.title = "Detail View"
+        self.title = "공유"
         if let navigationBar = self.navigationController?.navigationBar {
             navigationBar.isTranslucent = false
             navigationBar.barTintColor = .white // 네비게이션 바 배경색 설정
@@ -44,11 +40,10 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
         view.addSubview(mapViewController.view)
         mapViewController.didMove(toParent: self)
         
-        // 맵 뷰 배경색 설정
-        mapViewController.view.backgroundColor = .white
-        
         // 뷰 계층 구조에 테이블 뷰 추가
-        view.addSubview(tableView)
+        view.addSubview(mainContainer)
+        mainContainer.addSubview(mapViewController.view)
+        mainContainer.addSubview(tableView)
         
         // Set up constraints for the map view
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -56,55 +51,57 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
         // 테이블 뷰 제약 조건 설정
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            mapViewController.view.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-            mapViewController.view.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.9), // 너비를 슈퍼뷰 너비의 90%로 설정
-            mapViewController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mainContainer.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            mainContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            
+            mapViewController.view.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
+            mapViewController.view.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            mapViewController.view.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            mapViewController.view.widthAnchor.constraint(equalToConstant: 300),
             mapViewController.view.heightAnchor.constraint(equalToConstant: 300),
             
-            tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor, constant: 8),
+            tableView.bottomAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.bottomAnchor)
         ])
+
         
+        // 테이블 뷰 리로드
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
-    // Firestore에서 plan 정보 가져오기
-    func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
-        let planRef = db.collection("users").document(userId)
-        planRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                do {
-                    let user = try document.data(as: User.self)
-                    completion(user)
-                } catch let error {
-                    print("Plan Decoding Error: \(error)")
-                    completion(nil)
-                }
-            } else {
-                print("Firestore에 Plan이 존재하지 않음.")
-                completion(nil)
-            }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationBar = self.navigationController?.navigationBar {
+            navigationBar.overrideUserInterfaceStyle = .light
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return plans.count
+        return selectedPlan != nil ? 1 : 0 // 선택한 계획이 있는 경우에만 1개의 셀을 반환
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PmDetailViewCell", for: indexPath) as! PlanDetailViewCell
-        if let sharedPlan = plan {
-            cell.titleLabel.text = sharedPlan.title
-            cell.bodyLabel.text = sharedPlan.body
+        
+        if let selectedPlan = selectedPlan {
+            cell.titleLabel.text = selectedPlan.title // 선택한 계획의 제목을 표시
+            cell.bodyLabel.text = selectedPlan.body // 선택한 계획의 내용을 표시
             
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "HH:mm"
-            let formattedDate = timeFormatter.string(from: sharedPlan.time ?? Date())
-            cell.timeLabel.text = formattedDate
+            let formattedDate = timeFormatter.string(from: selectedPlan.time ?? Date())
+            cell.timeLabel.text = formattedDate // 선택한 계획의 시간을 표시
             
-            cell.clockImage.image = UIImage(systemName: "clock.fill")
+            cell.clockImage.image = UIImage(systemName: "clock.fill") // 시계 이미지 표시
         }
+        
         return cell
     }
 }
