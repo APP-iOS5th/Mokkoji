@@ -15,7 +15,7 @@ struct Plan: Codable {
     var body: String
     var date: String? /// 옵셔널 없애기
     var time: Date? /// 제거
-    var mapTimeInfo: [Date]? /// 옵셔널 없애기
+    var mapTimeInfo: [Date] /// 옵셔널 없애기
     var mapInfo: [MapInfo]
     var currentLatitude: Double? /// 제거
     var currentLongitude: Double? /// 제거

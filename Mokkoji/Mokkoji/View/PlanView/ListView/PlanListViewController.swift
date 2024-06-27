@@ -62,17 +62,6 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationController?.navigationBar.tintColor = UIColor(named: "Primary_Color") // 버튼 아이템 색상 설정
     }
     
-    // Firestore에 plan 정보 저장
-    //MARK: - FireStore Methods
-    func saveUserToFirestore(user: User, userId: String) {
-        let userRef = db.collection("users").document(userId)
-        do {
-            try userRef.setData(from: user)
-        } catch let error {
-            print("Firestore Writing Error: \(error)")
-        }
-    }
-    
     // Firestore에서 plan 정보 가져오기
     func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
         let userRef = db.collection("users").document(userId)

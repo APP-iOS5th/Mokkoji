@@ -45,11 +45,6 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
         view.addSubview(mapViewController.view)
         mapViewController.didMove(toParent: self)
         
-        // 맵 뷰 배경색 설정
-//        mapViewController.view.backgroundColor = .white
-        
-        // 뷰 계층 구조에 테이블 뷰 추가
-//        view.addSubview(tableView)
         view.addSubview(mainContainer)
         mainContainer.addSubview(mapViewController.view)
         mainContainer.addSubview(tableView)
@@ -65,9 +60,6 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
             mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
-//            mapViewController.view.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
-//            mapViewController.view.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 0.9), // 너비를 슈퍼뷰 너비의 90%로 설정
-            
             mapViewController.view.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
             mapViewController.view.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             mapViewController.view.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
@@ -79,8 +71,8 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
             tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor, constant: 8),
             tableView.bottomAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.bottomAnchor)
         ])
+        
     }
-    
     
     
     // Firestore에서 plan 정보 가져오기
@@ -126,10 +118,15 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
             cell.titleLabel.text = plan.title
             cell.bodyLabel.text = plan.body
             
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "HH:mm"
-            let formattedDate = timeFormatter.string(from: plan.time ?? Date())
-            cell.timeLabel.text = formattedDate
+            // 특정 날짜를 선택 (예: 첫 번째 날짜)
+            if let mapTimeInfo = plan.mapTimeInfo.first {
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm"
+                let formattedDate = timeFormatter.string(from: mapTimeInfo)
+                cell.timeLabel.text = formattedDate
+            } else {
+                cell.timeLabel.text = "시간 정보 없음"
+            }
                 
             cell.clockImage.image = UIImage(systemName: "clock.fill")
         }

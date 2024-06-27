@@ -74,12 +74,12 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
             cell.titleLabel.text = plan.title
             cell.bodyLabel.text = plan.body
             
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "HH:mm"
-            let formattedDate = timeFormatter.string(from: plan.time ?? Date())
-            cell.timeLabel.text = formattedDate
-//
-//            cell.clockImage.image = UIImage(systemName: "clock.fill")
+            if let mapTimeInfo = plan.mapTimeInfo.first {
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm"
+                let formattedDate = timeFormatter.string(from: mapTimeInfo)
+                cell.timeLabel.text = formattedDate
+            }
         }
         
         return cell

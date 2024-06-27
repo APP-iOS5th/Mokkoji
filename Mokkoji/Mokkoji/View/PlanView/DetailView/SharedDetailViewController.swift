@@ -94,10 +94,14 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
             cell.titleLabel.text = selectedPlan.title // 선택한 계획의 제목을 표시
             cell.bodyLabel.text = selectedPlan.body // 선택한 계획의 내용을 표시
             
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "HH:mm"
-            let formattedDate = timeFormatter.string(from: selectedPlan.time ?? Date())
-            cell.timeLabel.text = formattedDate // 선택한 계획의 시간을 표시
+            if let mapTimeInfo = selectedPlan.mapTimeInfo.first {
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm"
+                let formattedDate = timeFormatter.string(from: mapTimeInfo)
+                cell.timeLabel.text = formattedDate
+            } else {
+                cell.timeLabel.text = "시간 정보 없음"
+            }
             
             cell.clockImage.image = UIImage(systemName: "clock.fill") // 시계 이미지 표시
         }
