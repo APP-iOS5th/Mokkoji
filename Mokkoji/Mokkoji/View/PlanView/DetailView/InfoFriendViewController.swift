@@ -19,7 +19,7 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
@@ -32,23 +32,32 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
-        
-       
     }
 
-    // Firestore에 plan 정보 저장
-    //MARK: - FireStore Methods
-    func saveUserToFirestore(user: User, userId: String) {
-        let userRef = db.collection("users").document(userId)
-        do {
-            try userRef.setData(from: user)
-        } catch let error {
-            print("Firestore Writing Error: \(error)")
+    func initializeSelectArray() {
+        isSelectArray = [Bool](repeating: false, count: friends.count)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let navigationBar = self.navigationController?.navigationBar {
+            navigationBar.overrideUserInterfaceStyle = .light
+        }
+        
+        fetchCurrentUser { [weak self] user in
+            guard let self = self, let user = user else { return }
+            self.friends = user.friendList ?? []
+            self.initializeSelectArray()
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
     
-    // Firestore에서 사용자 정보 가져오기
-    func fetchUserFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
+    // Firestore에서 현재 사용자 정보 가져오기
+    func fetchCurrentUser(completion: @escaping (User?) -> Void) {
+        let userId = UserInfo.shared.user!.id
         let userRef = db.collection("users").document(userId)
         userRef.getDocument { (document, error) in
             if let document = document, document.exists {
@@ -65,36 +74,7 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
             }
         }
     }
-    
-    func initializeSelectArray() {
-        isSelectArray = [Bool](repeating: false, count: friends.count)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        if let navigationBar = self.navigationController?.navigationBar {
-            navigationBar.overrideUserInterfaceStyle = .light
-        }
-        
-        saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
 
-        // Firestore에서 사용자 정보 가져오기
-        fetchUserFromFirestore(userId: String(UserInfo.shared.user!.id)) { [weak self] user in
-            guard let self = self else { return }
-            if let user = user {
-                // Firestore에서 가져온 사용자 정보를 friends 배열에 추가
-                self.friends.append(user)
-                // isSelectArray 초기화
-                self.initializeSelectArray()
-                // 테이블 뷰 리로드
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }
-        }
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return friends.count
     }
@@ -107,7 +87,6 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var selectedFriend = friends[indexPath.row]
-        // 공유 기능 구현
         sharePlan(with: &selectedFriend)
     }
     
@@ -121,16 +100,20 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
         if friend.sharedPlan == nil {
             friend.sharedPlan = []
         }
-        
         friend.sharedPlan?.append(plan)
         
-        print("\(friend.name)에게 약속을 공유했습니다.")
-        print("\(plan)")
-        
-        // 공유된 약속을 Firestore에 저장합니다.
         saveUserToFirestore(user: friend, userId: friend.id)
         
         dismiss(animated: true, completion: nil)
     }
 
+    // Firestore에 사용자 정보 저장
+    func saveUserToFirestore(user: User, userId: String) {
+        let userRef = db.collection("users").document(userId)
+        do {
+            try userRef.setData(from: user)
+        } catch let error {
+            print("Firestore Writing Error: \(error)")
+        }
+    }
 }
