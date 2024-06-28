@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Firebase
 
 class InformationViewController: UIViewController, UITableViewDataSource,UITableViewDelegate {
 
@@ -14,6 +15,7 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
     var plans: [Plan] = []
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
     var friendList:[User] = []
+    let db = Firestore.firestore()
 
 
     override func viewDidLoad() {
@@ -44,21 +46,40 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
         NSLayoutConstraint.activate([
             //promissTitle 제약조건
             promissTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            promissTitle.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
-            promissTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 8),
+            promissTitle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            promissTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
             
-            //tableView 제약조건
+            // tableView 제약조건
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.topAnchor.constraint(equalTo: promissTitle.bottomAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            //sharedBtn 제약조건
+            tableView.bottomAnchor.constraint(equalTo: sharedBtn.topAnchor, constant: -20),
+            
+            // sharedBtn 제약조건
             sharedBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            sharedBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
-            sharedBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -400),
+            sharedBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            sharedBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             sharedBtn.heightAnchor.constraint(equalToConstant: 50),
 
         ])
+    }
+    // Firestore에서 plan 정보 가져오기
+    func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
+        let planRef = db.collection("users").document(userId)
+        planRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                do {
+                    let user = try document.data(as: User.self)
+                    completion(user)
+                } catch let error {
+                    print("Plan Decoding Error: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("Firestore에 Plan이 존재하지 않음.")
+                completion(nil)
+            }
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -87,6 +108,12 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
                 
                 cell.clockImage.image = UIImage(systemName: "clock.fill")
                 cell.placeNameLabel.text = placeName
+                
+                print("Cell Data:")
+                print("Title: \(plan.title)")
+                print("Body: \(plan.body)")
+                print("Place Name: \(placeName)")
+                print("Time: \(formattedDate)")
                 break
             }
             cumulativeCount += plan.mapInfo.count
