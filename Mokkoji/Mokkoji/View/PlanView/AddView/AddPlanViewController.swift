@@ -17,8 +17,14 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     let inviteFriendTableViewController = InviteFriendTableViewController()
     let mapViewController = MapViewController()
     
-    var selectedTimes: [Date] = []
-    var mapInfoList: [MapInfo] = []
+    var mapInfoList: [MapInfo] = [] {
+        didSet {
+            /// 배열의 크기를 mapInfoList의 크기와 동일하게 설정하고 nil로 초기화
+            /// mapInfoList가 변경될 때 selectedTimes 크기 조정
+            selectedTimes = Array(repeating: nil, count: mapInfoList.count)
+        }
+    }
+    var selectedTimes: [Date?] = []
     var planList: [Plan] = []
     
     lazy var mainContainer: UIScrollView = {
@@ -231,8 +237,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         /// 부모 뷰 컨트롤러가 사라질 때 엔진 일시 중지
 //        mapViewController.mapController?.pauseEngine()
-//        /// PlanListView의 title은 inline으로 유지
-//        self.navigationController?.navigationBar.prefersLargeTitles = false
     }
   
     override func viewDidDisappear(_ animated: Bool) {
@@ -263,9 +267,13 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let placeName = "\(mapInfoList[indexPath.row].placeName)"
         cell.configure(number: numbering, placeInfo: placeName)
         
-        /// 선택된 각 장소의 시간 저장
-        if let selectedTime = cell.selectedTime {
-            selectedTimes.append(selectedTime)
+        // UIDatePicker의 tag를 설정
+        cell.timePicker.tag = indexPath.row
+        cell.timePicker.addTarget(self, action: #selector(timeChanged(_:)), for: .valueChanged)
+
+        // 저장된 시간으로 UIDatePicker 설정
+        if let selectedTime = selectedTimes[indexPath.row] {
+            cell.timePicker.date = selectedTime
         }
 
         return cell
@@ -295,10 +303,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
                 friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
                 friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             ])
-            
-//            self.view.setNeedsLayout()
-//            self.view.layoutIfNeeded()
-            
         }
     }
     
@@ -415,4 +419,15 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     func addMapButtonTapped() {
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
+    
+    /// 각 장소에서 선택된 시간
+    @objc func timeChanged(_ sender: UIDatePicker) {
+        let index = sender.tag
+        
+        /// 사용자가 선택한 시간을 그대로 Date로 저장
+        let selectedTime = sender.date
+            
+        selectedTimes[index] = selectedTime
+    }
+    
 }
