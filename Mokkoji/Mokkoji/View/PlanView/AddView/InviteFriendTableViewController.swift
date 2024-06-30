@@ -8,7 +8,7 @@
 import UIKit
 
 protocol SelectDoneFriendListDelegate {
-    func didInviteFriends(names: String)
+    func didInviteFriends(friends: [User])
 }
 
 class InviteFriendTableViewController: UITableViewController, SelectedFriendListDelegate {
@@ -86,14 +86,15 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
     
     @objc func doneTapped() {
         /// 최종 선택된 친구 목록 저장 및 전달
-        var friends: [String] = []
-        for friend in selectedFriends {
-            friends.append(friend.name)
-        }
+//        var friends: [String] = []
+//        for friend in selectedFriends {
+//            friends.append(friend.name)
+//        }
         
         /// 리스트의 요소들을 하나의 문자열로 합치기
-        let combinedString = friends.joined(separator: ", ")
-        delegate?.didInviteFriends(names: combinedString)
+//        let combinedString = friends.joined(separator: ", ")
+//        delegate?.didInviteFriends(names: combinedString)
+        delegate?.didInviteFriends(friends: self.selectedFriends)
         dismiss(animated: true)
     }
         

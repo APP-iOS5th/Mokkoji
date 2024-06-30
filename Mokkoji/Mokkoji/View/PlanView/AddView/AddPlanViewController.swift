@@ -25,6 +25,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     var selectedTimes: [Date?] = []
+    var participants: [User]? = []
     var planList: [Plan] = []
     
     lazy var mainContainer: UIScrollView = {
@@ -286,9 +287,18 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     // MARK: - SelectDoneFriendListDelegate
-    func didInviteFriends(names: String) {
-        self.friendList.text = names
+    func didInviteFriends(friends: [User]) {
+        self.participants = friends
         
+        /// 리스트의 요소들을 하나의 문자열로 합치기
+        var names: [String] = []
+        for friend in friends {
+            names.append(friend.name)
+        }
+        let combinedString = names.joined(separator: ", ")
+        self.friendList.text = combinedString
+        
+        // TODO: - 제약조건 설정 안되는 문제 해결
         /// 초대된 친구 추가 후 제약조건 수정
         if ((self.friendList.text?.isEmpty) == nil) {
             /// friendList 제약조건 비활성화
@@ -391,7 +401,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             newPlans = currentPlan
         }
         
-        let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes, mapInfo: mapInfoList)
+        let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes, mapInfo: mapInfoList, participant: participants)
         newPlans.append(newPlan)
         
         return newPlans
