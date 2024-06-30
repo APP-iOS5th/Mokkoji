@@ -29,8 +29,6 @@ class PlaceListTableViewCell: UITableViewCell {
     lazy var timePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .time
-        // 기본 시간을 00:00으로 설정
-        datePicker.date = getDefaultDate()
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         
         return datePicker
@@ -92,7 +90,7 @@ class PlaceListTableViewCell: UITableViewCell {
     }
     
     /// 기본 시간을 00:00으로 설정하는 함수
-    func getDefaultDate() -> Date {
+    func getDefaultDate() {
         var components = DateComponents()
         /// 연,월,일은 임의로 설정
         components.year = 2000
@@ -100,7 +98,7 @@ class PlaceListTableViewCell: UITableViewCell {
         components.day = 1
         components.hour = 0
         components.minute = 0
-        return Calendar.current.date(from: components) ?? Date()
+        self.timePicker.date = Calendar.current.date(from: components) ?? Date()
     }
     
     func configure(number: UIImage?, placeInfo: String) {

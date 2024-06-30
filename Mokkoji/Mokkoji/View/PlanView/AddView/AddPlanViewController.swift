@@ -17,16 +17,21 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     let inviteFriendTableViewController = InviteFriendTableViewController()
     let mapViewController = MapViewController()
     
+    var saveButton: UIBarButtonItem?
+    
     var mapInfoList: [MapInfo] = [] {
         didSet {
             /// 배열의 크기를 mapInfoList의 크기와 동일하게 설정하고 nil로 초기화
             /// mapInfoList가 변경될 때 selectedTimes 크기 조정
             selectedTimes = Array(repeating: nil, count: mapInfoList.count)
+            /// mapInfoList가 변경될 때 detailTexts 크기 조정
+            detailTexts = Array(repeating: "", count: mapInfoList.count)
+            
         }
     }
-    var selectedTimes: [Date?] = []
-    var participants: [User]? = []
-    var planList: [Plan] = []
+    var selectedTimes: [Date?]?
+    var detailTexts: [String]?
+    var participants: [User]?
     
     lazy var mainContainer: UIScrollView = {
         let scrollView = UIScrollView()
@@ -133,7 +138,11 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         /// Title 및 BarButton 설정
         self.navigationItem.title = "약속 추가"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
+        saveButton = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveButtonTapped))
+        self.navigationItem.rightBarButtonItem = saveButton
+        /// 값이 다 채워지기 전까지 save 버튼 비활성화
+        saveButton?.isEnabled = false
+        
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.largeTitleDisplayMode = .automatic
         
@@ -268,15 +277,30 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let placeName = "\(mapInfoList[indexPath.row].placeName)"
         cell.configure(number: numbering, placeInfo: placeName)
         
-        // UIDatePicker의 tag를 설정
+        // TODO: - 뷰가 다시 로드될 때 timePicker와 detailTextField가 초기화되는 문제
+        /// UIDatePicker의 tag를 설정
         cell.timePicker.tag = indexPath.row
         cell.timePicker.addTarget(self, action: #selector(timeChanged(_:)), for: .valueChanged)
 
-        // 저장된 시간으로 UIDatePicker 설정
-        if let selectedTime = selectedTimes[indexPath.row] {
+        /// 저장된 시간으로 UIDatePicker 설정
+        if let selectedTime = selectedTimes?[indexPath.row] {
             cell.timePicker.date = selectedTime
+        } else {
+            /// 저장된 시간이 없을 경우, 기본 시간을 00:00으로 설정
+            cell.getDefaultDate()
         }
+        
+        /// UITextField의 tag를 설정
+        cell.detailTextField.tag = indexPath.row
+        
+        /// 텍스트 필드가 편집될 때와 리턴 키를 눌렀을 때
+        cell.detailTextField.addTarget(self, action: #selector(detailTextChanged(_:)), for: .editingChanged)
+        cell.detailTextField.addTarget(self, action: #selector(detailTextChanged(_:)), for: .editingDidEndOnExit)
 
+        /// 저장된 텍스트로 UITextField 설정
+        let detailText = detailTexts?[indexPath.row]
+        cell.detailTextField.text = detailText
+        
         return cell
     }
     
@@ -363,6 +387,30 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
+    /// 각 장소에서 선택된 시간
+    @objc func timeChanged(_ sender: UIDatePicker) {
+        let index = sender.tag
+        
+        /// 사용자가 선택한 시간을 그대로 Date로 저장
+        let selectedTime = sender.date
+            
+        selectedTimes?[index] = selectedTime
+        
+        updateSaveButtonState()
+    }
+    
+    /// 각 장소에 입력한 상세내용
+    @objc func detailTextChanged(_ sender: UITextField) {
+        let index = sender.tag
+        
+        /// 사용자가 작성한 상세내용을 그대로 String으로 저장
+        let detailText = sender.text
+            
+        detailTexts?[index] = detailText ?? ""
+        
+        updateSaveButtonState()
+    }
+    
     /// Firestore에 데이터 저장
     func saveUserToFirestore(user: User, userId: String) {
         let userRef = db.collection("users").document(userId)
@@ -401,7 +449,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             newPlans = currentPlan
         }
         
-        let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes, mapInfo: mapInfoList, participant: participants)
+        let newPlan = Plan(uuid: UUID(), title: title, body: body, date: date, mapTimeInfo: selectedTimes ?? [], detailTextInfo: detailTexts ?? [], mapInfo: mapInfoList, participant: participants)
         newPlans.append(newPlan)
         
         return newPlans
@@ -430,14 +478,10 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.navigationController?.pushViewController(mapViewController, animated: true)
     }
     
-    /// 각 장소에서 선택된 시간
-    @objc func timeChanged(_ sender: UIDatePicker) {
-        let index = sender.tag
+    func updateSaveButtonState() {
+        let allTimesSelected = !(selectedTimes?.contains(where: { $0 == nil }))!
+        let allDetailsEntered = !detailTexts!.contains(where: { $0.isEmpty })
         
-        /// 사용자가 선택한 시간을 그대로 Date로 저장
-        let selectedTime = sender.date
-            
-        selectedTimes[index] = selectedTime
+        saveButton?.isEnabled = allTimesSelected && allDetailsEntered
     }
-    
 }
