@@ -11,7 +11,7 @@ import FirebaseCore
 import FirebaseFirestore
 import KakaoMapsSDK
 
-class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate, SelectDoneFriendListDelegate {    
+class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate, SelectDoneFriendListDelegate, UITextFieldDelegate {    
     
     let db = Firestore.firestore()
     let inviteFriendTableViewController = InviteFriendTableViewController()
@@ -58,7 +58,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     lazy var dateField: UITextField = {
         let textField = UITextField()
         textField.borderStyle = .roundedRect
-        textField.placeholder = "약속 날짜를 입력하세요."
+        textField.placeholder = "약속 날짜를 선택하세요."
         textField.inputView = datePicker
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
@@ -148,10 +148,16 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         inviteFriendTableViewController.delegate = self
         mapViewController.delegate = self
+        /// 사용자 입력 방지
+        dateField.delegate = self
         
         /// tableView 행 삭제를 위한 gesture 설정
         let deleteLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         tableView.addGestureRecognizer(deleteLongPressRecognizer)
+        
+        /// 터치 이벤트를 감지하여 UIDatePicker를 숨기기 위한 gesture 설정
+        let hideDatePickerTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        self.view.addGestureRecognizer(hideDatePickerTapGesture)
         
         mapView.addSubview(mapViewController.view)
         
@@ -277,7 +283,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let placeName = "\(mapInfoList[indexPath.row].placeName)"
         cell.configure(number: numbering, placeInfo: placeName)
         
-        // TODO: - 뷰가 다시 로드될 때 timePicker와 detailTextField가 초기화되는 문제
+        // TODO: - 뷰가 다시 로드될 때 timePicker와 detailTextField가 초기화되는 묹
         /// UIDatePicker의 tag를 설정
         cell.timePicker.tag = indexPath.row
         cell.timePicker.addTarget(self, action: #selector(timeChanged(_:)), for: .valueChanged)
@@ -340,6 +346,12 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
+    // MARK: - UITextFieldDelegate
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return false /// dateField 사용자 입력을 허용하지 않음
+    }
+
+    
     // MARK: - Methods
     @objc func saveButtonTapped() {
         /// Plan 객체 생성
@@ -385,6 +397,17 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
                 present(alertController, animated: true, completion: nil)
             }
         }
+    }
+    
+    @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+        /// 터치된 위치를 확인하여 터치된 뷰가 dateTextField 또는 그 하위 뷰이면 리턴
+        let touchLocation = gesture.location(in: view)
+        if dateField.frame.contains(touchLocation) {
+            return
+        }
+        
+        /// dateTextField 이외의 영역을 터치했을 때 UIDatePicker를 숨김
+        dateField.resignFirstResponder()
     }
     
     /// 각 장소에서 선택된 시간
@@ -484,4 +507,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         saveButton?.isEnabled = allTimesSelected && allDetailsEntered
     }
+
+    
 }
