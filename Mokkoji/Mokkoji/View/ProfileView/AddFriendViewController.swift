@@ -10,7 +10,7 @@ import UIKit
 class AddFriendViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     var allFriends = [
-        User(id:"123", name: "김홍도", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
+        User(id:"1236", name: "김홍도", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
         User(id:"1234", name: "김홍만", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
         User(id:"1235", name: "김홍기", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
     ]
@@ -103,18 +103,19 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         
         let selectedFriend = filteredFriends[indexPath.row]
         let alertController = UIAlertController(title: "Add Friend", message: "\(selectedFriend.name)을 친구목록에 추가 하시겠습니까?", preferredStyle: .alert)
-
+        
+        print("\(selectedFriend)")
         let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
-            print("\(UserInfo.shared.user)")
-            if UserInfo.shared.user!.friendList!.contains{$0.id != selectedFriend.id} {
-                
-                print("before \(UserInfo.shared.user?.friendList)")
-                UserInfo.shared.user?.friendList?.append(selectedFriend)
-                print("after \(UserInfo.shared.user?.friendList)")
-                self.navigationController?.popViewController(animated: true)
+            if UserInfo.shared.user!.friendList!.isEmpty {
+                UserInfo.shared.user!.friendList = [selectedFriend]
             } else {
-            
-            } 
+                if !UserInfo.shared.user!.friendList!.contains(where: { $0.id == selectedFriend.id }) {
+                    UserInfo.shared.user!.friendList!.append(selectedFriend)
+                        print("jkfasbdjifpbjejfoap1211")
+                    } else {
+                    return
+                }
+            }
         }
 
         let noAction = UIAlertAction(title: "No", style: .cancel)

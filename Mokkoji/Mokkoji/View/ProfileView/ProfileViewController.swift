@@ -219,6 +219,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://picsum.photos/200/300")!)]
             UserInfo.shared.user?.friendList = emptyFriend
         }
+        print("123")
         friendsTableView.reloadData()
     }
     
