@@ -13,7 +13,7 @@ struct Plan: Codable {
     var order: Int?
     var title: String
     var body: String
-    var date: String
+    var date: String? /// 옵셔널 없애기
     var time: Date? /// 제거
     var mapTimeInfo: [Date?]
     var detailTextInfo: [String]

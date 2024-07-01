@@ -129,6 +129,7 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         
     }
     
+    
     override func viewWillAppear(_ animated: Bool) {
         addObservers()
         _appear = true
