@@ -10,9 +10,9 @@ import UIKit
 class AddFriendViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     var allFriends = [
-        User(id: "123", name: "김홍도", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
-        User(id: "1234", name: "김홍만", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
-        User(id: "1235", name: "김홍기", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
+        User(id:"123", name: "김홍도", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
+        User(id:"1234", name: "김홍만", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
+        User(id:"1235", name: "김홍기", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
     ]
     
     var filteredFriends = [User]()
@@ -90,7 +90,7 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.imageView?.contentMode = .scaleAspectFill
         
         // 이미지뷰의 크기를 설정합니다.
-        let imageSize: CGFloat = 50 // 원하는 크기로 설정하세요
+        let imageSize: CGFloat = 50
         cell.imageView?.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
         cell.imageView?.layer.cornerRadius = imageSize / 3.6
         cell.imageView?.clipsToBounds = true
@@ -105,12 +105,16 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         let alertController = UIAlertController(title: "Add Friend", message: "\(selectedFriend.name)을 친구목록에 추가 하시겠습니까?", preferredStyle: .alert)
 
         let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
-            if UserInfo.shared.user?.name != nil {
+            print("\(UserInfo.shared.user)")
+            if UserInfo.shared.user!.friendList!.contains{$0.id != selectedFriend.id} {
+                
+                print("before \(UserInfo.shared.user?.friendList)")
                 UserInfo.shared.user?.friendList?.append(selectedFriend)
+                print("after \(UserInfo.shared.user?.friendList)")
                 self.navigationController?.popViewController(animated: true)
             } else {
-                
-            }
+            
+            } 
         }
 
         let noAction = UIAlertAction(title: "No", style: .cancel)

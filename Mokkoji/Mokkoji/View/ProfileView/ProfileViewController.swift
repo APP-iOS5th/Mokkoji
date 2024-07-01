@@ -296,6 +296,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
           cell.imageView?.image = UIImage(systemName: "person.circle")
           cell.imageView?.load(url: cellImage)
           
+          let imageSize: CGFloat = 50
+          cell.imageView?.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
+          cell.imageView?.layer.cornerRadius = imageSize / 3.6
+          cell.imageView?.clipsToBounds = true
+          
           return cell
       }
       
