@@ -14,6 +14,7 @@ class PlanDetailViewCell: UITableViewCell {
     let timeLabel = UILabel()
     let clockImage = UIImageView(image: UIImage(systemName: "clock.fill"))
     let placeNameLabel = UILabel()
+    let detailTextInfoLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -26,6 +27,9 @@ class PlanDetailViewCell: UITableViewCell {
         
         placeNameLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(placeNameLabel)
+        
+        detailTextInfoLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(detailTextInfoLabel)
         
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(timeLabel)
@@ -48,7 +52,12 @@ class PlanDetailViewCell: UITableViewCell {
             placeNameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             placeNameLabel.topAnchor.constraint(equalTo: bodyLabel.bottomAnchor, constant: 8),
             placeNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            placeNameLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            
+            // detailTextInfoLabel 설정
+            detailTextInfoLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            detailTextInfoLabel.topAnchor.constraint(equalTo: placeNameLabel.bottomAnchor, constant: 8),
+            detailTextInfoLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            detailTextInfoLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
 
             // clockImage 설정
             clockImage.leadingAnchor.constraint(equalTo: titleLabel.trailingAnchor, constant: 8),

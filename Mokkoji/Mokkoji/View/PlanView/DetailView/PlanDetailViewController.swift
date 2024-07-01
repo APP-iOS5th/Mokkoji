@@ -124,11 +124,15 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
                 cell.titleLabel.text = plan.title
                 cell.bodyLabel.text = plan.body
                 
+                // detailTextInfo 배열을 적절하게 처리하여 문자열로 병합
+                let detailTextInfo = plan.detailTextInfo.joined(separator: ", ")
+                cell.detailTextInfoLabel.text = detailTextInfo
+                
                 // 해당 place의 시간 가져오기
                 let mapTimeInfo = plan.mapTimeInfo[mapInfoIndex]
                 let timeFormatter = DateFormatter()
                 timeFormatter.dateFormat = "HH:MM"
-                let formattedDate = timeFormatter.string(from: mapTimeInfo)
+                let formattedDate = timeFormatter.string(from: mapTimeInfo!)
                 cell.timeLabel.text = formattedDate
                 
                 cell.clockImage.image = UIImage(systemName: "clock.fill")
