@@ -126,9 +126,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func createTabBarController() -> UITabBarController {
         let navigationController = UINavigationController(rootViewController: PlanListViewController())
         let profilController = UINavigationController(rootViewController: ProfileViewController())
+        let friendController = UINavigationController(rootViewController: AddFriendViewController())
         
         let tabBarController = UITabBarController()
-        tabBarController.setViewControllers([navigationController, profilController], animated: true)
+        tabBarController.setViewControllers([navigationController, profilController, friendController], animated: true)
         
         // 기본 색상 설정
         UINavigationBar.appearance().barTintColor = .white
@@ -147,6 +148,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             items[1].selectedImage = UIImage(systemName: "person.fill")
             items[1].image = UIImage(systemName: "person")
             items[1].title = "프로필"
+            
+            items[2].selectedImage = UIImage(systemName: "person.2.circle.fill")
+            items[2].image = UIImage(systemName: "person.2.circle")
+            items[2].title = "친구"
         }
         
         return tabBarController

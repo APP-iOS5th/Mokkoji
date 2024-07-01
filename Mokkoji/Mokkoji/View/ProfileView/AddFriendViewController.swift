@@ -43,8 +43,6 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         friendSearchBar.translatesAutoresizingMaskIntoConstraints = false
         friendSearchTableView.translatesAutoresizingMaskIntoConstraints = false
         
-        filteredFriends = allFriends
-        
         NSLayoutConstraint.activate([
             friendSearchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             friendSearchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -71,7 +69,7 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            filteredFriends = allFriends
+            filteredFriends.removeAll()
         } else {
             filteredFriends = allFriends.filter { $0.name.contains(searchText) }
         }
@@ -89,6 +87,13 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         cell.textLabel?.text = friend.name
         cell.imageView?.image = UIImage(systemName: "person.circle")
         cell.imageView?.load(url: friend.profileImageUrl)
+        cell.imageView?.contentMode = .scaleAspectFill
+        
+        // 이미지뷰의 크기를 설정합니다.
+        let imageSize: CGFloat = 50 // 원하는 크기로 설정하세요
+        cell.imageView?.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
+        cell.imageView?.layer.cornerRadius = imageSize / 3.6
+        cell.imageView?.clipsToBounds = true
         
         return cell
     }
@@ -104,7 +109,7 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
                 UserInfo.shared.user?.friendList?.append(selectedFriend)
                 self.navigationController?.popViewController(animated: true)
             } else {
-                // 이미 있는 사람은 추가하면 안됨 ..
+                
             }
         }
 
@@ -116,3 +121,4 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         present(alertController, animated: true, completion: nil)
     }
 }
+
