@@ -5,6 +5,7 @@ import Firebase
 class PlanListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
+    let segmentedControl = UISegmentedControl(items: ["나의 약속", "공유 받은 약속"])
     var isEditMode = false // Edit 모드 여부를 추적
     var isSelectArray = [Bool]()
     
@@ -21,7 +22,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         self.navigationItem.title = "약속 리스트"
         
         setupNavigationBarAppearance()
-
+        setupSegmentedControl()
         
         // 왼쪽에 Add 버튼 추가
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
@@ -43,6 +44,11 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         initializeSelectArray()
     }
     
+    func setupSegmentedControl() {
+        segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
+        navigationItem.titleView = segmentedControl
+    }
     
     func setupNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
@@ -54,17 +60,6 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.tintColor = UIColor(named: "Primary_Color") // 버튼 아이템 색상 설정
-    }
-    
-    // Firestore에 plan 정보 저장
-    //MARK: - FireStore Methods
-    func saveUserToFirestore(user: User, userId: String) {
-        let userRef = db.collection("users").document(userId)
-        do {
-            try userRef.setData(from: user)
-        } catch let error {
-            print("Firestore Writing Error: \(error)")
-        }
     }
     
     // Firestore에서 plan 정보 가져오기
@@ -138,49 +133,93 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // 체크되면 삭제될 메서드
     @objc func doneButtonTapped() {
-        var indexesToDelete = [Int]() // 삭제할 인덱스 배열
+        var indexesToDeleteFromPlans = [Int]()
+        var indexesToDeleteFromSharedPlans = [Int]()
+        var plansToDelete = [Plan]()
+        var sharedPlansToDelete = [Plan]()
         
-        // 선택된 항목 삭제
+        // 선택된 항목을 인덱스에 따라 plans와 sharedPlans에 대해 나누어 처리
         for (index, isSelected) in isSelectArray.enumerated() {
             if isSelected {
-                indexesToDelete.append(index)
+                if segmentedControl.selectedSegmentIndex == 0 {
+                    indexesToDeleteFromPlans.append(index)
+                    plansToDelete.append(plans[index])
+                } else {
+                    indexesToDeleteFromSharedPlans.append(index)
+                    sharedPlansToDelete.append(sharedPlans[index])
+                }
             }
         }
-        
-        // 선택된 항목 삭제
-        for index in indexesToDelete.reversed() {
-            plans.remove(at: index)
-            isSelectArray.remove(at: index)
-            let indexPath = IndexPath(row: index, section: 0)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+
+        // Firestore에서 plans와 sharedPlans 각각의 삭제 작업 수행
+        if segmentedControl.selectedSegmentIndex == 0 {
+            deletePlansFromFirestore(plansToDelete)
+            for index in indexesToDeleteFromPlans.reversed() {
+                plans.remove(at: index)
+                isSelectArray.remove(at: index)
+            }
+        } else {
+            deleteSharedPlansFromFirestore(sharedPlansToDelete)
+            for index in indexesToDeleteFromSharedPlans.reversed() {
+                sharedPlans.remove(at: index)
+                isSelectArray.remove(at: index)
+            }
         }
-        
+
         // isSelectArray 초기화
         initializeSelectArray()
-        
+
         // 테이블 뷰의 데이터 업데이트
         tableView.reloadData()
-        
+
         // UI 업데이트
         editButtonTapped() // Edit 모드 종료
     }
     
+    // Firestore에서 plans 삭제
+    func deletePlansFromFirestore(_ plansToDelete: [Plan]) {
+        guard let userId = UserInfo.shared.user?.id else { return }
+        let userRef = db.collection("users").document(userId)
+        
+        userRef.updateData([
+            "plan": FieldValue.arrayRemove(plansToDelete.map { try! Firestore.Encoder().encode($0) })
+        ]) { error in
+            if let error = error {
+                print("Error removing plans: \(error)")
+            } else {
+                print("Plans successfully removed!")
+            }
+        }
+    }
+
+    // Firestore에서 sharedPlans 삭제
+    func deleteSharedPlansFromFirestore(_ sharedPlansToDelete: [Plan]) {
+        guard let userId = UserInfo.shared.user?.id else { return }
+        let userRef = db.collection("users").document(userId)
+        
+        userRef.updateData([
+            "sharedPlan": FieldValue.arrayRemove(sharedPlansToDelete.map { try! Firestore.Encoder().encode($0) })
+        ]) { error in
+            if let error = error {
+                print("Error removing shared plans: \(error)")
+            } else {
+                print("Shared plans successfully removed!")
+            }
+        }
+    }
+
     // 체크박스 추가
     func setNeedsUpdateConfiguration(_ cell: CustomTableViewCell, at indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            if isEditMode {
-                let checkBox = UIButton(type: .custom)
-                let imageName = isSelectArray[indexPath.row] ? "checkmark.square.fill" : "checkmark.square"
-                checkBox.setImage(UIImage(systemName: imageName), for: .normal)
-                checkBox.addTarget(self, action: #selector(checkBoxTapped(_:)), for: .touchUpInside)
-                checkBox.tag = indexPath.row
-                
-                // accessoryView의 frame을 설정하여 셀의 accessoryView로 추가
-                checkBox.frame = CGRect(x: 0, y: 0, width: 20, height: 20) // 적절한 크기 및 위치를 설정하세요
-                cell.accessoryView = checkBox
-            } else {
-                cell.accessoryView = nil
-            }
+        if isEditMode {
+            let checkBox = UIButton(type: .custom)
+            let imageName = isSelectArray[indexPath.row] ? "checkmark.square.fill" : "checkmark.square"
+            checkBox.setImage(UIImage(systemName: imageName), for: .normal)
+            checkBox.addTarget(self, action: #selector(checkBoxTapped(_:)), for: .touchUpInside)
+            checkBox.tag = indexPath.row
+            
+            // accessoryView의 frame을 설정하여 셀의 accessoryView로 추가
+            checkBox.frame = CGRect(x: 0, y: 0, width: 20, height: 20) // 적절한 크기 및 위치를 설정하세요
+            cell.accessoryView = checkBox
         } else {
             cell.accessoryView = nil
         }
@@ -196,7 +235,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // 선택한 셀을 tap하면 이동
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
+        if segmentedControl.selectedSegmentIndex == 0 {
             let selectedPlan = plans[indexPath.row]
             let pmDetailViewController = PlanDetailViewController()
             pmDetailViewController.plans = [selectedPlan] // 선택된 계획만 전달
@@ -204,18 +243,18 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         } else {
             let selectedSharedPlan = sharedPlans[indexPath.row]
             let sharedDetailViewController = SharedDetailViewController()
-            sharedDetailViewController.plan = selectedSharedPlan // 선택한 약속만 포함하는 속성으로 설정
+            sharedDetailViewController.selectedPlan = selectedSharedPlan // 선택한 공유 약속을 전달
             navigationController?.pushViewController(sharedDetailViewController, animated: true)
         }
     }
-    
+
     // 섹션 수 설정
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+        if segmentedControl.selectedSegmentIndex == 0 {
             return plans.count
         } else {
             return sharedPlans.count
@@ -226,7 +265,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         
-        if indexPath.section == 0 {
+        if segmentedControl.selectedSegmentIndex == 0 {
             let plan = plans[indexPath.row]
             cell.titleLabel.text = plan.title
             cell.dateLabel.text = plan.date
@@ -254,13 +293,8 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         return cell
     }
     
-    // 섹션 헤더 타이틀 설정
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
-            return "나의 약속"
-        } else {
-            return "공유 받은 약속"
-        }
+    @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
+        tableView.reloadData()
     }
     
     func loadImage(from url: URL?, completion: @escaping (UIImage?) -> Void) {

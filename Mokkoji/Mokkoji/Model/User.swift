@@ -17,5 +17,4 @@ struct User: Codable {
     var plan: [Plan]?
     var sharedPlan: [Plan]?
     var friendList: [User]?
-
 }
