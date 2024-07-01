@@ -7,7 +7,8 @@
 
 
 import UIKit
-
+import AuthenticationServices
+import CryptoKit
 import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
@@ -16,7 +17,7 @@ import KakaoSDKCommon
 import KakaoSDKAuth
 import KakaoSDKUser
 
-
+//MARK: - Extension
 extension UIView {
     func addSubviews(_ views: [UIView]) {
         for view in views {
@@ -25,10 +26,25 @@ extension UIView {
     }
 }
 
+extension UIButton {
+    func setBackgroundColor(_ color: UIColor, for state: UIControl.State) {
+        UIGraphicsBeginImageContext(CGSize(width: 1.0, height: 1.0))
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        context.setFillColor(color.cgColor)
+        context.fill(CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0))
+        
+        let backgroundImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+         
+        self.setBackgroundImage(backgroundImage, for: state)
+    }
+}
+
 class LoginViewController: UIViewController {
     
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
+    var currentNonce: String? //Apple Login Property
     
     //정규식
     ///@ 앞에 알파벳, 숫자, 특수문자가 포함될 수 있고 @ 뒤에는 알파벳, 숫자, 그리고 . 뒤에는 알파벳 2자리 이상
@@ -61,6 +77,8 @@ class LoginViewController: UIViewController {
         textField.layer.borderColor = UIColor.systemGray4.cgColor
         textField.layer.borderWidth = 1
         textField.layer.cornerRadius = 5
+        textField.keyboardType = .emailAddress
+        textField.autocapitalizationType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -107,7 +125,7 @@ class LoginViewController: UIViewController {
         var button = UIButton()
         button.setImage(UIImage(systemName: "x.circle.fill"), for: .normal)
         button.tintColor = .black
-        button.backgroundColor = .systemGray4
+        button.backgroundColor = .white
         button.isHidden = true
         button.addTarget(self, action: #selector(clearAllPasswordButtonTapped), for: .touchUpInside)
         button.layer.zPosition = 1000
@@ -121,7 +139,7 @@ class LoginViewController: UIViewController {
         var button = UIButton()
         button.setImage(UIImage(systemName: "eye.slash.fill"), for: .normal)
         button.tintColor = .black
-        button.backgroundColor = .systemGray4
+        button.backgroundColor = .white
         button.isHidden = true
         button.addTarget(self, action: #selector(hiddenToggleButtonTapped), for: .touchUpInside)
         button.layer.zPosition = 1000
@@ -135,8 +153,10 @@ class LoginViewController: UIViewController {
         var button = UIButton()
         button.setTitle("로그인", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.setBackgroundColor(UIColor(named: "Primary_Color")!, for: .normal)
+        button.setBackgroundColor(.lightGray, for: .selected)
         button.layer.cornerRadius = 10
-        button.backgroundColor = UIColor(named: "Primary_Color")
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
@@ -184,6 +204,7 @@ class LoginViewController: UIViewController {
         button.setAttributedTitle(attributedTitle, for: .normal)
         button.backgroundColor = .white
         button.setTitleColor(.lightGray, for: .normal)
+        button.setBackgroundColor(.lightGray, for: .selected)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         return button
@@ -219,7 +240,7 @@ class LoginViewController: UIViewController {
     private lazy var kakaoLoginButton: UIButton = {
         var button = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .light)
-        let image = UIImage(named: "Property 1=Default")
+        let image = UIImage(named: "kakao_login_button")
         button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(kakaoLoginButtonTapped), for: .touchUpInside)
@@ -230,7 +251,7 @@ class LoginViewController: UIViewController {
     private lazy var appleLoginButton: UIButton = {
         var button = UIButton(frame: CGRect(x: 0, y: 0, width: 44, height: 44))
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 50, weight: .light)
-        let image = UIImage(named: "Sign in with Apple - Logo Only - Black - Circle")
+        let image = UIImage(named: "apple_signup_button")
         button.setImage(image, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.imageView?.contentMode = .scaleAspectFill
@@ -332,7 +353,7 @@ class LoginViewController: UIViewController {
         snsButtonsStackView.addArrangedSubview(appleLoginButton)
         snsButtonsStackView.addArrangedSubview(googleLoginButton)
         snsButtonsStackView.addArrangedSubview(snsRightSpacer)
-
+        
         
         NSLayoutConstraint.activate([
             // logoImage Constraints
@@ -412,7 +433,8 @@ class LoginViewController: UIViewController {
                                                name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
                                                name: UIResponder.keyboardWillHideNotification, object: nil)
-        
+        //자동 로그인 체크
+        checkAutoLogin()
     }
     
     //MARK: - Methods
@@ -425,6 +447,20 @@ class LoginViewController: UIViewController {
         guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
         let tabBarController = sceneDelegate.createTabBarController()
         sceneDelegate.changeRootViewController(tabBarController, animated: true)
+    }
+    
+    //자동 로그인
+    private func checkAutoLogin() {
+        if let user = Auth.auth().currentUser {
+            fetchUserFromFirestore(userId: user.uid) { fetchedUser in
+                if let fetchedUser = fetchedUser {
+                    UserInfo.shared.user = fetchedUser
+                    self.loginSuccess()
+                } else {
+                    print("자동 로그인 실패: 사용자 정보를 불러오지 못했습니다.")
+                }
+            }
+        }
     }
     
     @objc func clearAllPasswordButtonTapped() {
@@ -460,7 +496,11 @@ class LoginViewController: UIViewController {
                     print("Email Login Error: \(error.localizedDescription)")
                 } else {
                     // 로그인에 성공했다면 여기서 처리...
-                    fetchUserFromFirestore(userId: password) { user in
+                    guard let authResult = authResult else {
+                        print("[loginButtonTapped] authResult error")
+                        return
+                    }
+                    fetchUserFromFirestore(userId: authResult.user.uid) { user in
                         if let user = user {
                             UserInfo.shared.user = user
                             print("이미 사용자가 존재하는 경우 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
@@ -486,7 +526,7 @@ class LoginViewController: UIViewController {
         emailTextField.layer.borderWidth = 1
         passwordTextField.layer.borderColor = UIColor.systemGray4.cgColor
         passwordTextField.layer.borderWidth = 1
-
+        
         view.addGestureRecognizer(tap)
     }
     
@@ -526,10 +566,7 @@ class LoginViewController: UIViewController {
             if let error = error {
                 print("setUserInfo Error: \(error.localizedDescription)")
             } else {
-                print("setUserInfo nickname: \(user?.kakaoAccount?.profile?.nickname ?? "no nickname")")
-                print("setUserInfo email: \(user?.kakaoAccount?.email ?? "no email")")
-                print("setUserInfo profileImageUrl: \(String(describing: user?.kakaoAccount?.profile?.profileImageUrl))")
-                UserInfo.shared.user?.id =  String((user?.id)!)
+                //                UserInfo.shared.user?.id =  String((user?.id)!)
                 
                 //TODO: - fetchSignInMethods deprecated, 이메일로 확인하는것은 보안에 문제가됨.
                 // Firebase에 사용자 등록 전에 이미 가입된 사용자인지 확인
@@ -547,7 +584,10 @@ class LoginViewController: UIViewController {
                                 print("FB: 이미 사용자가 존재하는 경우 로그인 시도 signin failed error: \(error.localizedDescription)")
                             } else {
                                 print("FB: 이미 사용자가 존재하는 경우 로그인 시도 signin success")
-                                self.fetchUserFromFirestore(userId: String((user?.id)!)) { user in
+                                guard let authResult = authResult else {
+                                    return
+                                }
+                                self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
                                     if let user = user {
                                         UserInfo.shared.user = user
                                         print("이미 사용자가 존재하는 경우 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
@@ -574,7 +614,10 @@ class LoginViewController: UIViewController {
                                         print("FB: 이메일이 이미 사용 중일 때, 로그인 시도 signin failed error: \(error.localizedDescription)")
                                     } else {
                                         print("FB: 이메일이 이미 사용 중일 때, 로그인 시도 signin success")
-                                        self.fetchUserFromFirestore(userId: String((user?.id)!)) { user in
+                                        guard let authResult = authResult else {
+                                            return
+                                        }
+                                        self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
                                             if let user = user {
                                                 UserInfo.shared.user = user
                                                 print("fetch 이후 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
@@ -591,10 +634,13 @@ class LoginViewController: UIViewController {
                             } else {
                                 print("FB: 이메일이 사용중이지 않을때 signup success")
                                 //사용자 정보 저장
+                                guard let authResult = authResult else {
+                                    return
+                                }
+                                let userId = authResult.user.uid
                                 if let nickname = user?.kakaoAccount?.profile?.nickname,
                                    let email = user?.kakaoAccount?.email,
-                                   let profileImageUrl = user?.kakaoAccount?.profile?.profileImageUrl,
-                                   let userId = user?.id {
+                                   let profileImageUrl = user?.kakaoAccount?.profile?.profileImageUrl {
                                     let user = User(id: String(userId), name: nickname, email: email, profileImageUrl: profileImageUrl)
                                     UserInfo.shared.user = user
                                     
@@ -657,7 +703,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    // MARK: - 로그아웃 버튼 기능 
+    // MARK: - 로그아웃 버튼 기능
     @objc func kakaoLogoutButtonTapped() {
         //kakaoLogout
         UserApi.shared.logout{(error) in
@@ -693,8 +739,9 @@ class LoginViewController: UIViewController {
                     if let error = error {
                         print("FB: 이미 사용자가 존재하는 경우 로그인 시도 signin failed error: \(error.localizedDescription)")
                     } else {
+                        guard let authResult = authResult else { return }
                         print("FB: 이미 사용자가 존재하는 경우 로그인 시도 signin success")
-                        self.fetchUserFromFirestore(userId: userID) { user in
+                        self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
                             if let user = user {
                                 UserInfo.shared.user = user
                                 print("이미 사용자가 존재하는 경우 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
@@ -717,7 +764,8 @@ class LoginViewController: UIViewController {
                                 print("이메일이 이미 사용 중일 때, 로그인 시도 실패: \(error.localizedDescription)")
                             } else {
                                 print("이메일이 이미 사용 중일 때, 로그인 시도 성공")
-                                self.fetchUserFromFirestore(userId: userID) { user in
+                                guard let authResult = authResult else { return }
+                                self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
                                     if let user = user {
                                         UserInfo.shared.user = user
                                         print("fetch 이후 currentUser 정보: \(String(describing: UserInfo.shared.user))")
@@ -733,15 +781,15 @@ class LoginViewController: UIViewController {
                         print("이메일이 사용 중이지 않을 때, 회원가입 실패: \(error.localizedDescription)")
                     } else {
                         print("이메일이 사용 중이지 않을 때, 회원가입 성공")
-                        
+                        guard let authResult = authResult else { return }
                         // 사용자 정보 저장
-                        let newUser = User(id: userID, name: userName, email: userEmail, profileImageUrl: userProfileURL)
+                        let newUser = User(id: authResult.user.uid, name: userName, email: userEmail, profileImageUrl: userProfileURL)
                         UserInfo.shared.user = newUser
                         
                         print("이메일이 사용 중이지 않을 때, 사용자 정보 저장: \(String(describing: UserInfo.shared.user))")
                         
                         // Firestore에 사용자 정보 저장
-                        self.saveUserToFirestore(user: newUser, userId: userID)
+                        self.saveUserToFirestore(user: newUser, userId: authResult.user.uid)
                         //탭바뷰 표시
                         self.loginSuccess()
                     }
@@ -778,12 +826,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-    //MARK: - Apple Login Methods
-    @objc func appleLoginButtonTapped() {
-        //TODO: - 애플 로그인 구현
-        loginSuccess()
-    }
-    
     //MARK: - FireStore Methods
     func saveUserToFirestore(user: User, userId: String) {
         let userRef = db.collection("users").document(userId)
@@ -813,9 +855,109 @@ class LoginViewController: UIViewController {
     }
 }
 
+//TODO: - 애플 로그인 구현
+//MARK: - Apple Login Methods
+extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    
+    @objc func appleLoginButtonTapped() {
+        let nonce = randomNonceString()
+        currentNonce = nonce
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+        request.nonce = sha256(nonce)
+        
+        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
+        authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
+        authorizationController.performRequests()
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
+        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+            let userIdentifier = appleIDCredential.user
+            let fullName = appleIDCredential.fullName
+            let email = appleIDCredential.email
+            
+            // Firebase에 사용자 인증 정보 저장
+            let credential = OAuthProvider.credential(withProviderID: "apple.com",
+                                                      idToken: String(data: appleIDCredential.identityToken!, encoding: .utf8)!,
+                                                      rawNonce: currentNonce)
+            Auth.auth().signIn(with: credential) { (authResult, error) in
+                if let error = error {
+                    // 로그인 오류 처리
+                    print("Apple 로그인 오류: \(error.localizedDescription)")
+                    return
+                }
+                
+                // 사용자 정보 저장 및 Firestore 업데이트
+                guard let authResult = authResult else { return }
+                self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
+                    if let user = user {
+                        UserInfo.shared.user = user
+                        print("이미 사용자가 존재하는 경우 currentUser 정보: \(String(describing: UserInfo.shared.user))")
+                        self.loginSuccess()
+                    } else {
+                        //Apple은 사진 URL을 제공하지 않습니다.
+                        let newUser = User(id: authResult.user.uid, name: (fullName?.givenName ?? "No") + (fullName?.familyName ?? " Name"), email: email ?? "No Email", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
+                        UserInfo.shared.user = newUser
+                        self.saveUserToFirestore(user: newUser, userId: authResult.user.uid)
+                        print("[Apple Login] 새 사용자 정보 저장: \(String(describing: UserInfo.shared.user))")
+                        self.loginSuccess()
+                    }
+                }
+            }
+        }
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        // 애플 로그인 실패 처리
+        print("Apple 로그인 실패: \(error.localizedDescription)")
+    }
+    
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        return self.view.window!
+    }
+    
+    //로그인 요청마다 임의의 문자열인 'nonce'가 생성되며, 이 nonce는 앱의 인증 요청에 대한 응답으로 ID 토큰이 명시적으로 부여되었는지 확인하는 데 사용됩니다. 재전송 공격을 방지하려면 이 단계가 필요합니다.
+    private func randomNonceString(length: Int = 32) -> String {
+        precondition(length > 0)
+        var randomBytes = [UInt8](repeating: 0, count: length)
+        let errorCode = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
+        if errorCode != errSecSuccess {
+            fatalError(
+                "Unable to generate nonce. SecRandomCopyBytes failed with OSStatus \(errorCode)"
+            )
+        }
+        
+        let charset: [Character] =
+        Array("0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._")
+        
+        let nonce = randomBytes.map { byte in
+            // Pick a random character from the set, wrapping around if needed.
+            charset[Int(byte) % charset.count]
+        }
+        
+        return String(nonce)
+    }
+    
+    //로그인 요청과 함께 nonce의 SHA256 해시를 전송하면 Apple은 이에 대한 응답으로 원래의 값을 전달합니다. Firebase는 원래의 nonce를 해싱하고 Apple에서 전달한 값과 비교하여 응답을 검증합니다.
+    @available(iOS 13, *)
+    private func sha256(_ input: String) -> String {
+        let inputData = Data(input.utf8)
+        let hashedData = SHA256.hash(data: inputData)
+        let hashString = hashedData.compactMap {
+            String(format: "%02x", $0)
+        }.joined()
+        
+        return hashString
+    }
+}
+
 //MARK: - TextField Delegate Methods
 extension LoginViewController: UITextFieldDelegate {
     
+    //TODO: - shouldReturn으로 리턴누르면 바로 로그인
     func textFieldDidChangeSelection(_ textField: UITextField) {
         if textField == passwordTextField {
             if let text = textField.text, text.isEmpty {
@@ -851,6 +993,14 @@ extension LoginViewController: UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if textField == self.emailTextField {
+            self.passwordTextField.becomeFirstResponder()
+        } else if textField == self.passwordTextField {
+            textField.resignFirstResponder()
+            loginButtonTapped()
+        }
+        
         textField.resignFirstResponder()
         
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
