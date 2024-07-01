@@ -9,10 +9,6 @@ import UIKit
 
 class PlaceListTableViewCell: UITableViewCell {
     
-    var selectedTime: Date? {
-        return timePicker.date
-    }
-    
     lazy var numberIcon: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .black
@@ -83,7 +79,7 @@ class PlaceListTableViewCell: UITableViewCell {
             stackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10),
             
             detailTextField.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 10),
-            detailTextField.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            detailTextField.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -20),
             detailTextField.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 20),
             detailTextField.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -10)
         ])
@@ -91,6 +87,18 @@ class PlaceListTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    /// 기본 시간을 00:00으로 설정하는 함수
+    func getDefaultDate() {
+        var components = DateComponents()
+        /// 연,월,일은 임의로 설정
+        components.year = 2000
+        components.month = 1
+        components.day = 1
+        components.hour = 0
+        components.minute = 0
+        self.timePicker.date = Calendar.current.date(from: components) ?? Date()
     }
     
     func configure(number: UIImage?, placeInfo: String) {
