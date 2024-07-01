@@ -69,7 +69,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         button.layer.backgroundColor = UIColor(named: "Primary_Color")?.cgColor
         button.layer.cornerRadius = 10
         
-        button.addTarget(self, action: #selector(kakaoLogoutButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         
         return button
     }()
@@ -236,15 +236,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     // MARK: - 로그아웃 버튼 기능
-    @objc func kakaoLogoutButtonTapped() {
-        //kakaoLogout
-        UserApi.shared.logout{(error) in
-            if let error = error {
-                print(error)
-            } else {
-                print("kakao logout success")
-            }
-        }
+    @objc func logoutButtonTapped() {
         
         //firebase logout
         let firebaseAuth = Auth.auth()
