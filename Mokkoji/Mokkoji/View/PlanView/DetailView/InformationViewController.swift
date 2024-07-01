@@ -112,8 +112,8 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
             cell.timeLabel.text = formattedDate
             
             // detailTextInfo 배열을 적절하게 처리하여 문자열로 병합
-//            let detailTextInfo = selectedPlan.detailTextInfo.joined(separator: ", ")
-//            cell.detailTextInfoLabel.text = detailTextInfo
+            let detailTextInfo = selectedPlan.detailTextInfo.joined(separator: ", ")
+            cell.detailTextInfoLabel.text = detailTextInfo
 
             cell.clockImage.image = UIImage(systemName: "clock.fill")
             cell.placeNameLabel.text = placeName
