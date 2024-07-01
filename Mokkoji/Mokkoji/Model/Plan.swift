@@ -16,7 +16,7 @@ struct Plan: Codable {
     var date: String
     var time: Date? /// 제거
     var mapTimeInfo: [Date?]
-    var detailTextInfo: [String]
+//    var detailTextInfo: [String]
     var mapInfo: [MapInfo]
     var participant: [User]?
 }

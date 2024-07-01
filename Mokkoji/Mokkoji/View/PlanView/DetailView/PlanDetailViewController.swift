@@ -65,8 +65,7 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
             mapViewController.view.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
             mapViewController.view.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             mapViewController.view.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            mapViewController.view.widthAnchor.constraint(equalToConstant: 300),
-            mapViewController.view.heightAnchor.constraint(equalToConstant: 300),
+            mapViewController.view.heightAnchor.constraint(equalToConstant: 400), // 맵 뷰 높이 설정
             
             tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
