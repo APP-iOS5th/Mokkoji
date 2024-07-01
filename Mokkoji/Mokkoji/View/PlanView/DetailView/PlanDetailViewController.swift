@@ -125,8 +125,8 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
                 cell.bodyLabel.text = plan.body
                 
                 // detailTextInfo 배열을 적절하게 처리하여 문자열로 병합
-                let detailTextInfo = plan.detailTextInfo.joined(separator: ", ")
-                cell.detailTextInfoLabel.text = detailTextInfo
+//                let detailTextInfo = plan.detailTextInfo.joined(separator: ", ")
+//                cell.detailTextInfoLabel.text = detailTextInfo
                 
                 // 해당 place의 시간 가져오기
                 let mapTimeInfo = plan.mapTimeInfo[mapInfoIndex]

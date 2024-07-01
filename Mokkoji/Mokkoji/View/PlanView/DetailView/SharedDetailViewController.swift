@@ -102,8 +102,8 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
                 cell.titleLabel.text = plan.title
                 cell.bodyLabel.text = plan.body
                 
-                let detailTextInfo = plan.detailTextInfo.joined(separator: ", ")
-                cell.detailTextInfoLabel.text = detailTextInfo
+//                let detailTextInfo = plan.detailTextInfo.joined(separator: ", ")
+//                cell.detailTextInfoLabel.text = detailTextInfo
                 
                 // 해당 place의 시간 가져오기
                 let mapTimeInfo = plan.mapTimeInfo[mapInfoIndex]
