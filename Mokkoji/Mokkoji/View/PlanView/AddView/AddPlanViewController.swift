@@ -16,6 +16,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     let db = Firestore.firestore()
     let inviteFriendTableViewController = InviteFriendTableViewController()
     let mapViewController = MapViewController()
+    let previewMapViewController = PreviewMapViewController()
     
     var saveButton: UIBarButtonItem?
     
@@ -122,7 +123,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     lazy var mapView: UIView = {
         let view = UIView()
-        addChild(mapViewController)
+//        addChild(previewMapViewController)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -163,7 +164,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         inviteFriendTableViewController.delegate = self
         mapViewController.delegate = self
         
-        mapView.addSubview(mapViewController.view)
+        mapView.addSubview(previewMapViewController.view)
         self.view.addSubview(mainContainer)
         
         mainContainer.addSubview(titleText)
@@ -242,7 +243,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let hideKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         self.view.addGestureRecognizer(hideKeyboardTapGesture)
 
-        mapViewController.didMove(toParent: self)
+//        mapViewController.didMove(toParent: self)
         
     }
         
@@ -253,30 +254,13 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    
-        mapViewController.mapController?.activateEngine()
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         /// 선택한 장소를 삭제했을 때 부모 뷰와 자식 뷰의 장소 리스트가 같도록 설정
         /// 선택한 장소 반영 전에 이전 버튼 눌렀을 때 부모 뷰와 자식 뷰의 장소 리스트가 같도록 설정
         self.mapViewController.selectedPlaces = self.mapInfoList
-        
-        /// 부모 뷰 컨트롤러가 사라질 때 엔진 일시 중지
-//        mapViewController.mapController?.pauseEngine()
     }
-  
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        /// 부모 뷰 컨트롤러가 사라질 때 엔진 정지
-//        mapViewController.mapController?.resetEngine()
-    }
-
     
     // MARK: - UITableViewDelegate
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
