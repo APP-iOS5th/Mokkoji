@@ -19,6 +19,9 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     var saveButton: UIBarButtonItem?
     
+    /// tableView의 동적 높이 설정
+    var tableViewHeightConstraint: NSLayoutConstraint?
+    
     var mapInfoList: [MapInfo] = [] {
         didSet {
             /// 배열의 크기를 mapInfoList의 크기와 동일하게 설정하고 nil로 초기화
@@ -43,6 +46,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.placeholder = "약속 제목을 입력하세요."
+        textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -51,6 +55,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let textField = UITextField()
         textField.borderStyle = .roundedRect
         textField.placeholder = "약속 내용을 간단히 입력하세요."
+        textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -60,6 +65,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         textField.borderStyle = .roundedRect
         textField.placeholder = "약속 날짜를 선택하세요."
         textField.inputView = datePicker
+        /// 사용자 입력 방지
+//        textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -127,10 +134,16 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
+
+    // MARK: - deinit
+    deinit {
+        tableView.removeObserver(self, forKeyPath: "contentSize")
+        
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
     
-    /// tableView의 동적 높이 설정
-    var tableViewHeightConstraint: NSLayoutConstraint?
-    
+    // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -148,19 +161,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         inviteFriendTableViewController.delegate = self
         mapViewController.delegate = self
-        /// 사용자 입력 방지
-        dateField.delegate = self
-        
-        /// tableView 행 삭제를 위한 gesture 설정
-        let deleteLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        tableView.addGestureRecognizer(deleteLongPressRecognizer)
-        
-        /// 터치 이벤트를 감지하여 UIDatePicker를 숨기기 위한 gesture 설정
-        let hideDatePickerTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        self.view.addGestureRecognizer(hideDatePickerTapGesture)
         
         mapView.addSubview(mapViewController.view)
-        
         self.view.addSubview(mainContainer)
         
         mainContainer.addSubview(titleText)
@@ -174,7 +176,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         NSLayoutConstraint.activate([
             mainContainer.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            mainContainer.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor, constant: -20),
+            mainContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             
@@ -182,14 +184,17 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             titleText.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
             titleText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             titleText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            titleText.heightAnchor.constraint(equalToConstant: 40),
             
             bodyText.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 5),
             bodyText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             bodyText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            bodyText.heightAnchor.constraint(equalToConstant: 40),
             
             dateField.topAnchor.constraint(equalTo: bodyText.bottomAnchor, constant: 5),
             dateField.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             dateField.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            dateField.heightAnchor.constraint(equalToConstant: 40),
             
             friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
             friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
@@ -206,7 +211,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             mapView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor, constant: 15),
             mapView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             mapView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            mapView.widthAnchor.constraint(equalToConstant: 300),
             mapView.heightAnchor.constraint(equalToConstant: 300),
             
             tableView.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 15),
@@ -223,6 +227,22 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.addObserver(self, forKeyPath: "contentSize", options: .new, context: nil)
         tableViewHeightConstraint?.constant = tableView.contentSize.height
         
+        /// 키보드 핸들링 옵저버 추가
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        /// tableView 행 삭제를 위한 gesture 설정
+        let deleteLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        tableView.addGestureRecognizer(deleteLongPressRecognizer)
+        
+        /// 터치 이벤트를 감지하여 UIDatePicker를 숨기기 위한 gesture 설정
+        let hideDatePickerTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        self.view.addGestureRecognizer(hideDatePickerTapGesture)
+        
+        /// 터치 이벤트를 감지하여 keyboard를 숨기기 위한 gesture 설정
+        let hideKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        self.view.addGestureRecognizer(hideKeyboardTapGesture)
+
         mapViewController.didMove(toParent: self)
         
     }
@@ -232,10 +252,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         if keyPath == "contentSize", let tableView = object as? UITableView {
             tableViewHeightConstraint?.constant = tableView.contentSize.height
         }
-    }
-
-    deinit {
-        tableView.removeObserver(self, forKeyPath: "contentSize")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -351,6 +367,34 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         return false /// dateField 사용자 입력을 허용하지 않음
     }
 
+    // MARK: - Keyboard Handling Methods
+    
+    /// 리턴 버튼을 누르면 키보드가 내려가는 함수
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    /// 텍스트 필드 이외의 부분을 누르면 키보드가 내려가는 함수
+    @objc func dismissKeyboard() {
+        self.view.endEditing(true)
+    }
+    
+    /// 키보드가 나타날 때 호출되는 함수
+    @objc func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+            mainContainer.contentInset = contentInsets
+            mainContainer.scrollIndicatorInsets = contentInsets
+        }
+    }
+        
+    /// 키보드가 사라질 때 호출되는 함수
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInsets = UIEdgeInsets.zero
+        mainContainer.contentInset = contentInsets
+        mainContainer.scrollIndicatorInsets = contentInsets
+    }
     
     // MARK: - Methods
     @objc func saveButtonTapped() {
@@ -507,6 +551,4 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         saveButton?.isEnabled = allTimesSelected && allDetailsEntered
     }
-
-    
 }
