@@ -42,6 +42,14 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         
         // isSelectArray 초기화
         initializeSelectArray()
+        
+        // 임시 데이터 추가
+        let tempMapInfo1 = MapInfo(placeId: "1", roadAddressName: "123 Road St", placeLatitude: "37.12345", placeLongitude: "127.12345", placeName: "Place 1")
+        let tempMapInfo2 = MapInfo(placeId: "2", roadAddressName: "456 Road St", placeLatitude: "37.67890", placeLongitude: "127.67890", placeName: "Place 2")
+        let tempPlan1 = Plan(uuid: UUID(), order: 1, title: "Plan 1", body: "Description 1", date: "2024-07-02", mapTimeInfo: [Date(), Date()], detailTextInfo: ["Detail 1-1", "Detail 1-2"], mapInfo: [tempMapInfo1, tempMapInfo2], participant: nil)
+        let tempPlan2 = Plan(uuid: UUID(), order: 2, title: "Plan 2", body: "Description 2", date: "2024-07-03", mapTimeInfo: [Date(), Date()], detailTextInfo: ["Detail 2-1", "Detail 2-2"], mapInfo: [tempMapInfo1, tempMapInfo2], participant: nil)
+        
+        sharedPlans = [tempPlan1, tempPlan2]
     }
     
     func setupSegmentedControl() {
@@ -98,7 +106,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
             guard let self = self else { return }
             if let user = user {
                 self.plans = user.plan ?? []
-                self.sharedPlans = user.sharedPlan ?? []
+                self.sharedPlans.append(contentsOf: user.sharedPlan ?? [])
                 UserInfo.shared.user?.sharedPlan = self.sharedPlans
                 
                 // isSelectArray 초기화

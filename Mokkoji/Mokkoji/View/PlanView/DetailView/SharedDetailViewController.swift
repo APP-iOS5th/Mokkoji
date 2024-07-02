@@ -7,7 +7,6 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
     let tableView = UITableView()
     let mapViewController = MapViewController()
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
-    var selectedPlans: Plan!
     var sharPlan: [Plan] = []
     let db = Firestore.firestore()
     
@@ -69,6 +68,10 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
             tableView.bottomAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.bottomAnchor)
         ])
         
+        // 선택된 약속을 sharPlan에 추가
+        if let selectedPlan = selectedPlan {
+            sharPlan.append(selectedPlan)
+        }
         
         // 테이블 뷰 리로드
         DispatchQueue.main.async {
