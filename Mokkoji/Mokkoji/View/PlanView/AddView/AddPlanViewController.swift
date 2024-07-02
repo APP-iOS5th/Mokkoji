@@ -123,7 +123,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     lazy var mapView: UIView = {
         let view = UIView()
-//        addChild(previewMapViewController)
+        addChild(previewMapViewController)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -243,7 +243,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let hideKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         self.view.addGestureRecognizer(hideKeyboardTapGesture)
 
-//        mapViewController.didMove(toParent: self)
+        previewMapViewController.didMove(toParent: self)
         
     }
         
