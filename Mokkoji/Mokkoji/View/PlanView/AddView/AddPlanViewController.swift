@@ -48,6 +48,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         textField.placeholder = "약속 제목을 입력하세요."
         textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
+        becomeFirstResponder()
         return textField
     }()
     
@@ -66,7 +67,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         textField.placeholder = "약속 날짜를 선택하세요."
         textField.inputView = datePicker
         /// 사용자 입력 방지
-//        textField.delegate = self
+        textField.delegate = self
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -184,17 +185,14 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             titleText.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
             titleText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             titleText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            titleText.heightAnchor.constraint(equalToConstant: 40),
             
             bodyText.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 5),
             bodyText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             bodyText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            bodyText.heightAnchor.constraint(equalToConstant: 40),
             
             dateField.topAnchor.constraint(equalTo: bodyText.bottomAnchor, constant: 5),
             dateField.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             dateField.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            dateField.heightAnchor.constraint(equalToConstant: 40),
             
             friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
             friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
@@ -213,6 +211,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             mapView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             mapView.heightAnchor.constraint(equalToConstant: 300),
             
+            // TODO: - 상세내용 입력 시 키보드에 가려지지 않도록 수정
             tableView.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 15),
             tableView.bottomAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
@@ -228,8 +227,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         tableViewHeightConstraint?.constant = tableView.contentSize.height
         
         /// 키보드 핸들링 옵저버 추가
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         /// tableView 행 삭제를 위한 gesture 설정
         let deleteLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
@@ -299,7 +298,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let placeName = "\(mapInfoList[indexPath.row].placeName)"
         cell.configure(number: numbering, placeInfo: placeName)
         
-        // TODO: - 뷰가 다시 로드될 때 timePicker와 detailTextField가 초기화되는 묹
+        // TODO: - 뷰가 다시 로드될 때 timePicker와 detailTextField가 초기화되는 문제
         /// UIDatePicker의 tag를 설정
         cell.timePicker.tag = indexPath.row
         cell.timePicker.addTarget(self, action: #selector(timeChanged(_:)), for: .valueChanged)
@@ -364,7 +363,11 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // MARK: - UITextFieldDelegate
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return false /// dateField 사용자 입력을 허용하지 않음
+        if textField == dateField {
+            return false /// dateField 사용자 입력을 허용하지 않음
+        } else {
+            return true
+        }
     }
 
     // MARK: - Keyboard Handling Methods
@@ -381,7 +384,12 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     /// 키보드가 나타날 때 호출되는 함수
-    @objc func keyboardWillShow(notification: NSNotification) {
+    @objc func keyboardWillShow(_ notification: NSNotification) {
+        print("Keyboard will show")
+        
+        /// dateField가 첫 번째 응답자인 경우 건너뜀
+        guard dateField.isFirstResponder == false else { return }
+        
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
             mainContainer.contentInset = contentInsets
@@ -390,10 +398,22 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
         
     /// 키보드가 사라질 때 호출되는 함수
-    @objc func keyboardWillHide(notification: NSNotification) {
+    @objc func keyboardWillHide(_ notification: NSNotification) {
+        print("Keyboard will hide")
         let contentInsets = UIEdgeInsets.zero
         mainContainer.contentInset = contentInsets
         mainContainer.scrollIndicatorInsets = contentInsets
+    }
+    
+    /// textField가 터치되면 FirstResponder로 설정되어야 키보드 이벤트가 발생함
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.becomeFirstResponder()
+        
+        if textField == titleText {
+            print("titleText 텍스트 필드가 선택되었습니다.")
+        } else if textField == bodyText {
+            print("bodyText 텍스트 필드가 선택되었습니다.")
+        }
     }
     
     // MARK: - Methods
