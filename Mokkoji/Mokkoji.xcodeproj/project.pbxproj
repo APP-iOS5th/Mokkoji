@@ -16,6 +16,9 @@
 		3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 3B605C182C16E3A300D3603C /* KakaoMapsSDK-SPM */; };
 		3B605C1E2C16F07200D3603C /* PlanDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */; };
 		3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */; };
+		3B81AC9C2C337B3900330F54 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B81AC9A2C337B3900330F54 /* Config.xcconfig */; };
+		3B81AC9D2C337B3900330F54 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B81AC9B2C337B3900330F54 /* GoogleService-Info.plist */; };
+		3B81AD6C2C3432FB00330F54 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B81AD6B2C3432FB00330F54 /* FriendTableViewCell.swift */; };
 		4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */; };
 		4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */; };
 		4A187EE82C0F06EE00F5C2EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE72C0F06EE00F5C2EE /* LoginViewController.swift */; };
@@ -58,6 +61,9 @@
 		3B605C152C16E28000D3603C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailViewCell.swift; sourceTree = "<group>"; };
 		3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
+		3B81AC9A2C337B3900330F54 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
+		3B81AC9B2C337B3900330F54 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3B81AD6B2C3432FB00330F54 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
 		4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mokkoji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -234,6 +240,7 @@
 				C1B688452C180B5C00B76DCD /* ProfileViewController.swift */,
 				C1B688492C180BFF00B76DCD /* ProfileEditViewController.swift */,
 				C1B688472C180BBB00B76DCD /* AddFriendViewController.swift */,
+				3B81AD6B2C3432FB00330F54 /* FriendTableViewCell.swift */,
 			);
 			path = ProfileView;
 			sourceTree = "<group>";
@@ -335,6 +342,7 @@
 				4A21EDA22C1958390001470C /* InviteFriendTableViewController.swift in Sources */,
 				584EEBF22C197AF700538F55 /* PlaceListTableViewCell.swift in Sources */,
 				4A9E41402C16843A00DE424A /* User.swift in Sources */,
+				3B81AD6C2C3432FB00330F54 /* FriendTableViewCell.swift in Sources */,
 				58A318182C22E0F6003CA86B /* FriendListTableViewCell.swift in Sources */,
 				4A9E415D2C1884E900DE424A /* SignUpViewController.swift in Sources */,
 				3B605C1E2C16F07200D3603C /* PlanDetailViewCell.swift in Sources */,

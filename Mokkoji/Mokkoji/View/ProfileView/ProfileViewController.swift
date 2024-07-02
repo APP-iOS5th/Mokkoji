@@ -212,12 +212,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(true)
         profileImageView.load(url: userProfileImage)
-        if let userFriend = UserInfo.shared.user?.friendList {
-            
-        } else { // TODO: - 친구 목록이 비어있을땐 이미지가 나오면 안됨 (수정중)
-            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://picsum.photos/200/300")!)]
-            UserInfo.shared.user?.friendList = emptyFriend
+        if let friendList = UserInfo.shared.user?.friendList {
+            if friendList.count == 0 {
+                let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://picsum.photos/200/300")!)]
+                UserInfo.shared.user?.friendList = emptyFriend
+            }
         }
         print("123")
         friendsTableView.reloadData()

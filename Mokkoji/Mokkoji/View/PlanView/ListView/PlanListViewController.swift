@@ -42,6 +42,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         
         // isSelectArray 초기화
         initializeSelectArray()
+        
     }
     
     func setupSegmentedControl() {
@@ -98,7 +99,7 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
             guard let self = self else { return }
             if let user = user {
                 self.plans = user.plan ?? []
-                self.sharedPlans = user.sharedPlan ?? []
+                self.sharedPlans.append(contentsOf: user.sharedPlan ?? [])
                 UserInfo.shared.user?.sharedPlan = self.sharedPlans
                 
                 // isSelectArray 초기화

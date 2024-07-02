@@ -27,7 +27,7 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
+        tableView.register(FriendTableViewCell.self, forCellReuseIdentifier: "friendCell")
         return tableView
     }()
     
@@ -81,20 +81,11 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as! FriendTableViewCell
         let friend = filteredFriends[indexPath.row]
         
-        cell.textLabel?.text = friend.name
-        cell.imageView?.image = UIImage(systemName: "person.circle")
-        cell.imageView?.load(url: friend.profileImageUrl)
-        cell.imageView?.contentMode = .scaleAspectFill
-        
-        // 이미지뷰의 크기를 설정합니다.
-        let imageSize: CGFloat = 50
-        cell.imageView?.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
-        cell.imageView?.layer.cornerRadius = imageSize / 3.6
-        cell.imageView?.clipsToBounds = true
-        
+        cell.userNameLabel.text = friend.name
+        cell.userImageView.load(url: friend.profileImageUrl)
         return cell
     }
     
@@ -125,5 +116,6 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
 
         present(alertController, animated: true, completion: nil)
     }
+    
 }
 
