@@ -16,6 +16,8 @@
 		3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 3B605C182C16E3A300D3603C /* KakaoMapsSDK-SPM */; };
 		3B605C1E2C16F07200D3603C /* PlanDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */; };
 		3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */; };
+		3B81AC9C2C337B3900330F54 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B81AC9A2C337B3900330F54 /* Config.xcconfig */; };
+		3B81AC9D2C337B3900330F54 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B81AC9B2C337B3900330F54 /* GoogleService-Info.plist */; };
 		4A187EE42C0F06EE00F5C2EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */; };
 		4A187EE62C0F06EE00F5C2EE /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */; };
 		4A187EE82C0F06EE00F5C2EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A187EE72C0F06EE00F5C2EE /* LoginViewController.swift */; };
@@ -23,8 +25,6 @@
 		4A187EF02C0F06EF00F5C2EE /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 4A187EEF2C0F06EF00F5C2EE /* Base */; };
 		4A21EDA12C1958390001470C /* AddPlanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9E2C1958390001470C /* AddPlanViewController.swift */; };
 		4A21EDA22C1958390001470C /* InviteFriendTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21ED9F2C1958390001470C /* InviteFriendTableViewController.swift */; };
-		4A2462B02C32A12800966E04 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4A2462AE2C32A12800966E04 /* GoogleService-Info.plist */; };
-		4A2462B22C32A15A00966E04 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 4A2462B12C32A15A00966E04 /* Config.xcconfig */; };
 		4A7CDB552C1D68CF004A8B40 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 4A7CDB542C1D68CF004A8B40 /* FirebaseStorage */; };
 		4A9E41402C16843A00DE424A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E413F2C16843A00DE424A /* User.swift */; };
 		4A9E41422C16843F00DE424A /* Plan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A9E41412C16843F00DE424A /* Plan.swift */; };
@@ -58,6 +58,8 @@
 		3B605C152C16E28000D3603C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailViewCell.swift; sourceTree = "<group>"; };
 		3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
+		3B81AC9A2C337B3900330F54 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
+		3B81AC9B2C337B3900330F54 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4A187EE02C0F06EE00F5C2EE /* Mokkoji.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mokkoji.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A187EE32C0F06EE00F5C2EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A187EE52C0F06EE00F5C2EE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -67,8 +69,6 @@
 		4A187EF12C0F06EF00F5C2EE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A21ED9E2C1958390001470C /* AddPlanViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPlanViewController.swift; sourceTree = "<group>"; };
 		4A21ED9F2C1958390001470C /* InviteFriendTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InviteFriendTableViewController.swift; sourceTree = "<group>"; };
-		4A2462AE2C32A12800966E04 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Desktop/모꼬지/info/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		4A2462B12C32A15A00966E04 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = "../../../../Desktop/모꼬지/info/Config.xcconfig"; sourceTree = "<group>"; };
 		4A9E413F2C16843A00DE424A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4A9E41412C16843F00DE424A /* Plan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plan.swift; sourceTree = "<group>"; };
 		4A9E41432C16844C00DE424A /* MapInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapInfo.swift; sourceTree = "<group>"; };
@@ -213,8 +213,8 @@
 		584EEBE62C1966D900538F55 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				4A2462B12C32A15A00966E04 /* Config.xcconfig */,
-				4A2462AE2C32A12800966E04 /* GoogleService-Info.plist */,
+				3B81AC9A2C337B3900330F54 /* Config.xcconfig */,
+				3B81AC9B2C337B3900330F54 /* GoogleService-Info.plist */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -314,10 +314,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A2462B22C32A15A00966E04 /* Config.xcconfig in Resources */,
 				4A187EED2C0F06EF00F5C2EE /* Assets.xcassets in Resources */,
+				3B81AC9D2C337B3900330F54 /* GoogleService-Info.plist in Resources */,
+				3B81AC9C2C337B3900330F54 /* Config.xcconfig in Resources */,
 				4A187EF02C0F06EF00F5C2EE /* Base in Resources */,
-				4A2462B02C32A12800966E04 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,7 +372,7 @@
 /* Begin XCBuildConfiguration section */
 		4A187EF22C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A2462B12C32A15A00966E04 /* Config.xcconfig */;
+			baseConfigurationReference = 3B81AC9A2C337B3900330F54 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -436,7 +436,7 @@
 		};
 		4A187EF32C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A2462B12C32A15A00966E04 /* Config.xcconfig */;
+			baseConfigurationReference = 3B81AC9A2C337B3900330F54 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -493,7 +493,7 @@
 		};
 		4A187EF52C0F06EF00F5C2EE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A2462B12C32A15A00966E04 /* Config.xcconfig */;
+			baseConfigurationReference = 3B81AC9A2C337B3900330F54 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -525,7 +525,7 @@
 		};
 		4A187EF62C0F06EF00F5C2EE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4A2462B12C32A15A00966E04 /* Config.xcconfig */;
+			baseConfigurationReference = 3B81AC9A2C337B3900330F54 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
