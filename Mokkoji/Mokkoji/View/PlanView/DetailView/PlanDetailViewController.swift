@@ -149,10 +149,6 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
         return cell
     }
 
-    
-    
-    
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // 선택된 셀의 데이터를 처리할 수 있습니다.
         if indexPath.row < plans.count {
