@@ -16,7 +16,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     let db = Firestore.firestore()
     let inviteFriendTableViewController = InviteFriendTableViewController()
     let mapViewController = MapViewController()
-    let previewMapViewController = PreviewMapViewController()
+    var previewMapViewController = PreviewMapViewController(selectePlaces: [])
     
     var saveButton: UIBarButtonItem?
     
@@ -30,6 +30,9 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             selectedTimes = Array(repeating: nil, count: mapInfoList.count)
             /// mapInfoList가 변경될 때 detailTexts 크기 조정
             detailTexts = Array(repeating: "", count: mapInfoList.count)
+            
+            /// previewMapViewController의 selectedPlaces를 mapInfoList로 변경
+            previewMapViewController.selectedPlaces = mapInfoList
             
         }
     }
@@ -181,8 +184,12 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             mainContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+//            mainContainer.heightAnchor.constraint(equalTo: self.view.
             
             /// ScrollView에 맞춰 제약조건 설정
+            previewMapViewController.view.widthAnchor.constraint(equalToConstant: 200),
+            previewMapViewController.view.heightAnchor.constraint(equalToConstant: 300),
+            
             titleText.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
             titleText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             titleText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
@@ -210,6 +217,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             mapView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor, constant: 15),
             mapView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             mapView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            mapView.widthAnchor.constraint(equalToConstant: 200),
             mapView.heightAnchor.constraint(equalToConstant: 300),
             
             // TODO: - 상세내용 입력 시 키보드에 가려지지 않도록 수정

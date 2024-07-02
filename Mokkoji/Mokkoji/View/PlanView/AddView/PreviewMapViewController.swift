@@ -9,7 +9,7 @@ import UIKit
 import KakaoMapsSDK
 import CoreLocation
 
-class PreviewMapViewController: UIViewController, MapControllerDelegate, CLLocationManagerDelegate, SearchResultsSelectionDelegate {
+class PreviewMapViewController: UIViewController, MapControllerDelegate, CLLocationManagerDelegate {
 
     /// 카카오 지도 불러오기
     var mapContainer: KMViewContainer?
@@ -23,15 +23,16 @@ class PreviewMapViewController: UIViewController, MapControllerDelegate, CLLocat
     let locationManager = CLLocationManager()
     
     /// 핀 꼽기
-    var selectedPlaces: [MapInfo] = []
+    var selectedPlaces: [MapInfo]
     
     let POI_LAYER_ID = "PoiLayer"
     let ROUTE_LAYER_ID = "RouteLayer"
     
-    init() {
+    init(selectePlaces: [MapInfo]) {
         _observerAdded = false
         _auth = false
         _appear = false
+        self.selectedPlaces = selectePlaces
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -78,6 +79,17 @@ class PreviewMapViewController: UIViewController, MapControllerDelegate, CLLocat
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
+        
+        /// Poi 생성
+        createPoiStyle()
+        let placeCount = selectedPlaces.count
+        for place in selectedPlaces {
+            createPois(poiNum: placeCount, place: place)
+        }
+
+        /// Route 생성
+        createRouteStyleSet()
+        createRouteline()
     }
     
     
@@ -186,25 +198,6 @@ class PreviewMapViewController: UIViewController, MapControllerDelegate, CLLocat
     // MARK: - CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
         print("Failed to find user's location: \(error.localizedDescription)")
-    }
-    
-    // MARK: - SearchResultsSelectionDelegate
-    func didSelectPlace(place: MapInfo) {
-        print("didSelectPlace")
-        
-        /// 선택 장소 중복 방지
-        if !selectedPlaces.contains(place) {
-            selectedPlaces.append(place)
-        }
-        
-        /// Poi 생성
-        createPoiStyle()
-        let placeCount = selectedPlaces.count
-        createPois(poiNum: placeCount, place: place)
-
-        /// Route 생성
-        createRouteStyleSet()
-        createRouteline()
     }
     
     // MARK: - Methods
@@ -363,16 +356,19 @@ class PreviewMapViewController: UIViewController, MapControllerDelegate, CLLocat
     /// RouteSegment마다 RouteStyleSet에 있는 다른 RouteStyle을 적용할 수 있음
     func createRouteStyleSet() {
         /// RouteLines을 표시할 Layer를 생성
-        let mapView = mapController?.getView("mapview") as? KakaoMap
-        let manager = mapView?.getRouteManager()
+        guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
+            print("Failed to get map view")
+            return
+        }
+        let manager = mapView.getRouteManager()
         
         /// Route layer가 존재할 때
-        if let _: RouteLayer = manager?.getRouteLayer(layerID: ROUTE_LAYER_ID) {
+        if let _: RouteLayer = manager.getRouteLayer(layerID: ROUTE_LAYER_ID) {
             print("기존 Route layer 존재 / 로드")
             
         } else {
             print("새로운 Route layer 생성")
-            let _ = manager?.addRouteLayer(layerID: ROUTE_LAYER_ID, zOrder: 1)
+            let _ = manager.addRouteLayer(layerID: ROUTE_LAYER_ID, zOrder: 1)
         }
         
         /// Route Pattern 종류
@@ -389,12 +385,15 @@ class PreviewMapViewController: UIViewController, MapControllerDelegate, CLLocat
         ])
         styleSet.addStyle(routeStyle)
         
-        manager?.addRouteStyleSet(styleSet)
+        manager.addRouteStyleSet(styleSet)
     }
     
     /// Routeline 생성
     func createRouteline() {
-        let mapView = mapController?.getView("mapview") as! KakaoMap
+        guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
+            print("Failed to get map view")
+            return
+        }
         let manager = mapView.getRouteManager()
         
         /// Route layer는 이전 route style set을 생성할 때 이미 생성됨
