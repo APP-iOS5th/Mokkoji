@@ -59,11 +59,11 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.topAnchor.constraint(equalTo: promissTitle.bottomAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -300),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -200),
             //sharedBtn 제약조건
             sharedBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             sharedBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20),
-            sharedBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100),
+            sharedBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
             sharedBtn.heightAnchor.constraint(equalToConstant: 50),
 
         ])
