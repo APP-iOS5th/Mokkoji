@@ -184,11 +184,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             mainContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
             mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-//            mainContainer.heightAnchor.constraint(equalTo: self.view.
-            
-            /// ScrollView에 맞춰 제약조건 설정
-            previewMapViewController.view.widthAnchor.constraint(equalToConstant: 200),
-            previewMapViewController.view.heightAnchor.constraint(equalToConstant: 300),
             
             titleText.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
             titleText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
@@ -214,17 +209,21 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             addMapButton.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             addMapButton.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
             
-            mapView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor, constant: 15),
-            mapView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            mapView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            mapView.widthAnchor.constraint(equalToConstant: 200),
-            mapView.heightAnchor.constraint(equalToConstant: 300),
-            
             // TODO: - 상세내용 입력 시 키보드에 가려지지 않도록 수정
-            tableView.topAnchor.constraint(equalTo: mapView.bottomAnchor, constant: 15),
-            tableView.bottomAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.bottomAnchor),
+            tableView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor, constant: 15),
             tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            
+            mapView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 25),
+            mapView.bottomAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.bottomAnchor),
+            mapView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            mapView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            mapView.widthAnchor.constraint(equalTo: mainContainer.widthAnchor),
+            mapView.heightAnchor.constraint(equalTo: mainContainer.widthAnchor, multiplier: 2),
+            
+            /// ScrollView에 맞춰 제약조건 설정
+            previewMapViewController.view.widthAnchor.constraint(equalTo: mapView.widthAnchor),
+            previewMapViewController.view.heightAnchor.constraint(equalTo: mapView.heightAnchor, multiplier: 2)
         ])
         
         /// tableView의 동적 높이 설정
