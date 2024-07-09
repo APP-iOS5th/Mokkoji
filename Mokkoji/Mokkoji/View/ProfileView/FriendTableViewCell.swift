@@ -23,6 +23,10 @@ class FriendTableViewCell: UITableViewCell {
             userNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             userNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
+
+        // 이미지 뷰를 동그랗게 설정
+        userImageView.layer.cornerRadius = 20
+        userImageView.clipsToBounds = true
         
     }
     

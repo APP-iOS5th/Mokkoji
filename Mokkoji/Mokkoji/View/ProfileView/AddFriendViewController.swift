@@ -102,18 +102,17 @@ class AddFriendViewController: UIViewController, UITableViewDelegate, UITableVie
             } else {
                 if !UserInfo.shared.user!.friendList!.contains(where: { $0.id == selectedFriend.id }) {
                     UserInfo.shared.user!.friendList!.append(selectedFriend)
-                        print("jkfasbdjifpbjejfoap1211")
-                    } else {
+                } else {
                     return
                 }
             }
         }
-
+        
         let noAction = UIAlertAction(title: "No", style: .cancel)
-
+        
         alertController.addAction(yesAction)
         alertController.addAction(noAction)
-
+        
         present(alertController, animated: true, completion: nil)
     }
     

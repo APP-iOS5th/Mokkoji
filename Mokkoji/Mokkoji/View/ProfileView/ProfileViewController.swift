@@ -156,7 +156,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         friendsTableView.dataSource = self
         friendsTableView.delegate = self
-        friendsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
+        friendsTableView.register(FriendTableViewCell.self, forCellReuseIdentifier: "friendCell")
         
         view.addSubview(profileImageView)
         view.addSubview(nameLabel)
@@ -200,7 +200,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                        
+            
             deleteFriendButton.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 10),
             deleteFriendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
@@ -211,14 +211,18 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         ])
     }
     
+    
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(true)
         profileImageView.load(url: userProfileImage)
         if let friendList = UserInfo.shared.user?.friendList {
             if friendList.count == 0 {
-                let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://picsum.photos/200/300")!)]
+                let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://postfiles.pstatic.net/MjAyMDA5MDNfNzYg/MDAxNTk5MTI1ODQyOTgz.GcnIG2lAeKYjlf_WW__Z-RbcEmuCPliCM7JtSvcSf9Eg.IfoEGxCaenu31xJE57uGvHnwOqANmAIW_Azf2oIYxDMg.PNG.shshspdla/1%EB%8C%801.png?type=w773")!)]
                 UserInfo.shared.user?.friendList = emptyFriend
             }
+        } else {
+            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://postfiles.pstatic.net/MjAyMDA5MDNfNzYg/MDAxNTk5MTI1ODQyOTgz.GcnIG2lAeKYjlf_WW__Z-RbcEmuCPliCM7JtSvcSf9Eg.IfoEGxCaenu31xJE57uGvHnwOqANmAIW_Azf2oIYxDMg.PNG.shshspdla/1%EB%8C%801.png?type=w773")!)]
+            UserInfo.shared.user?.friendList = emptyFriend
         }
         print("123")
         friendsTableView.reloadData()
@@ -267,15 +271,6 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     // MARK: - 친구 테이블 뷰
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        guard let friendCount = UserInfo.shared.user?.friendList?.count else { return 0 }
-//        if friendCount > 0 {
-//            return friendCount
-//        } else {
-//            return 1
-//        }
-//    }
-//    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
           return UserInfo.shared.user?.friendList?.count ?? 0
       }
@@ -294,6 +289,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
           cell.imageView?.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
           cell.imageView?.layer.cornerRadius = imageSize / 3.6
           cell.imageView?.clipsToBounds = true
+          cell.selectionStyle = .none
           
           return cell
       }
