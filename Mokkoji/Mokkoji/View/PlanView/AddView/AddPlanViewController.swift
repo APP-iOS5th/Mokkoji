@@ -40,6 +40,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     var detailTexts: [String]?
     var participants: [User]?
     
+    var selectedTextField: UITextField?
+    
     lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
@@ -224,8 +226,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             addMapButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             addMapButton.heightAnchor.constraint(equalToConstant: 40),
             
-            
-            // TODO: - 상세내용 입력 시 키보드에 가려지지 않도록 수정
             tableView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor, constant: 15),
             tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
@@ -236,14 +236,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             previewMapViewController.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             previewMapViewController.view.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.9),
             previewMapViewController.view.heightAnchor.constraint(equalTo: previewMapViewController.view.widthAnchor, multiplier: 2)
-//            previewMapViewController.view.widthAnchor.constraint(equalToConstant: 350),
-//            previewMapViewController.view.heightAnchor.constraint(equalToConstant: 700)
         ])
-        
-        /// Tab Bar의 높이만큼 contentInset을 추가
-//        let tabBarHeight = tabBarController?.tabBar.frame.size.height ?? 0
-//        scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: tabBarHeight, right: 0)
-//        scrollView.scrollIndicatorInsets = scrollView.contentInset
         
         /// tableView의 동적 높이 설정
         tableViewHeightConstraint = tableView.heightAnchor.constraint(equalToConstant: 0)
@@ -254,8 +247,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         tableViewHeightConstraint?.constant = tableView.contentSize.height
         
         /// 키보드 핸들링 옵저버 추가
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         /// tableView 행 삭제를 위한 gesture 설정
         let deleteLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
@@ -266,11 +259,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.view.addGestureRecognizer(hideDatePickerTapGesture)
         
         /// 터치 이벤트를 감지하여 keyboard를 숨기기 위한 gesture 설정
-//        let hideKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-//        self.view.addGestureRecognizer(hideKeyboardTapGesture)
-
-//        previewMapViewController.didMove(toParent: self)
-        
+        let hideKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        self.view.addGestureRecognizer(hideKeyboardTapGesture)
     }
         
     /// tableView의 동적 높이 설정을 위한 옵저버 설정 - tableVIew의 contentSize 관찰
@@ -337,6 +327,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         let detailText = detailTexts?[indexPath.row]
         cell.detailTextField.text = detailText
         
+        cell.detailTextField.delegate = self
+        
         return cell
     }
     
@@ -360,20 +352,20 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         // TODO: - 제약조건 설정 안되는 문제 해결
         /// 초대된 친구 추가 후 제약조건 수정
-//        if ((self.friendList.text?.isEmpty) == nil) {
-//            /// friendList 제약조건 비활성화
-//            NSLayoutConstraint.deactivate([
-//                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor),
-//                friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-//                friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
-//            ])
-//            /// friendList 제약조건 다시 활성화
-//            NSLayoutConstraint.activate([
-//                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
-//                friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-//                friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-//            ])
-//        }
+        if let text = friendList.text, !text.isEmpty {
+            /// friendList 기존 제약조건 비활성화
+            NSLayoutConstraint.deactivate([
+                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor),
+                friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+                friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+            ])
+            /// friendList 새로운 제약조건 활성화
+            NSLayoutConstraint.activate([
+                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
+                friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+                friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+            ])
+        }
     }
     
     // MARK: - UITextFieldDelegate
@@ -385,17 +377,15 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        activeTextField = textField
-//        // Scroll to the active text field if needed
-//        if let indexPath = tableView.indexPathForRow(at: textField.convert(textField.bounds.origin, to: tableView)) {
-//            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
-//        }
-//    }
-//    
-//    func textFieldDidEndEditing(_ textField: UITextField) {
-//        activeTextField = nil
-//    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        selectedTextField = textField
+        /// textField가 터치되면 FirstResponder로 설정되어야 키보드 이벤트가 발생함
+        textField.becomeFirstResponder()
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        selectedTextField = nil
+    }
 
     // MARK: - Keyboard Handling Methods
     /// 리턴 버튼을 누르면 키보드가 내려가는 함수
@@ -409,38 +399,45 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.view.endEditing(true)
     }
 
-//    /// 키보드가 나타날 때 호출되는 함수
-//    @objc func keyboardWillShow(_ notification: NSNotification) {
-//        print("Keyboard will show")
-//        
-//        /// dateField가 첫 번째 응답자인 경우 건너뜀
-//        guard dateField.isFirstResponder == false else { return }
-//        
-//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-//            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-//            scrollView.contentInset = contentInsets
-//            scrollView.scrollIndicatorInsets = contentInsets
-//        }
-//    }
-//        
-//    /// 키보드가 사라질 때 호출되는 함수
-//    @objc func keyboardWillHide(_ notification: NSNotification) {
-//        print("Keyboard will hide")
-//        let contentInsets = UIEdgeInsets.zero
-//        scrollView.contentInset = contentInsets
-//        scrollView.scrollIndicatorInsets = contentInsets
-//    }
-//    
-//    /// textField가 터치되면 FirstResponder로 설정되어야 키보드 이벤트가 발생함
-//    func textFieldDidBeginEditing(_ textField: UITextField) {
-//        textField.becomeFirstResponder()
-//        
-//        if textField == titleText {
-//            print("titleText 텍스트 필드가 선택되었습니다.")
-//        } else if textField == bodyText {
-//            print("bodyText 텍스트 필드가 선택되었습니다.")
-//        }
-//    }
+    // TODO: - 텍스트필드 클릭 시 텍스트필드 날아감
+    /// 키보드가 나타날 때 호출되는 함수
+    @objc func keyboardWillShow(_ notification: NSNotification) {
+        print("Keyboard will show")
+        
+        /// dateField가 첫 번째 응답자인 경우 건너뜀
+        guard dateField.isFirstResponder == false else { return }
+        
+        if let userInfo = notification.userInfo,
+           let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            
+            let keyboardHeight = keyboardFrame.height
+            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+            
+            tableView.contentInset = contentInsets
+            tableView.scrollIndicatorInsets = contentInsets
+            
+            /// 현재 선택된 textField가 키보드에 가려지지 않도록 스크롤
+            if let activeField = selectedTextField {
+                let activeFieldFrame = activeField.convert(activeField.bounds, to: view)
+                let activeFieldBottomY = activeFieldFrame.minY
+                let keyboardOriginY = view.frame.height - keyboardHeight
+                
+                /// 키보드의 상단과 텍스트 필드의 하단이 맞닿도록 스크롤
+                if activeFieldBottomY > keyboardOriginY {
+                    let offset = activeFieldBottomY - keyboardOriginY
+                    tableView.setContentOffset(CGPoint(x: 0, y: tableView.contentOffset.y + offset), animated: true)
+                }
+            }
+        }
+    }
+        
+    /// 키보드가 사라질 때 호출되는 함수
+    @objc func keyboardWillHide(_ notification: NSNotification) {
+        print("Keyboard will hide")
+        let contentInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
     
     // MARK: - Methods
     @objc func saveButtonTapped() {
