@@ -11,7 +11,7 @@ import FirebaseCore
 import FirebaseFirestore
 import KakaoMapsSDK
 
-class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate, SelectDoneFriendListDelegate, UITextFieldDelegate {    
+class AddPlanViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SelectedPlaceListDelegate, SelectDoneFriendListDelegate, UITextFieldDelegate {
     
     let db = Firestore.firestore()
     let inviteFriendTableViewController = InviteFriendTableViewController()
@@ -40,10 +40,16 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     var detailTexts: [String]?
     var participants: [User]?
     
-    lazy var mainContainer: UIScrollView = {
+    lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         return scrollView
+    }()
+    
+    lazy var contentView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     lazy var titleText: UITextField = {
@@ -124,13 +130,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         return button
     }()
     
-    lazy var mapView: UIView = {
-        let view = UIView()
-        addChild(previewMapViewController)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
     lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
@@ -167,64 +166,84 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         inviteFriendTableViewController.delegate = self
         mapViewController.delegate = self
         
-        mapView.addSubview(previewMapViewController.view)
-        self.view.addSubview(mainContainer)
+        self.view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
         
-        mainContainer.addSubview(titleText)
-        mainContainer.addSubview(bodyText)
-        mainContainer.addSubview(dateField)
-        mainContainer.addSubview(friendList)
-        mainContainer.addSubview(inviteButton)
-        mainContainer.addSubview(addMapButton)
-        mainContainer.addSubview(mapView)
-        mainContainer.addSubview(tableView)
+        contentView.addSubview(titleText)
+        contentView.addSubview(bodyText)
+        contentView.addSubview(dateField)
+        contentView.addSubview(friendList)
+        contentView.addSubview(inviteButton)
+        contentView.addSubview(addMapButton)
+        contentView.addSubview(tableView)
+        contentView.addSubview(previewMapViewController.view)
+        
+        /// 자식뷰 설정
+        addChild(previewMapViewController)
+        previewMapViewController.didMove(toParent: self)
+        previewMapViewController.view.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            mainContainer.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            mainContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            scrollView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             
-            titleText.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
-            titleText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            titleText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            
+            titleText.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
+            titleText.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            titleText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            titleText.heightAnchor.constraint(equalToConstant: 40),
             
             bodyText.topAnchor.constraint(equalTo: titleText.bottomAnchor, constant: 5),
-            bodyText.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            bodyText.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            bodyText.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            bodyText.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            bodyText.heightAnchor.constraint(equalToConstant: 40),
             
             dateField.topAnchor.constraint(equalTo: bodyText.bottomAnchor, constant: 5),
-            dateField.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            dateField.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            dateField.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            dateField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            dateField.heightAnchor.constraint(equalToConstant: 40),
             
             friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
-            friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
             inviteButton.topAnchor.constraint(equalTo: friendList.bottomAnchor, constant: 15),
-            inviteButton.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
+            inviteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             inviteButton.widthAnchor.constraint(equalToConstant: 80),
+            inviteButton.heightAnchor.constraint(equalToConstant: 40),
 
             addMapButton.topAnchor.constraint(equalTo: inviteButton.bottomAnchor, constant: 15),
-            addMapButton.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            addMapButton.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            addMapButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            addMapButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            addMapButton.heightAnchor.constraint(equalToConstant: 40),
+            
             
             // TODO: - 상세내용 입력 시 키보드에 가려지지 않도록 수정
             tableView.topAnchor.constraint(equalTo: addMapButton.bottomAnchor, constant: 15),
-            tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            mapView.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 25),
-            mapView.bottomAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.bottomAnchor),
-            mapView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            mapView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            mapView.widthAnchor.constraint(equalTo: mainContainer.widthAnchor),
-            mapView.heightAnchor.constraint(equalTo: mainContainer.widthAnchor, multiplier: 2),
-            
-            /// ScrollView에 맞춰 제약조건 설정
-            previewMapViewController.view.widthAnchor.constraint(equalTo: mapView.widthAnchor),
-            previewMapViewController.view.heightAnchor.constraint(equalTo: mapView.heightAnchor, multiplier: 2)
+            previewMapViewController.view.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 20),
+            previewMapViewController.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            previewMapViewController.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            previewMapViewController.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            previewMapViewController.view.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.9),
+            previewMapViewController.view.heightAnchor.constraint(equalTo: previewMapViewController.view.widthAnchor, multiplier: 2)
+//            previewMapViewController.view.widthAnchor.constraint(equalToConstant: 350),
+//            previewMapViewController.view.heightAnchor.constraint(equalToConstant: 700)
         ])
+        
+        /// Tab Bar의 높이만큼 contentInset을 추가
+//        let tabBarHeight = tabBarController?.tabBar.frame.size.height ?? 0
+//        scrollView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: tabBarHeight, right: 0)
+//        scrollView.scrollIndicatorInsets = scrollView.contentInset
         
         /// tableView의 동적 높이 설정
         tableViewHeightConstraint = tableView.heightAnchor.constraint(equalToConstant: 0)
@@ -235,8 +254,8 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         tableViewHeightConstraint?.constant = tableView.contentSize.height
         
         /// 키보드 핸들링 옵저버 추가
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         /// tableView 행 삭제를 위한 gesture 설정
         let deleteLongPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
@@ -247,10 +266,10 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.view.addGestureRecognizer(hideDatePickerTapGesture)
         
         /// 터치 이벤트를 감지하여 keyboard를 숨기기 위한 gesture 설정
-        let hideKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        self.view.addGestureRecognizer(hideKeyboardTapGesture)
+//        let hideKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+//        self.view.addGestureRecognizer(hideKeyboardTapGesture)
 
-        previewMapViewController.didMove(toParent: self)
+//        previewMapViewController.didMove(toParent: self)
         
     }
         
@@ -259,6 +278,11 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         if keyPath == "contentSize", let tableView = object as? UITableView {
             tableViewHeightConstraint?.constant = tableView.contentSize.height
         }
+    }
+    
+    /// 키보드 내리기
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+            view.endEditing(true)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -336,20 +360,20 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         // TODO: - 제약조건 설정 안되는 문제 해결
         /// 초대된 친구 추가 후 제약조건 수정
-        if ((self.friendList.text?.isEmpty) == nil) {
-            /// friendList 제약조건 비활성화
-            NSLayoutConstraint.deactivate([
-                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor),
-                friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-                friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor)
-            ])
-            /// friendList 제약조건 다시 활성화
-            NSLayoutConstraint.activate([
-                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
-                friendList.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-                friendList.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            ])
-        }
+//        if ((self.friendList.text?.isEmpty) == nil) {
+//            /// friendList 제약조건 비활성화
+//            NSLayoutConstraint.deactivate([
+//                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor),
+//                friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+//                friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+//            ])
+//            /// friendList 제약조건 다시 활성화
+//            NSLayoutConstraint.activate([
+//                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
+//                friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+//                friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+//            ])
+//        }
     }
     
     // MARK: - UITextFieldDelegate
@@ -360,9 +384,20 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             return true
         }
     }
+    
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//        activeTextField = textField
+//        // Scroll to the active text field if needed
+//        if let indexPath = tableView.indexPathForRow(at: textField.convert(textField.bounds.origin, to: tableView)) {
+//            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+//        }
+//    }
+//    
+//    func textFieldDidEndEditing(_ textField: UITextField) {
+//        activeTextField = nil
+//    }
 
     // MARK: - Keyboard Handling Methods
-    
     /// 리턴 버튼을 누르면 키보드가 내려가는 함수
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -373,39 +408,39 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     @objc func dismissKeyboard() {
         self.view.endEditing(true)
     }
-    
-    /// 키보드가 나타날 때 호출되는 함수
-    @objc func keyboardWillShow(_ notification: NSNotification) {
-        print("Keyboard will show")
-        
-        /// dateField가 첫 번째 응답자인 경우 건너뜀
-        guard dateField.isFirstResponder == false else { return }
-        
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-            mainContainer.contentInset = contentInsets
-            mainContainer.scrollIndicatorInsets = contentInsets
-        }
-    }
-        
-    /// 키보드가 사라질 때 호출되는 함수
-    @objc func keyboardWillHide(_ notification: NSNotification) {
-        print("Keyboard will hide")
-        let contentInsets = UIEdgeInsets.zero
-        mainContainer.contentInset = contentInsets
-        mainContainer.scrollIndicatorInsets = contentInsets
-    }
-    
-    /// textField가 터치되면 FirstResponder로 설정되어야 키보드 이벤트가 발생함
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.becomeFirstResponder()
-        
-        if textField == titleText {
-            print("titleText 텍스트 필드가 선택되었습니다.")
-        } else if textField == bodyText {
-            print("bodyText 텍스트 필드가 선택되었습니다.")
-        }
-    }
+
+//    /// 키보드가 나타날 때 호출되는 함수
+//    @objc func keyboardWillShow(_ notification: NSNotification) {
+//        print("Keyboard will show")
+//        
+//        /// dateField가 첫 번째 응답자인 경우 건너뜀
+//        guard dateField.isFirstResponder == false else { return }
+//        
+//        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+//            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+//            scrollView.contentInset = contentInsets
+//            scrollView.scrollIndicatorInsets = contentInsets
+//        }
+//    }
+//        
+//    /// 키보드가 사라질 때 호출되는 함수
+//    @objc func keyboardWillHide(_ notification: NSNotification) {
+//        print("Keyboard will hide")
+//        let contentInsets = UIEdgeInsets.zero
+//        scrollView.contentInset = contentInsets
+//        scrollView.scrollIndicatorInsets = contentInsets
+//    }
+//    
+//    /// textField가 터치되면 FirstResponder로 설정되어야 키보드 이벤트가 발생함
+//    func textFieldDidBeginEditing(_ textField: UITextField) {
+//        textField.becomeFirstResponder()
+//        
+//        if textField == titleText {
+//            print("titleText 텍스트 필드가 선택되었습니다.")
+//        } else if textField == bodyText {
+//            print("bodyText 텍스트 필드가 선택되었습니다.")
+//        }
+//    }
     
     // MARK: - Methods
     @objc func saveButtonTapped() {

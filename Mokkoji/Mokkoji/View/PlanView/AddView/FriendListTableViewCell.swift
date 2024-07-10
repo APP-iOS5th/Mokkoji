@@ -80,6 +80,7 @@ class FriendListTableViewCell: UITableViewCell {
             friendEmailLabel.bottomAnchor.constraint(equalTo: stackView.bottomAnchor),
             
             stackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
+            stackView.bottomAnchor.constraint(equalTo: self.contentView.keyboardLayoutGuide.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: profileImage.trailingAnchor, constant: 20),
             stackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -20),
 //            stackView.trailingAnchor.constraint(equalTo: inviteButton.leadingAnchor, constant: -10),
