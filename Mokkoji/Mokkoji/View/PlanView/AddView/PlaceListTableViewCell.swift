@@ -17,10 +17,13 @@ class PlaceListTableViewCell: UITableViewCell {
         return imageView
     }()
     
-    // TODO: - 글씨 길이 조정
+    // TODO: - 글씨 길이 조정 방안 고르기
     lazy var placeLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+//        label.numberOfLines = 0 /// 무제한 줄 설정
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.adjustsFontSizeToFitWidth = true
+        label.minimumScaleFactor = 0.5 /// 최소 축소 비율 설정
         label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
@@ -71,8 +74,8 @@ class PlaceListTableViewCell: UITableViewCell {
         self.contentView.addSubview(detailTextField)
         
         NSLayoutConstraint.activate([
-            numberIcon.widthAnchor.constraint(equalToConstant: 30),
-            numberIcon.heightAnchor.constraint(equalToConstant: 30),
+            numberIcon.widthAnchor.constraint(equalToConstant: 25),
+            numberIcon.heightAnchor.constraint(equalToConstant: 25),
             
             stackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 20),
             stackView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 20),
