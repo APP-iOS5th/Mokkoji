@@ -71,13 +71,15 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
         var config = cell.defaultContentConfiguration()
         
         /// 빠르게 검색어 입력 시 index out of range 오류 방지
+        /// 도로명 주소 추가
         if indexPath.row < results.count {
             config.text = results[indexPath.row].placeName
+            config.secondaryText = results[indexPath.row].roadAddressName
         } else {
             config.text = ""
+            config.secondaryText = ""
         }
 
-        // TODO: - 도로명 주소 추가하기
         cell.contentConfiguration = config
        
         return cell
