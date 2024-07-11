@@ -74,7 +74,10 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
     
     // MARK: - SelectedFriendListDelegate
     func didSelectFriends(user: User) {
-        selectedFriends.append(user)
+        /// 선택 친구 중복 방지
+        if !selectedFriends.contains(user) {
+            selectedFriends.append(user)
+        }
         
         tableView.reloadData()
     }
