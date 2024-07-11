@@ -15,6 +15,8 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     
     /// 검색 결과
     var results: [MapInfo] = []
+    /// 검색 debouncing 타이머
+    var searchTimer: Timer?
     
     var delegate: SearchResultsSelectionDelegate?
     
@@ -49,8 +51,14 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
             updateResults([])
             return
         }
+        /// 이전 타이머 취소
+        searchTimer?.invalidate()
         
-        getSearchResults(searchText: searchText)
+        /// 새로운 타이머 설정 - 0.5초 마다
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
+            /// 검색 실행
+            self?.getSearchResults(searchText: searchText)
+        }
     }
     
     // MARK: - UITableViewDelegate
