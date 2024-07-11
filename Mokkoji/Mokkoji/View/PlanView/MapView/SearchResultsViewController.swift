@@ -69,7 +69,14 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         var config = cell.defaultContentConfiguration()
-        config.text = results[indexPath.row].placeName
+        
+        /// 빠르게 검색어 입력 시 index out of range 오류 방지
+        if indexPath.row < results.count {
+            config.text = results[indexPath.row].placeName
+        } else {
+            config.text = ""
+        }
+
         // TODO: - 도로명 주소 추가하기
         cell.contentConfiguration = config
        
@@ -125,7 +132,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
                        let documents = json["documents"] as? [[String: Any]] {
                         
                         var places: [MapInfo] = []
-                        for (index, document) in documents.enumerated() {
+                        for (_, document) in documents.enumerated() {
                             /// MapInfo에 필요한 프로퍼티 값 가져오기
                             if let id = document["id"] as? String,
                                let placeName = document["place_name"] as? String,
