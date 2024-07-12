@@ -15,6 +15,7 @@
 		3B605C162C16E28000D3603C /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C152C16E28000D3603C /* MapViewController.swift */; };
 		3B605C192C16E3A300D3603C /* KakaoMapsSDK-SPM in Frameworks */ = {isa = PBXBuildFile; productRef = 3B605C182C16E3A300D3603C /* KakaoMapsSDK-SPM */; };
 		3B605C1E2C16F07200D3603C /* PlanDetailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */; };
+		3B784CC22C41134800B079FF /* PreviewMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B784CC12C41134800B079FF /* PreviewMapViewController.swift */; };
 		3B7B45582C1817C300C8DEA2 /* InformationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */; };
 		3B81AC9C2C337B3900330F54 /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3B81AC9A2C337B3900330F54 /* Config.xcconfig */; };
 		3B81AC9D2C337B3900330F54 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B81AC9B2C337B3900330F54 /* GoogleService-Info.plist */; };
@@ -58,6 +59,7 @@
 		3B605C132C16C2C200D3603C /* PlanDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailViewController.swift; sourceTree = "<group>"; };
 		3B605C152C16E28000D3603C /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		3B605C1D2C16F07200D3603C /* PlanDetailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanDetailViewCell.swift; sourceTree = "<group>"; };
+		3B784CC12C41134800B079FF /* PreviewMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewMapViewController.swift; sourceTree = "<group>"; };
 		3B7B45572C1817C300C8DEA2 /* InformationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationViewController.swift; sourceTree = "<group>"; };
 		3B81AC9A2C337B3900330F54 /* Config.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Config.xcconfig; path = ../../../../Downloads/Config.xcconfig; sourceTree = "<group>"; };
 		3B81AC9B2C337B3900330F54 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -196,6 +198,7 @@
 				4A21ED9F2C1958390001470C /* InviteFriendTableViewController.swift */,
 				584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */,
 				58A318172C22E0F6003CA86B /* FriendListTableViewCell.swift */,
+				3B784CC12C41134800B079FF /* PreviewMapViewController.swift */,
 				5898EB192C23437300A411A4 /* SearchFriendsTableViewController.swift */,
 			);
 			path = AddView;
@@ -338,6 +341,7 @@
 				4A21EDA22C1958390001470C /* InviteFriendTableViewController.swift in Sources */,
 				584EEBF22C197AF700538F55 /* PlaceListTableViewCell.swift in Sources */,
 				4A9E41402C16843A00DE424A /* User.swift in Sources */,
+				3B784CC22C41134800B079FF /* PreviewMapViewController.swift in Sources */,
 				3B81AD6C2C3432FB00330F54 /* FriendTableViewCell.swift in Sources */,
 				58A318182C22E0F6003CA86B /* FriendListTableViewCell.swift in Sources */,
 				4A9E415D2C1884E900DE424A /* SignUpViewController.swift in Sources */,
