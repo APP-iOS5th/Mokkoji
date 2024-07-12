@@ -411,20 +411,20 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
            let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
             
             let keyboardHeight = keyboardFrame.height
-            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
-            
-            tableView.contentInset = contentInsets
-            tableView.scrollIndicatorInsets = contentInsets
+//            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+//            
+//            tableView.contentInset = contentInsets
+//            tableView.scrollIndicatorInsets = contentInsets
             
             /// 현재 선택된 textField가 키보드에 가려지지 않도록 스크롤
             if let activeField = selectedTextField {
                 let activeFieldFrame = activeField.convert(activeField.bounds, to: view)
-                let activeFieldBottomY = activeFieldFrame.minY
+                let activeFieldBottomY = activeFieldFrame.maxY
                 let keyboardOriginY = view.frame.height - keyboardHeight
                 
                 /// 키보드의 상단과 텍스트 필드의 하단이 맞닿도록 스크롤
                 if activeFieldBottomY > keyboardOriginY {
-                    let offset = activeFieldBottomY - keyboardOriginY
+                    let offset = activeFieldBottomY - keyboardOriginY + 10
                     tableView.setContentOffset(CGPoint(x: 0, y: tableView.contentOffset.y + offset), animated: true)
                 }
             }
