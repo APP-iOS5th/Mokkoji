@@ -8,13 +8,13 @@
 import UIKit
 
 /// 임시 데이터
-//struct sampleFriend {
-//    static var friends = [
-//        User(id: "123", name: "김홍도", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
-//        User(id: "1234", name: "김홍만", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
-//        User(id: "1235", name: "김홍기", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
-//    ]
-//}
+struct sampleFriend {
+    static var friends = [
+        User(id: "123", name: "김홍도", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
+        User(id: "1234", name: "김홍만", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!),
+        User(id: "1235", name: "김홍기", email: "asd@asd.com", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
+    ]
+}
 
 protocol SelectedFriendListDelegate {
     func didSelectFriends(user: User)
@@ -22,9 +22,9 @@ protocol SelectedFriendListDelegate {
 
 class SearchFriendsTableViewController: UITableViewController, UISearchResultsUpdating {
     
-    var friends: [User] = UserInfo.shared.user?.friendList ?? []
+//    var friends: [User] = UserInfo.shared.user?.friendList ?? []
     /// 임시 데이터
-//    var friends: [User] = sampleFriend.friends
+    var friends: [User] = sampleFriend.friends
     var filteredFriends: [User] = []
     
     var delegate: SelectedFriendListDelegate?

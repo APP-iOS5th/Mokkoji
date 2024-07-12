@@ -98,12 +98,29 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         return datePicker
     }()
     
-    lazy var friendList: UILabel = {
-        let textLabel = UILabel()
-        textLabel.numberOfLines = 0 /// 여러 줄 표시
-        textLabel.lineBreakMode = .byWordWrapping /// 단어 단위로 줄바꿈
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
-        return textLabel
+    /// 선택한 친구 한 줄로 보기 vs 여러 줄로 보기
+//    lazy var friendList: UITextField = {
+//        let textField = UITextField()
+//        textField.isEnabled = false
+//        textField.borderStyle = .roundedRect
+//        textField.placeholder = "초대할 친구를 추가하세요."
+//        textField.translatesAutoresizingMaskIntoConstraints = false
+//        return textField
+//    }()
+    
+    lazy var friendList: UITextView = {
+        let textView = UITextView()
+        textView.isEditable = false
+        textView.text = "초대할 친구를 추가하세요."
+        textView.textAlignment = .left
+        textView.textColor = UIColor.systemGray3
+        textView.font = UIFont.systemFont(ofSize: 18.0)
+        textView.layer.borderColor = UIColor.systemGray5.cgColor
+        textView.layer.borderWidth = 1.0
+        textView.layer.cornerRadius = 5.0
+        textView.layer.masksToBounds = true
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        return textView
     }()
     
     lazy var inviteButton: UIButton = {
@@ -212,9 +229,11 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             dateField.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             dateField.heightAnchor.constraint(equalToConstant: 40),
             
-            friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
+            friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 5),
             friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
+            friendList.widthAnchor.constraint(equalTo: dateField.widthAnchor),
+            friendList.heightAnchor.constraint(equalToConstant: 40),
             
             inviteButton.topAnchor.constraint(equalTo: friendList.bottomAnchor, constant: 15),
             inviteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
@@ -349,23 +368,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         let combinedString = names.joined(separator: ", ")
         self.friendList.text = combinedString
-        
-        // TODO: - 제약조건 설정 안되는 문제 해결
-        /// 초대된 친구 추가 후 제약조건 수정
-        if let text = friendList.text, !text.isEmpty {
-            /// friendList 기존 제약조건 비활성화
-            NSLayoutConstraint.deactivate([
-                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor),
-                friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-                friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
-            ])
-            /// friendList 새로운 제약조건 활성화
-            NSLayoutConstraint.activate([
-                friendList.topAnchor.constraint(equalTo: dateField.bottomAnchor, constant: 15),
-                friendList.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
-                friendList.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
-            ])
-        }
+        self.friendList.textColor = .black
     }
     
     // MARK: - UITextFieldDelegate
@@ -399,7 +402,6 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         self.view.endEditing(true)
     }
 
-    // TODO: - 텍스트필드 클릭 시 텍스트필드 날아감
     /// 키보드가 나타날 때 호출되는 함수
     @objc func keyboardWillShow(_ notification: NSNotification) {
         print("Keyboard will show")
