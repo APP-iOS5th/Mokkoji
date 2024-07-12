@@ -4,7 +4,7 @@ import Firebase
 class PlanDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
-    let mapViewController = MapViewController()
+    let mapViewController = PreviewMapViewController(selectedPlaces: [])
     var plans: [Plan] = []
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
     var plan: Plan?
