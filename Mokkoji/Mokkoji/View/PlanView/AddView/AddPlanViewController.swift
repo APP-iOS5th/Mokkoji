@@ -16,7 +16,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     let db = Firestore.firestore()
     let inviteFriendTableViewController = InviteFriendTableViewController()
     let mapViewController = MapViewController()
-    var previewMapViewController = PreviewMapViewController(selectePlaces: [])
+    var previewMapViewController = PreviewMapViewController(selectedPlaces: [])
     
     var saveButton: UIBarButtonItem?
     

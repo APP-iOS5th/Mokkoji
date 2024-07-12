@@ -28,11 +28,11 @@ class PreviewMapViewController: UIViewController, MapControllerDelegate, CLLocat
     let POI_LAYER_ID = "PoiLayer"
     let ROUTE_LAYER_ID = "RouteLayer"
     
-    init(selectePlaces: [MapInfo]) {
+    init(selectedPlaces: [MapInfo]) {
         _observerAdded = false
         _auth = false
         _appear = false
-        self.selectedPlaces = selectePlaces
+        self.selectedPlaces = selectedPlaces
         super.init(nibName: nil, bundle: nil)
     }
     
