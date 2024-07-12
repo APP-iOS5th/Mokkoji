@@ -39,7 +39,10 @@ class ProfileViewController: UIViewController {
     /// 프로필 이미지
     let profileImageView: UIImageView! = {
         let image = UIImageView()
-        image.image = UIImage(systemName: "person.circle")
+        if let profileImageUrl = UserInfo.shared.user?.profileImageUrl,
+           let url = URL(string: profileImageUrl.absoluteString) {
+            image.load(url: url)
+        }
         image.clipsToBounds = true
         image.layer.borderWidth = 2
         image.contentMode = .scaleAspectFill
@@ -55,7 +58,7 @@ class ProfileViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.layer.backgroundColor = UIColor(named: "Primary_Color")?.cgColor
         button.layer.cornerRadius = 10
-        button.addTarget(ProfileViewController.self, action: #selector(logoutButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         return button
     }()
     
