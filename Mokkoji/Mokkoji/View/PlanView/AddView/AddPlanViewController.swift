@@ -98,29 +98,13 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         return datePicker
     }()
     
-    /// 선택한 친구 한 줄로 보기 vs 여러 줄로 보기
-//    lazy var friendList: UITextField = {
-//        let textField = UITextField()
-//        textField.isEnabled = false
-//        textField.borderStyle = .roundedRect
-//        textField.placeholder = "초대할 친구를 추가하세요."
-//        textField.translatesAutoresizingMaskIntoConstraints = false
-//        return textField
-//    }()
-    
-    lazy var friendList: UITextView = {
-        let textView = UITextView()
-        textView.isEditable = false
-        textView.text = "초대할 친구를 추가하세요."
-        textView.textAlignment = .left
-        textView.textColor = UIColor.systemGray3
-        textView.font = UIFont.systemFont(ofSize: 18.0)
-        textView.layer.borderColor = UIColor.systemGray5.cgColor
-        textView.layer.borderWidth = 1.0
-        textView.layer.cornerRadius = 5.0
-        textView.layer.masksToBounds = true
-        textView.translatesAutoresizingMaskIntoConstraints = false
-        return textView
+    lazy var friendList: UITextField = {
+        let textField = UITextField()
+        textField.isEnabled = false
+        textField.borderStyle = .roundedRect
+        textField.placeholder = "초대할 친구를 추가하세요."
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
     }()
     
     lazy var inviteButton: UIButton = {
@@ -235,7 +219,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             friendList.widthAnchor.constraint(equalTo: dateField.widthAnchor),
             friendList.heightAnchor.constraint(equalToConstant: 40),
             
-            inviteButton.topAnchor.constraint(equalTo: friendList.bottomAnchor, constant: 15),
+            inviteButton.topAnchor.constraint(equalTo: friendList.bottomAnchor, constant: 5),
             inviteButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             inviteButton.widthAnchor.constraint(equalToConstant: 80),
             inviteButton.heightAnchor.constraint(equalToConstant: 40),
@@ -249,7 +233,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            previewMapViewController.view.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 20),
+            previewMapViewController.view.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 15),
             previewMapViewController.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
             previewMapViewController.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             previewMapViewController.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
