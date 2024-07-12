@@ -1,6 +1,7 @@
 import UIKit
 import FirebaseFirestore
 import Firebase
+
 class PlanDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
@@ -12,6 +13,7 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
     let db = Firestore.firestore()
     var isSelectArray = [Bool]()
     var mapInfo: MapInfo? // MapInfo 저장 변수 추가
+    let contentView = UIView()
     
     lazy var mainContainer: UIScrollView = {
         let scrollView = UIScrollView()
@@ -40,40 +42,50 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
         tableView.backgroundColor = .white // 테이블 뷰 배경색 설정
         tableView.allowsMultipleSelection = true //테이블 여러개 선택되지 않게해줌
         
-        
         // Add child view controller
         addChild(mapViewController)
-        view.addSubview(mapViewController.view)
         mapViewController.didMove(toParent: self)
         
+        // ScrollView와 contentView 설정
         view.addSubview(mainContainer)
-        mainContainer.addSubview(mapViewController.view)
-        mainContainer.addSubview(tableView)
+        mainContainer.addSubview(contentView)
+        contentView.addSubview(tableView)
+        contentView.addSubview(mapViewController.view)
         
-        // Set up constraints for the map view
-        mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        
-        // 테이블 뷰 제약 조건 설정
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        // Set up constraints for the scroll view
+        mainContainer.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
-            mainContainer.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            mainContainer.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            mainContainer.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
-            mainContainer.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            mainContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            mainContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            mainContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            mainContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             
-            mapViewController.view.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
-            mapViewController.view.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            mapViewController.view.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            mapViewController.view.heightAnchor.constraint(equalToConstant: 400), // 맵 뷰 높이 설정
-            
-            tableView.leadingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.trailingAnchor),
-            tableView.topAnchor.constraint(equalTo: mapViewController.view.bottomAnchor, constant: 8),
-            tableView.bottomAnchor.constraint(equalTo: mainContainer.frameLayoutGuide.bottomAnchor)
+            contentView.topAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: mainContainer.contentLayoutGuide.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: mainContainer.widthAnchor),
         ])
-        
+
+        // 테이블 뷰와 맵 뷰 제약 조건 설정
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            tableView.heightAnchor.constraint(equalToConstant: 380),
+
+            mapViewController.view.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 8),
+            mapViewController.view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            mapViewController.view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            mapViewController.view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            mapViewController.view.heightAnchor.constraint(equalToConstant: 500),
+        ])
     }
-    
     // Firestore에서 plan 정보 가져오기
     func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
         let planRef = db.collection("users").document(userId)
