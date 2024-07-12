@@ -193,11 +193,11 @@
 			isa = PBXGroup;
 			children = (
 				4A21ED9E2C1958390001470C /* AddPlanViewController.swift */,
-				4A21ED9F2C1958390001470C /* InviteFriendTableViewController.swift */,
 				584EEBF12C197AF700538F55 /* PlaceListTableViewCell.swift */,
+				58E53FF52C342B3500EF0D28 /* PreviewMapViewController.swift */,
+				4A21ED9F2C1958390001470C /* InviteFriendTableViewController.swift */,
 				58A318172C22E0F6003CA86B /* FriendListTableViewCell.swift */,
 				5898EB192C23437300A411A4 /* SearchFriendsTableViewController.swift */,
-				58E53FF52C342B3500EF0D28 /* PreviewMapViewController.swift */,
 			);
 			path = AddView;
 			sourceTree = "<group>";
