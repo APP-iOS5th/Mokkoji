@@ -446,6 +446,7 @@ class LoginViewController: UIViewController {
     func loginSuccess() {
         guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
         let tabBarController = sceneDelegate.createTabBarController()
+        tabBarController.selectedIndex = 1
         sceneDelegate.changeRootViewController(tabBarController, animated: true)
     }
     

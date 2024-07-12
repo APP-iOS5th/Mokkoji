@@ -70,6 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     print("[SceneDelegate] 로그인 성공")
                     UserInfo.shared.user = fetchedUser
                     let tabBarController = self.createTabBarController()
+                    tabBarController.selectedIndex = 1
                     window.rootViewController = tabBarController
                 } else {
                     // 사용자가 로그인되어 있지만 Firestore에서 사용자 정보를 가져오지 못한 경우, 로그아웃
@@ -119,6 +120,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func changeRootViewController (_ viewController: UIViewController, animated: Bool) {
         guard let window = self.window else { return }
+        
+        // PlanListViewController가 처음보이는 화면으로 설정
+        if let tabBarController = viewController as? UITabBarController {
+            tabBarController.selectedIndex = 1
+        }
+        
         window.rootViewController = viewController // 전환
         window.makeKeyAndVisible()
     }
@@ -129,7 +136,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let friendController = UINavigationController(rootViewController: AddFriendViewController())
         
         let tabBarController = UITabBarController()
-        tabBarController.setViewControllers([navigationController, profilController, friendController], animated: true)
+        tabBarController.setViewControllers([friendController, navigationController, profilController], animated: true)
         
         // 기본 색상 설정
         UINavigationBar.appearance().barTintColor = .white
@@ -141,17 +148,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UITabBar.appearance().unselectedItemTintColor = .lightGray
         
         if let items = tabBarController.tabBar.items {
-            items[0].selectedImage = UIImage(systemName: "star.fill")
-            items[0].image = UIImage(systemName: "star")
-            items[0].title = "약속 리스트"
+            items[0].selectedImage = UIImage(systemName: "person.2.circle.fill")
+            items[0].image = UIImage(systemName: "person.2.circle")
+            items[0].title = "친구"
             
-            items[1].selectedImage = UIImage(systemName: "person.fill")
-            items[1].image = UIImage(systemName: "person")
-            items[1].title = "프로필"
+            items[1].selectedImage = UIImage(systemName: "star.fill")
+            items[1].image = UIImage(systemName: "star")
+            items[1].title = "약속 리스트"
             
-            items[2].selectedImage = UIImage(systemName: "person.2.circle.fill")
-            items[2].image = UIImage(systemName: "person.2.circle")
-            items[2].title = "친구"
+            items[2].selectedImage = UIImage(systemName: "person.fill")
+            items[2].image = UIImage(systemName: "person")
+            items[2].title = "프로필"
+            
+            
         }
         
         return tabBarController
