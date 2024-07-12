@@ -13,12 +13,16 @@ import FirebaseStorage
 
 class ProfileEditViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    //MARK: - Properties
     let db = Firestore.firestore()
-    var onSave: ((String, String, UIImage) -> Void)?
     
+    //MARK: - UIComponents
     private lazy var profileEditImage: UIImageView! = {
         let imageEdit = UIImageView()
-        imageEdit.image = UIImage(systemName: "person.circle")
+//        imageEdit.image = UIImage(systemName: "person.circle")
+        if let profileImageUrl = UserInfo.shared.user?.profileImageUrl, let url = URL(string: profileImageUrl.absoluteString) {
+            imageEdit.load(url: url)
+        }
         imageEdit.isUserInteractionEnabled = true
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped))
@@ -149,19 +153,13 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
 
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        print("\(info)")
         
         guard let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
             fatalError("Expected a dictionary containing an image: \(info)")
         }
-        uploadImage(image: selectedImage, pathRoot: UserInfo.shared.user!.id) { url in
-            let userRef = self.db.collection("users").document("LmpQJXa9dYVwgP8vOOTX6RAEKaV2")
-            userRef.updateData(["profileImageUrl" : url?.absoluteString] )
-                print("Profile Edit Information saved")
-        }
         
-        let smallerImage = selectedImage.preparingThumbnail(of: CGSize(width: 150, height: 150))
-        profileEditImage.image = smallerImage
+        profileEditImage.image = selectedImage
+
         dismiss(animated: true)
     }
     
@@ -182,27 +180,25 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
     
     //TODO: - 파이어 베이스 저장 기능 추가
     @objc func tapSaveButton() {
-        guard let text = profileEditName.text,
-              let text2 = profileEditMail.text,
-              let image1 = profileEditImage.image
-        else { return }
         
-//        // 사용자의 데이터를 기반으로 User 객체 생성
-//        let user = User(id: UserInfo.shared.user?.id, name: text, email: text2, profileImageUrl: <#T##URL#>)
-//        
-        // 사용자 ID 가져오기 (예시: UserInfo.shared.user?.id)
-        guard let userId = UserInfo.shared.user?.id else {
-            print("User ID not found")
+        guard var user = UserInfo.shared.user else {
+            print("tapSaveButton user error")
             return
         }
+        guard let userId = UserInfo.shared.user?.id else {
+            print("tapSaveButton userId error")
+            return
+        }
+        guard let userImage = profileEditImage.image else {
+            return
+        }
+        uploadImage(image: userImage, pathRoot: userId) { url in
+            if let url = url {
+                user.profileImageUrl = url
+            }
+            self.saveUserToFirestore(user: user, userId: userId)
+        }
         
-        // Firestore에 사용자 데이터 저장
-//        saveUserToFirestore(user: user, userId: userId)
-//        
-        // 클로저 호출
-        onSave?(text, text2, image1)
-        
-        // 뷰 컨트롤러 닫기
         dismiss(animated: true, completion: nil)
     }
 
