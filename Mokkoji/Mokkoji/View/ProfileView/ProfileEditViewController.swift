@@ -16,10 +16,10 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
     //MARK: - Properties
     let db = Firestore.firestore()
     
+    
     //MARK: - UIComponents
     private lazy var profileEditImage: UIImageView! = {
         let imageEdit = UIImageView()
-//        imageEdit.image = UIImage(systemName: "person.circle")
         if let profileImageUrl = UserInfo.shared.user?.profileImageUrl, let url = URL(string: profileImageUrl.absoluteString) {
             imageEdit.load(url: url)
         }

@@ -26,14 +26,11 @@ extension UIImageView {
     }
 }
 
-
 class ProfileViewController: UIViewController {
     
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
     var userProfileImage = UserInfo.shared.user!.profileImageUrl
-    
-
     
     //MARK: - UIComponents
     /// 프로필 이미지
@@ -258,6 +255,7 @@ class ProfileViewController: UIViewController {
     }
 }
 
+//MARK: - UITableViewDelegate, DataSource Methods
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     //친구 테이블 뷰
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
