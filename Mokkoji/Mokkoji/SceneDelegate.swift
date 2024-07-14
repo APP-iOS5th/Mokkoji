@@ -133,7 +133,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func createTabBarController() -> UITabBarController {
         let navigationController = UINavigationController(rootViewController: PlanListViewController())
         let profilController = UINavigationController(rootViewController: ProfileViewController())
-        let friendController = UINavigationController(rootViewController: AddFriendViewController())
+        let friendController = UINavigationController(rootViewController: FriendListViewController())
         
         let tabBarController = UITabBarController()
         tabBarController.setViewControllers([friendController, navigationController, profilController], animated: true)
