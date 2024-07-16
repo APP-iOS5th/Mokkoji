@@ -62,9 +62,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //사용자 로그인 유무 확인
         print("[SceneDelegate currentUser]\(Auth.auth().currentUser)")
         if let user = Auth.auth().currentUser {
+            
+            guard let userEmail = user.email else { return }
+            
             // Firestore에서 사용자 정보 가져오기
             //TODO: = userID가 로그인에 따라 다름. user.uid는 sns의 따라 다 다름
-            fetchUserFromFirestore(userId: user.uid) { fetchedUser in
+            fetchUserFromFirestore(userEmail: userEmail) { fetchedUser in
                 if let fetchedUser = fetchedUser {
                     //로그인이 된 상태
                     print("[SceneDelegate] 로그인 성공")
@@ -167,9 +170,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     //파이어스토어 유저 정보 가져오는 메소드
-    func fetchUserFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
+    func fetchUserFromFirestore(userEmail: String, completion: @escaping (User?) -> Void) {
         let db = Firestore.firestore()
-        let userRef = db.collection("users").document(userId)
+        let userRef = db.collection("users").document(userEmail)
         userRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 do {
@@ -180,7 +183,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     completion(nil)
                 }
             } else {
-                print("Firestore에 User가 존재하지 않음.")
+                print("scenedelegate [FB] Firestore에 User가 존재하지 않음.")
                 completion(nil)
             }
         }
