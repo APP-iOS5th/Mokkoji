@@ -6,8 +6,14 @@
 //
 
 import UIKit
+import FirebaseFirestore
 
 class FriendListViewController: UIViewController{
+    
+    //MARK: - Properties
+    let db = Firestore.firestore()  //firestore
+    
+    
         
     //MARK: - UIComponents
     
@@ -32,6 +38,7 @@ class FriendListViewController: UIViewController{
         return label
     }()
     
+    //MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -59,7 +66,16 @@ class FriendListViewController: UIViewController{
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        friendSearchTableView.reloadData()
+        
+        guard let userEmail = UserInfo.shared.user?.email else { return }
+        
+        fetchUserFromFirestore(userEmail: userEmail) { user in
+            UserInfo.shared.user = user
+        }
+        
+        DispatchQueue.main.async {
+            self.friendSearchTableView.reloadData()
+        }
     }
     
     //MARK: - Methods
@@ -101,5 +117,26 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.selectionStyle = .none
         
         return cell
+    }
+}
+
+//MARK: - FireStore Methods
+extension FriendListViewController {
+    func fetchUserFromFirestore(userEmail: String, completion: @escaping (User?) -> Void) {
+        let userRef = db.collection("users").document(userEmail)
+        userRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                do {
+                    let user = try document.data(as: User.self)
+                    completion(user)
+                } catch let error {
+                    print("User Decoding Error: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("loginView[FB]Firestore에 User가 존재하지 않음.")
+                completion(nil)
+            }
+        }
     }
 }
