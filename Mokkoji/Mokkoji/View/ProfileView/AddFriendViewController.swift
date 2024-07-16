@@ -6,12 +6,21 @@
 //
 
 import UIKit
+import FirebaseFirestore
+
+//TODO: - 이메일로 친구검색,,
+//https://firebase.google.com/docs/firestore/query-data/queries?hl=ko#swift
 
 class AddFriendViewController: UIViewController {
     
     //MARK: - Properties
+    let db = Firestore.firestore()  //firestore
     var filteredFriends = [User]()
     
+    //텍스트가 있을 경우만 true
+    var isFiltering: Bool {
+        return !(friendSearchBar.text?.isEmpty ?? true)
+    }
     
     //MARK: - UIComponents
     private lazy var friendSearchBar: UISearchBar = {
@@ -30,9 +39,12 @@ class AddFriendViewController: UIViewController {
         return tableView
     }()
     
+    //MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        
+        self.hideKeyboardWhenTappedAround()
         
         view.addSubview(friendSearchBar)
         view.addSubview(friendSearchTableView)
@@ -47,24 +59,51 @@ class AddFriendViewController: UIViewController {
             friendSearchTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             friendSearchTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        //TODO: - TEST
+        friendSearchBar.text = "jjwon2149@naver.com"
     }
     
     //MARK: - Methods
+    func searchFriendToFirestore(userEmail: String) {
+        let friendsRef = db.collection("users").whereField("email", isEqualTo: userEmail)
+        friendsRef.getDocuments { querySnapshot, error in
+            do {
+                for document in querySnapshot!.documents {
+                    //                    print("\(document.documentID) => \(document.data())")
+                    self.filteredFriends.append(try document.data(as: User.self))
+                    print("Friend search success \(self.filteredFriends)")
+                    
+                }
+                DispatchQueue.main.async {
+                    self.friendSearchTableView.reloadData()
+                }
+            } catch {
+                print("AddFriendVC [FB] get friend error: \(error)")
+            }
+        }
+    }
 }
 
 //MARK: - UITableView Delegate, DataSource Methods
 extension AddFriendViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UserInfo.shared.user?.friendList?.count ?? 0
+        
+        return self.filteredFriends.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
-        guard let cellImage = UserInfo.shared.user?.friendList?[indexPath.row].profileImageUrl else {
-            return UITableViewCell()
-        }
+        let cellImage = filteredFriends[indexPath.row].profileImageUrl
         
-        cell.textLabel?.text = UserInfo.shared.user?.friendList?[indexPath.row].name
+        cell.textLabel?.text = filteredFriends[indexPath.row].name
         cell.imageView?.image = UIImage(systemName: "person.circle")
         cell.imageView?.load(url: cellImage)
         
@@ -78,6 +117,7 @@ extension AddFriendViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //TODO: - 나: 친구 추가, 친구: 나 추가  (친구 추가했을시 친구 정보 업데이트 필요)
         tableView.deselectRow(at: indexPath, animated: true)
         
         let selectedFriend = filteredFriends[indexPath.row]
@@ -108,4 +148,49 @@ extension AddFriendViewController: UITableViewDelegate, UITableViewDataSource {
 //MARK: - UISearchBarDelegate Methods
 extension AddFriendViewController: UISearchBarDelegate {
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let userEmail = searchBar.text else { return }
+        searchFriendToFirestore(userEmail: userEmail)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        
+        searchBar.text = ""
+        // 캔슬 버튼을 눌렀을 때도 역시 모든 영화가 나오게 한다
+        filteredFriends.removeAll()
+        
+        DispatchQueue.main.async {
+            self.friendSearchTableView.reloadData()
+        }
+        
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+    
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = false
+    }
+}
+
+//MARK: - Keyboard Handling Methods
+extension AddFriendViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    @objc func keyboardWillHide(_ notification: NSNotification) {
+        print("keyboard down")
+        if view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
+        }
+    }
 }
