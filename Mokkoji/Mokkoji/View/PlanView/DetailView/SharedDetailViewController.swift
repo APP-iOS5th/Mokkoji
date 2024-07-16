@@ -5,7 +5,7 @@ import Firebase
 class SharedDetailViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     let tableView = UITableView()
-    let mapViewController = PreviewMapViewController(selectedPlaces: [])
+    var mapViewController = PreviewMapViewController(selectedPlaces: [])
     var selectedPlan: Plan? // 선택한 항목을 저장할 변수 추가
     var sharPlan: [Plan] = []
     let db = Firestore.firestore()
@@ -31,6 +31,8 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
         
         // 기본 뷰 배경색 설정
         view.backgroundColor = .white
+        mapViewController = PreviewMapViewController(selectedPlaces: generateMapInfoFromPlans())
+
         
         // 테이블 뷰 설정
         tableView.dataSource = self
@@ -42,6 +44,7 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
         // Add child view controller
         addChild(mapViewController)
         mapViewController.didMove(toParent: self)
+        
         
         // ScrollView와 contentView 설정
         view.addSubview(mainContainer)
@@ -147,5 +150,13 @@ class SharedDetailViewController: UIViewController, UITableViewDataSource, UITab
         }
         
         return cell
+    }
+    
+    func generateMapInfoFromPlans() -> [MapInfo] {
+        var mapInfos: [MapInfo] = []
+        for plan in sharPlan {
+            mapInfos.append(contentsOf: plan.mapInfo)
+        }
+        return mapInfos
     }
 }
