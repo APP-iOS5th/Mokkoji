@@ -57,18 +57,18 @@ class FriendListViewController: UIViewController{
             
             friendSearchTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             friendSearchTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            friendSearchTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            friendSearchTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            friendSearchTableView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor)
         ])
         
         updateEmptyFriendLabel()
-        print("friendList: \(UserInfo.shared.user?.friendList)")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         guard let userEmail = UserInfo.shared.user?.email else { return }
-        
+        print("friendList TEST : \(UserInfo.shared.user?.friendList)")
         fetchUserFromFirestore(userEmail: userEmail) { user in
             UserInfo.shared.user = user
         }
@@ -128,13 +128,14 @@ extension FriendListViewController {
             if let document = document, document.exists {
                 do {
                     let user = try document.data(as: User.self)
+                    print("loginView [FB]Firestore fetch succeed")
                     completion(user)
                 } catch let error {
                     print("User Decoding Error: \(error)")
                     completion(nil)
                 }
             } else {
-                print("loginView[FB]Firestore에 User가 존재하지 않음.")
+                print("loginView [FB]Firestore에 User가 존재하지 않음.")
                 completion(nil)
             }
         }

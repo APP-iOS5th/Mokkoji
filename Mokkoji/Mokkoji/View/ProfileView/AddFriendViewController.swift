@@ -8,9 +8,6 @@
 import UIKit
 import FirebaseFirestore
 
-//TODO: - 이메일로 친구검색,,
-//https://firebase.google.com/docs/firestore/query-data/queries?hl=ko#swift
-
 class AddFriendViewController: UIViewController {
     
     //MARK: - Properties
@@ -117,23 +114,37 @@ extension AddFriendViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //TODO: - 나: 친구 추가, 친구: 나 추가  (친구 추가했을시 친구 정보 업데이트 필요)
+        //TODO: - 친구 중복 확인 추가 필요.
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let selectedFriend = filteredFriends[indexPath.row]
+        guard var user = UserInfo.shared.user else { return }
+        var selectedFriend = filteredFriends[indexPath.row]
+        
         let alertController = UIAlertController(title: "Add Friend", message: "\(selectedFriend.name)을 친구목록에 추가 하시겠습니까?", preferredStyle: .alert)
         
-        print("\(selectedFriend)")
         let yesAction = UIAlertAction(title: "Yes", style: .default) { _ in
-            if UserInfo.shared.user!.friendList!.isEmpty {
-                UserInfo.shared.user!.friendList = [selectedFriend]
+            
+            if ((user.friendList?.contains(where: { $0.email == selectedFriend.email })) != nil) {
+                //친구가 중복됨
             } else {
-                if !UserInfo.shared.user!.friendList!.contains(where: { $0.id == selectedFriend.id }) {
-                    UserInfo.shared.user!.friendList!.append(selectedFriend)
-                } else {
-                    return
+                // friendList가 nil이면 초기화
+                if  user.friendList == nil {
+                    print("friendList nil 초기화")
+                    user.friendList = []
                 }
+                if selectedFriend.friendList == nil {
+                    print("selectedFriend friendList nil 초기화")
+                    selectedFriend.friendList = []
+                }
+                user.friendList?.append(selectedFriend)
+                selectedFriend.friendList?.append(user)
+                
+                self.addFriendToFirestore(user: user, userEmail: user.email, friend: selectedFriend, friendEmail: selectedFriend.email)
+                
+                UserInfo.shared.user = user
+                print("AddFriendView[FB] 친구 양방향 저장 성공")
             }
+            self.dismiss(animated: true)
         }
         
         let noAction = UIAlertAction(title: "No", style: .cancel)
@@ -193,4 +204,21 @@ extension AddFriendViewController {
             view.frame.origin.y = 0
         }
     }
+}
+
+//MARK: - FireStore Methods
+extension AddFriendViewController {
+    
+    func addFriendToFirestore(user: User, userEmail: String, friend: User, friendEmail: String) {
+        let userRef = db.collection("users").document(userEmail)
+        let friendRef = db.collection("users").document(friendEmail)
+        do {
+            try userRef.setData(from: user)
+            try friendRef.setData(from: friend)
+            print("[FB] addFriendToFirestore Success")
+        } catch let error {
+            print("Firestore 양방향 저장 Error: \(error)")
+        }
+    }
+    
 }
