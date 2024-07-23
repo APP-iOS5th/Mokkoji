@@ -101,20 +101,15 @@ extension FriendListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as! FriendTableViewCell
         guard let cellImage = UserInfo.shared.user?.friendList?[indexPath.row].profileImageUrl else {
             return UITableViewCell()
         }
-        
-        cell.textLabel?.text = UserInfo.shared.user?.friendList?[indexPath.row].name
-        cell.imageView?.image = UIImage(systemName: "person.circle")
-        cell.imageView?.load(url: cellImage)
-        
-        let imageSize: CGFloat = 50
-        cell.imageView?.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
-        cell.imageView?.layer.cornerRadius = imageSize / 3.6
-        cell.imageView?.clipsToBounds = true
-        cell.selectionStyle = .none
+        guard let friend = UserInfo.shared.user?.friendList?[indexPath.row] else {
+            return UITableViewCell()
+        }
+        cell.userNameLabel.text = friend.name
+        cell.userImageView.load(url: cellImage)
         
         return cell
     }
