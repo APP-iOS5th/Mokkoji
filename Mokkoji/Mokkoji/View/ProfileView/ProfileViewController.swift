@@ -11,7 +11,7 @@ import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
 import FirebaseStorage
-
+//TODO: - 고객센터 (가이드, 문의하기, 서비스정책, 앱버전 등) 뷰 연결
 extension UIImageView {
     func load(url: URL) {
         DispatchQueue.global().async { [weak self] in
@@ -31,10 +31,11 @@ class ProfileViewController: UIViewController {
     //MARK: - Properties
     let db = Firestore.firestore()  //firestore
     var userProfileImage = UserInfo.shared.user!.profileImageUrl
+    let sectionTitle = ["가이드", "문의하기", "서비스정책", "앱버전"]
     
     //MARK: - UIComponents
     /// 프로필 이미지
-    let profileImageView: UIImageView! = {
+    private lazy var profileImageView: UIImageView! = {
         let image = UIImageView()
         if let profileImageUrl = UserInfo.shared.user?.profileImageUrl,
            let url = URL(string: profileImageUrl.absoluteString) {
@@ -49,7 +50,7 @@ class ProfileViewController: UIViewController {
     }()
     
     /// 로그아웃 버튼
-    let logoutButton: UIButton = {
+    private lazy var logoutButton: UIButton = {
         let button = UIButton()
         button.setTitle("LOGOUT", for: .normal)
         button.setTitleColor(.white, for: .normal)
@@ -97,21 +98,8 @@ class ProfileViewController: UIViewController {
         return label
     }()
     
-    /// 친구 삭제 버튼
-    private lazy var deleteFriendButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("친구삭제", for: .normal)
-        button.setTitle("완료", for: .selected)
-        button.setTitleColor(UIColor(named: "Primary_Color"), for: .normal)
-        button.setTitleColor(.blue, for: [.normal, .highlighted])
-        button.setTitleColor(.systemRed, for: .selected)
-        button.setTitleColor(.red, for: [.selected, .highlighted])
-        button.addTarget(self, action: #selector(friendsDeleteButton), for: .touchUpInside)
-        return button
-    }()
-    
     /// 친구 확인 테이블 뷰
-    private lazy var friendsTableView: UITableView = {
+    private lazy var customerServiceTableView: UITableView = {
         var tableView = UITableView()
         return tableView
     }()
@@ -126,9 +114,9 @@ class ProfileViewController: UIViewController {
         self.navigationItem.largeTitleDisplayMode = .always
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: #selector(tapButtonProfileEdit))
         
-        friendsTableView.dataSource = self
-        friendsTableView.delegate = self
-        friendsTableView.register(FriendTableViewCell.self, forCellReuseIdentifier: "friendCell")
+        customerServiceTableView.dataSource = self
+        customerServiceTableView.delegate = self
+        customerServiceTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         view.addSubview(profileImageView)
         view.addSubview(nameLabel)
@@ -136,8 +124,7 @@ class ProfileViewController: UIViewController {
         view.addSubview(mailLabel)
         view.addSubview(mailCheck)
         view.addSubview(logoutButton)
-        view.addSubview(deleteFriendButton)
-        view.addSubview(friendsTableView)
+        view.addSubview(customerServiceTableView)
         
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
@@ -145,8 +132,7 @@ class ProfileViewController: UIViewController {
         nameCheck.translatesAutoresizingMaskIntoConstraints = false
         mailLabel.translatesAutoresizingMaskIntoConstraints = false
         mailCheck.translatesAutoresizingMaskIntoConstraints = false
-        deleteFriendButton.translatesAutoresizingMaskIntoConstraints = false
-        friendsTableView.translatesAutoresizingMaskIntoConstraints = false
+        customerServiceTableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
@@ -173,13 +159,10 @@ class ProfileViewController: UIViewController {
             logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            deleteFriendButton.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 10),
-            deleteFriendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            
-            friendsTableView.topAnchor.constraint(equalTo: deleteFriendButton.bottomAnchor, constant: 10),
-            friendsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            friendsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            friendsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
+            customerServiceTableView.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 10),
+            customerServiceTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            customerServiceTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            customerServiceTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
         ])
     }
     
@@ -187,17 +170,6 @@ class ProfileViewController: UIViewController {
         super.viewIsAppearing(true)
         
         fetchProfileData()
-        
-        if let friendList = UserInfo.shared.user?.friendList {
-            if friendList.count == 0 {
-                let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://postfiles.pstatic.net/MjAyMDA5MDNfNzYg/MDAxNTk5MTI1ODQyOTgz.GcnIG2lAeKYjlf_WW__Z-RbcEmuCPliCM7JtSvcSf9Eg.IfoEGxCaenu31xJE57uGvHnwOqANmAIW_Azf2oIYxDMg.PNG.shshspdla/1%EB%8C%801.png?type=w773")!)]
-                UserInfo.shared.user?.friendList = emptyFriend
-            }
-        } else {
-            let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://postfiles.pstatic.net/MjAyMDA5MDNfNzYg/MDAxNTk5MTI1ODQyOTgz.GcnIG2lAeKYjlf_WW__Z-RbcEmuCPliCM7JtSvcSf9Eg.IfoEGxCaenu31xJE57uGvHnwOqANmAIW_Azf2oIYxDMg.PNG.shshspdla/1%EB%8C%801.png?type=w773")!)]
-            UserInfo.shared.user?.friendList = emptyFriend
-        }
-        friendsTableView.reloadData()
     }
     
     //MARK: - Methods
@@ -257,50 +229,48 @@ class ProfileViewController: UIViewController {
 
 //MARK: - UITableViewDelegate, DataSource Methods
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
-    //친구 테이블 뷰
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-          return UserInfo.shared.user?.friendList?.count ?? 0
-      }
-      
-      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-          let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
-          guard let cellImage = UserInfo.shared.user?.friendList?[indexPath.row].profileImageUrl else {
-              return UITableViewCell()
-          }
-          
-          cell.textLabel?.text = UserInfo.shared.user?.friendList?[indexPath.row].name
-          cell.imageView?.image = UIImage(systemName: "person.circle")
-          cell.imageView?.load(url: cellImage)
-          
-          let imageSize: CGFloat = 50
-          cell.imageView?.frame = CGRect(x: 0, y: 0, width: imageSize, height: imageSize)
-          cell.imageView?.layer.cornerRadius = imageSize / 3.6
-          cell.imageView?.clipsToBounds = true
-          cell.selectionStyle = .none
-          
-          return cell
-      }
-      
-    
-    //친구 삭제
-    @objc func friendsDeleteButton() {
-        let shouldBeEdited = !friendsTableView.isEditing
-        friendsTableView.setEditing(shouldBeEdited, animated: true)
-        deleteFriendButton.isSelected = shouldBeEdited
+        return sectionTitle.count
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return tableView.isEditing
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = sectionTitle[indexPath.row]
+        return cell
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return tableView.isEditing ? .delete : .none
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        guard editingStyle == .delete else { return }
-        UserInfo.shared.user?.friendList?.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .fade)
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .white
+        lazy var headerLabel: UILabel = {
+            let label = UILabel()
+            label.text = "고객센터"
+            label.textAlignment = .left
+            label.font = UIFont.boldSystemFont(ofSize: 12)
+            label.textColor = .lightGray
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+        
+        headerView.addSubview(headerLabel)
+        
+        NSLayoutConstraint.activate([
+            headerLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            headerLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16)
+        ])
+        
+        return headerView
     }
 }
 
