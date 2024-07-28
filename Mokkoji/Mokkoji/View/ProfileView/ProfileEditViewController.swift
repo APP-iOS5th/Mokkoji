@@ -92,6 +92,18 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         return textfield
     }()
     
+    private lazy var deleteAccountButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("회원 탈퇴", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.layer.backgroundColor = UIColor(named: "Primary_Color")?.cgColor
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(deleteAccountButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    //MARK: - View LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
@@ -105,6 +117,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         self.view.addSubview(profileEditName)
         self.view.addSubview(profileEditMailLabel)
         self.view.addSubview(profileEditMail)
+        self.view.addSubview(deleteAccountButton)
         
         profileEditImage.translatesAutoresizingMaskIntoConstraints = false
         profileEditNameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -133,24 +146,30 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
             profileEditMail.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             profileEditMail.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             profileEditMail.heightAnchor.constraint(equalToConstant: 40),
+            
+            deleteAccountButton.topAnchor.constraint(equalTo: profileEditMail.bottomAnchor, constant: 50),
+            deleteAccountButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            deleteAccountButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            deleteAccountButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20)
         ])
     }
     
-    func uploadImage(image: UIImage, pathRoot: String, completion: @escaping (URL?) -> Void) {
+    //MARK: - Methods
+    func uploadImage(image: UIImage, completion: @escaping (URL?) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
+        guard let user = UserInfo.shared.user else { return }
         let metaData = StorageMetadata()
         metaData.contentType = "image.jpeg"
         
-        let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
+        let userImageName = user.email.lowercased()
         
-        let firebaseReference = Storage.storage().reference().child("\(imageName)")
+        let firebaseReference = Storage.storage().reference().child("\(userImageName)")
         firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
             firebaseReference.downloadURL { url, _ in
                 completion(url)
             }
         }
     }
-
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
@@ -159,7 +178,7 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         }
         
         profileEditImage.image = selectedImage
-
+        
         dismiss(animated: true)
     }
     
@@ -178,40 +197,103 @@ class ProfileEditViewController: UIViewController, UIImagePickerControllerDelega
         dismiss(animated: true)
     }
     
-    //TODO: - 파이어 베이스 저장 기능 추가
+    @objc func deleteAccountButtonTapped() {
+        //회원 탈퇴 로직 (파이어스토어,스토리지 삭제 -> Auth삭제)
+        guard var user = UserInfo.shared.user else {
+            print("User not found")
+            return
+        }
+        guard let userEmail = UserInfo.shared.user?.email else {
+            print("userId not found")
+            return
+        }
+        
+        Task {
+            //파이어 스토어 데이터 삭제
+            await self.deleteUserToFirestore(user: user, userEmail: userEmail)
+            
+            //프로필 이미지 삭제
+            await self.deleteUserProfileImage(user: user)
+            
+            //파이어베이스 Authentication 삭제
+            self.deleteUserAuthentication()
+        }
+        
+    }
+    
+    // 로그인 화면으로 전환
+    func transitionToLoginView() {
+        guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
+        let loginViewController = LoginViewController()
+        let navController = UINavigationController(rootViewController: loginViewController)
+        sceneDelegate.changeRootViewController(navController, animated: true)
+    }
+    
     @objc func tapSaveButton() {
         
         guard var user = UserInfo.shared.user else {
             print("tapSaveButton user error")
             return
         }
-        guard let userId = UserInfo.shared.user?.id else {
+        guard let userEmail = UserInfo.shared.user?.email else {
             print("tapSaveButton userId error")
             return
         }
         guard let userImage = profileEditImage.image else {
             return
         }
-        uploadImage(image: userImage, pathRoot: userId) { url in
+        uploadImage(image: userImage) { url in
             if let url = url {
                 user.profileImageUrl = url
             }
-            self.saveUserToFirestore(user: user, userId: userId)
+            self.saveUserToFirestore(user: user, userEmail: userEmail)
         }
         
         dismiss(animated: true, completion: nil)
     }
-
-    func saveUserToFirestore(user: User, userId: String) {
-        let userRef = db.collection("users").document(userId)
+    
+    func saveUserToFirestore(user: User, userEmail: String) {
+        let userRef = db.collection("users").document(userEmail)
         do {
             try userRef.setData(from: user)
-            print("Profile Edit Information saved")
         } catch let error {
             print("Firestore Writing Error: \(error)")
         }
     }
-
+    
+    func deleteUserToFirestore(user: User, userEmail: String) async {
+        let userRef = db.collection("users").document(userEmail)
+        do {
+            try await userRef.delete()
+            print("파이어스토어 유저정보 삭제 성공")
+        } catch {
+            print("deleteUserToFirestore Error: \(error.localizedDescription)")
+        }
+    }
+    
+    func deleteUserProfileImage(user: User) async {
+        let userImageName = user.email.lowercased()
+        let firebaseReference = Storage.storage().reference().child("\(userImageName)")
+        do {
+            try await firebaseReference.delete()
+        } catch {
+            print("Firebase Storage 유저 프로필 이미지 삭제에 실패")
+        }
+    }
+    
+    func deleteUserAuthentication() {
+        let user = Auth.auth().currentUser
+        
+        user?.delete { error in
+            if let error = error {
+                print("Firebase Authentication 유저 삭제에 실패")
+            } else {
+                print("Firebase Authentication 유저 삭제 성공")
+                //유저 삭제 성공시 로그인뷰로 이동
+                self.transitionToLoginView()
+            }
+        }
+    }
 }
 
 private extension UITextField {

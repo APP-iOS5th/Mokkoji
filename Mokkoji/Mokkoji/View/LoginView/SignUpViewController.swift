@@ -282,7 +282,7 @@ class SignUpViewController: UIViewController {
             self.user.email = email
             self.user.id = UUID().uuidString
             
-            self.uploadImage(image: selectedImage, pathRoot: self.user.id) { url in
+            self.uploadImage(image: selectedImage) { url in
                 if let url = url {
                     self.user.profileImageUrl = url
                     
@@ -439,7 +439,7 @@ class SignUpViewController: UIViewController {
     //https://ios-development.tistory.com/769
     
     ///Firebase Storage에 업로드
-    func uploadImage(image: UIImage, pathRoot: String, completion: @escaping (URL?) -> Void) {
+    func uploadImage(image: UIImage, completion: @escaping (URL?) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
         let metaData = StorageMetadata()
         metaData.contentType = "image.jpeg"

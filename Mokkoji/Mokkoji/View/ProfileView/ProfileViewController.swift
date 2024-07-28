@@ -178,7 +178,7 @@ class ProfileViewController: UIViewController {
         guard let user = UserInfo.shared.user else {
             return
         }
-        self.fetchUserFromFirestore(userId: user.id) { fetchedUser in
+        self.fetchUserFromFirestore(userEmail: user.email) { fetchedUser in
             guard let fetchedUser = fetchedUser else { return }
             UserInfo.shared.user = fetchedUser
             
@@ -275,19 +275,20 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension ProfileViewController {
-    func fetchUserFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
-        let userRef = db.collection("users").document(userId)
+    func fetchUserFromFirestore(userEmail: String, completion: @escaping (User?) -> Void) {
+        let userRef = db.collection("users").document(userEmail)
         userRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 do {
                     let user = try document.data(as: User.self)
+                    print("loginView [FB]Firestore fetch succeed")
                     completion(user)
                 } catch let error {
                     print("User Decoding Error: \(error)")
                     completion(nil)
                 }
             } else {
-                print("Firestore에 User가 존재하지 않음.")
+                print("loginView [FB]Firestore에 User가 존재하지 않음.")
                 completion(nil)
             }
         }
