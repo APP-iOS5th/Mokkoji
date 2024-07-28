@@ -429,16 +429,31 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         }
         
         /// User 정보 불러오기
-        guard var user = UserInfo.shared.user else {
+        guard let unwrappedUser = UserInfo.shared.user else {
             return
         }
+        var user = unwrappedUser
         
         /// User에 Plan 추가
         user.plan = newPlans
         
+        /// participants 정보 불러오기
+        guard let unwrappedFriends = self.participants else {
+            return
+        }
+        var friends = unwrappedFriends
+        
+        /// participants에 Plan 추가
+        for index in friends.indices {
+            friends[index].sharedPlan = newPlans
+        }
+
         /// User의 plan 데이터 firestore에 저장
         DispatchQueue.main.async {
             self.saveUserToFirestore(user: user, userEmail: user.email)
+            for friend in friends {
+                self.saveUserToFirestore(user: friend, userEmail: friend.email)
+            }
         }
         self.navigationController?.popViewController(animated: true)
     }

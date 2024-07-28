@@ -28,7 +28,7 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
         
-        // 검색 컨트롤러
+        /// 검색 컨트롤러
         let searchController = UISearchController(searchResultsController: searchFriendsTableViewController)
         /// 텍스트가 변경될 때마다 업데이트를 처리
         searchController.searchResultsUpdater = searchFriendsTableViewController
@@ -40,7 +40,7 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
         self.navigationItem.hidesSearchBarWhenScrolling = false
         self.navigationItem.searchController = searchController
         
-        // FriendListViewCell 등록
+        /// FriendListViewCell 등록
         tableView.register(FriendListTableViewCell.self, forCellReuseIdentifier: "friendCell")
     }
 
@@ -66,7 +66,7 @@ class InviteFriendTableViewController: UITableViewController, SelectedFriendList
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // 행 삭제
+            /// 행 삭제
             selectedFriends.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
