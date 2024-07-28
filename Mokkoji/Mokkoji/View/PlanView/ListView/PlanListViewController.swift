@@ -96,11 +96,14 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         self.navigationItem.largeTitleDisplayMode = .always
         
         guard let user = UserInfo.shared.user else { return }
+        
         fetchPlanFromFirestore(userEmail: user.email) { [weak self] user in
             guard let self = self else { return }
             if let user = user {
+                guard let sharedPlan = user.sharedPlan else { return }
+                UserInfo.shared.user = user
                 self.plans = user.plan ?? []
-                self.sharedPlans.append(contentsOf: user.sharedPlan ?? [])
+                self.sharedPlans =  sharedPlan
                 UserInfo.shared.user?.sharedPlan = self.sharedPlans
                 
                 // isSelectArray 초기화

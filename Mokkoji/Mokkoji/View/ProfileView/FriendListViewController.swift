@@ -68,7 +68,6 @@ class FriendListViewController: UIViewController{
         super.viewWillAppear(animated)
         
         guard let userEmail = UserInfo.shared.user?.email else { return }
-        print("friendList TEST : \(UserInfo.shared.user?.friendList)")
         fetchUserFromFirestore(userEmail: userEmail) { user in
             UserInfo.shared.user = user
         }
