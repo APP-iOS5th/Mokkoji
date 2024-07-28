@@ -464,7 +464,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
                 alertController.addAction(cancelAction)
                 
                 present(alertController, animated: true, completion: nil)
-            }
+            } 
         }
     }
     

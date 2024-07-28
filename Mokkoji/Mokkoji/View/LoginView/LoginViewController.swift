@@ -446,13 +446,15 @@ class LoginViewController: UIViewController {
     func loginSuccess() {
         guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
         let tabBarController = sceneDelegate.createTabBarController()
+        tabBarController.selectedIndex = 1
         sceneDelegate.changeRootViewController(tabBarController, animated: true)
     }
     
     //자동 로그인
     private func checkAutoLogin() {
         if let user = Auth.auth().currentUser {
-            fetchUserFromFirestore(userId: user.uid) { fetchedUser in
+            guard let userEmail = user.email else { return }
+            fetchUserFromFirestore(userEmail: userEmail) { fetchedUser in
                 if let fetchedUser = fetchedUser {
                     UserInfo.shared.user = fetchedUser
                     self.loginSuccess()
@@ -500,7 +502,8 @@ class LoginViewController: UIViewController {
                         print("[loginButtonTapped] authResult error")
                         return
                     }
-                    fetchUserFromFirestore(userId: authResult.user.uid) { user in
+                    guard let userEmail = authResult.user.email else { return }
+                    fetchUserFromFirestore(userEmail: userEmail) { user in
                         if let user = user {
                             UserInfo.shared.user = user
                             print("이미 사용자가 존재하는 경우 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
@@ -587,7 +590,8 @@ class LoginViewController: UIViewController {
                                 guard let authResult = authResult else {
                                     return
                                 }
-                                self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
+                                guard let userEmail = authResult.user.email else { return }
+                                self.fetchUserFromFirestore(userEmail: userEmail) { user in
                                     if let user = user {
                                         UserInfo.shared.user = user
                                         print("이미 사용자가 존재하는 경우 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
@@ -617,7 +621,8 @@ class LoginViewController: UIViewController {
                                         guard let authResult = authResult else {
                                             return
                                         }
-                                        self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
+                                        guard let userEmail = authResult.user.email else { return }
+                                        self.fetchUserFromFirestore(userEmail: userEmail) { user in
                                             if let user = user {
                                                 UserInfo.shared.user = user
                                                 print("fetch 이후 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
@@ -647,7 +652,7 @@ class LoginViewController: UIViewController {
                                     print("이메일이 사용중이지 않을때 사용자 정보 저장: \(String(describing: UserInfo.shared.user))")
                                     
                                     // Firestore에 사용자 정보 저장
-                                    self.saveUserToFirestore(user: UserInfo.shared.user!, userId: String(UserInfo.shared.user!.id))
+                                    self.saveUserToFirestore(user: UserInfo.shared.user!, userEmail: String(UserInfo.shared.user!.email))
                                     //다음뷰 표시
                                     self.loginSuccess()
                                 }
@@ -740,8 +745,9 @@ class LoginViewController: UIViewController {
                         print("FB: 이미 사용자가 존재하는 경우 로그인 시도 signin failed error: \(error.localizedDescription)")
                     } else {
                         guard let authResult = authResult else { return }
+                        guard let userEmail = authResult.user.email else { return }
                         print("FB: 이미 사용자가 존재하는 경우 로그인 시도 signin success")
-                        self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
+                        self.fetchUserFromFirestore(userEmail: userEmail) { user in
                             if let user = user {
                                 UserInfo.shared.user = user
                                 print("이미 사용자가 존재하는 경우 currentUser 정보 : \(String(describing: UserInfo.shared.user))")
@@ -765,7 +771,8 @@ class LoginViewController: UIViewController {
                             } else {
                                 print("이메일이 이미 사용 중일 때, 로그인 시도 성공")
                                 guard let authResult = authResult else { return }
-                                self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
+                                guard let userEmail = authResult.user.email else { return }
+                                self.fetchUserFromFirestore(userEmail: userEmail) { user in
                                     if let user = user {
                                         UserInfo.shared.user = user
                                         print("fetch 이후 currentUser 정보: \(String(describing: UserInfo.shared.user))")
@@ -789,7 +796,7 @@ class LoginViewController: UIViewController {
                         print("이메일이 사용 중이지 않을 때, 사용자 정보 저장: \(String(describing: UserInfo.shared.user))")
                         
                         // Firestore에 사용자 정보 저장
-                        self.saveUserToFirestore(user: newUser, userId: authResult.user.uid)
+                        self.saveUserToFirestore(user: newUser, userEmail: userEmail)
                         //탭바뷰 표시
                         self.loginSuccess()
                     }
@@ -827,8 +834,8 @@ class LoginViewController: UIViewController {
     }
     
     //MARK: - FireStore Methods
-    func saveUserToFirestore(user: User, userId: String) {
-        let userRef = db.collection("users").document(userId)
+    func saveUserToFirestore(user: User, userEmail: String) {
+        let userRef = db.collection("users").document(userEmail)
         do {
             try userRef.setData(from: user)
         } catch let error {
@@ -836,8 +843,8 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func fetchUserFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
-        let userRef = db.collection("users").document(userId)
+    func fetchUserFromFirestore(userEmail: String, completion: @escaping (User?) -> Void) {
+        let userRef = db.collection("users").document(userEmail)
         userRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 do {
@@ -848,7 +855,7 @@ class LoginViewController: UIViewController {
                     completion(nil)
                 }
             } else {
-                print("Firestore에 User가 존재하지 않음.")
+                print("loginView[FB]Firestore에 User가 존재하지 않음.")
                 completion(nil)
             }
         }
@@ -892,7 +899,8 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
                 
                 // 사용자 정보 저장 및 Firestore 업데이트
                 guard let authResult = authResult else { return }
-                self.fetchUserFromFirestore(userId: authResult.user.uid) { user in
+                guard let userEmail = authResult.user.email else { return }
+                self.fetchUserFromFirestore(userEmail: userEmail) { user in
                     if let user = user {
                         UserInfo.shared.user = user
                         print("이미 사용자가 존재하는 경우 currentUser 정보: \(String(describing: UserInfo.shared.user))")
@@ -901,7 +909,7 @@ extension LoginViewController: ASAuthorizationControllerDelegate, ASAuthorizatio
                         //Apple은 사진 URL을 제공하지 않습니다.
                         let newUser = User(id: authResult.user.uid, name: (fullName?.givenName ?? "No") + (fullName?.familyName ?? " Name"), email: email ?? "No Email", profileImageUrl: URL(string: "https://picsum.photos/200/300")!)
                         UserInfo.shared.user = newUser
-                        self.saveUserToFirestore(user: newUser, userId: authResult.user.uid)
+                        self.saveUserToFirestore(user: newUser, userEmail: userEmail)
                         print("[Apple Login] 새 사용자 정보 저장: \(String(describing: UserInfo.shared.user))")
                         self.loginSuccess()
                     }

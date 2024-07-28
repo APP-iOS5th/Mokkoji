@@ -62,14 +62,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //사용자 로그인 유무 확인
         print("[SceneDelegate currentUser]\(Auth.auth().currentUser)")
         if let user = Auth.auth().currentUser {
+            
+            guard let userEmail = user.email else { return }
+            
             // Firestore에서 사용자 정보 가져오기
             //TODO: = userID가 로그인에 따라 다름. user.uid는 sns의 따라 다 다름
-            fetchUserFromFirestore(userId: user.uid) { fetchedUser in
+            fetchUserFromFirestore(userEmail: userEmail) { fetchedUser in
                 if let fetchedUser = fetchedUser {
                     //로그인이 된 상태
                     print("[SceneDelegate] 로그인 성공")
                     UserInfo.shared.user = fetchedUser
                     let tabBarController = self.createTabBarController()
+                    tabBarController.selectedIndex = 1
                     window.rootViewController = tabBarController
                 } else {
                     // 사용자가 로그인되어 있지만 Firestore에서 사용자 정보를 가져오지 못한 경우, 로그아웃
@@ -119,6 +123,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func changeRootViewController (_ viewController: UIViewController, animated: Bool) {
         guard let window = self.window else { return }
+        
+        // PlanListViewController가 처음보이는 화면으로 설정
+        if let tabBarController = viewController as? UITabBarController {
+            tabBarController.selectedIndex = 1
+        }
+        
         window.rootViewController = viewController // 전환
         window.makeKeyAndVisible()
     }
@@ -126,10 +136,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func createTabBarController() -> UITabBarController {
         let navigationController = UINavigationController(rootViewController: PlanListViewController())
         let profilController = UINavigationController(rootViewController: ProfileViewController())
-        let friendController = UINavigationController(rootViewController: AddFriendViewController())
+        let friendController = UINavigationController(rootViewController: FriendListViewController())
         
         let tabBarController = UITabBarController()
-        tabBarController.setViewControllers([navigationController, profilController, friendController], animated: true)
+        tabBarController.setViewControllers([friendController, navigationController, profilController], animated: true)
         
         // 기본 색상 설정
         UINavigationBar.appearance().barTintColor = .white
@@ -141,26 +151,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UITabBar.appearance().unselectedItemTintColor = .lightGray
         
         if let items = tabBarController.tabBar.items {
-            items[0].selectedImage = UIImage(systemName: "star.fill")
-            items[0].image = UIImage(systemName: "star")
-            items[0].title = "약속 리스트"
+            items[0].selectedImage = UIImage(systemName: "person.2.circle.fill")
+            items[0].image = UIImage(systemName: "person.2.circle")
+            items[0].title = "친구"
             
-            items[1].selectedImage = UIImage(systemName: "person.fill")
-            items[1].image = UIImage(systemName: "person")
-            items[1].title = "프로필"
+            items[1].selectedImage = UIImage(systemName: "star.fill")
+            items[1].image = UIImage(systemName: "star")
+            items[1].title = "약속 리스트"
             
-            items[2].selectedImage = UIImage(systemName: "person.2.circle.fill")
-            items[2].image = UIImage(systemName: "person.2.circle")
-            items[2].title = "친구"
+            items[2].selectedImage = UIImage(systemName: "person.fill")
+            items[2].image = UIImage(systemName: "person")
+            items[2].title = "프로필"
+            
+            
         }
         
         return tabBarController
     }
     
     //파이어스토어 유저 정보 가져오는 메소드
-    func fetchUserFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
+    func fetchUserFromFirestore(userEmail: String, completion: @escaping (User?) -> Void) {
         let db = Firestore.firestore()
-        let userRef = db.collection("users").document(userId)
+        let userRef = db.collection("users").document(userEmail)
         userRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 do {
@@ -171,7 +183,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     completion(nil)
                 }
             } else {
-                print("Firestore에 User가 존재하지 않음.")
+                print("scenedelegate [FB] Firestore에 User가 존재하지 않음.")
                 completion(nil)
             }
         }

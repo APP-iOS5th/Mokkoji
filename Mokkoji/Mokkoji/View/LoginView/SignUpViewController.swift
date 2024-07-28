@@ -99,6 +99,7 @@ class SignUpViewController: UIViewController {
         textField.textContentType = .emailAddress
         textField.keyboardType = .emailAddress
         textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -272,14 +273,16 @@ class SignUpViewController: UIViewController {
             signUpPasswordLabel.textColor = .red
         } else {
             guard let name = self.signUpNameTextField.text else { return }
-            guard let email = self.signUpEmailTextField.text else { return }
+            guard var email = self.signUpEmailTextField.text else { return }
             guard let password = self.signUpPasswordTextField.text else { return }
             guard let selectedImage = self.signUpProfileImage.image else { return }
+            
+            email = email.lowercased()
             self.user.name = name
             self.user.email = email
             self.user.id = UUID().uuidString
             
-            self.uploadImage(image: selectedImage, pathRoot: self.user.id) { url in
+            self.uploadImage(image: selectedImage) { url in
                 if let url = url {
                     self.user.profileImageUrl = url
                     
@@ -400,12 +403,16 @@ class SignUpViewController: UIViewController {
             }
             
             if let result = result {
-                print("[createUser] result.user.uid: \(result.user.uid)")
-                //Firestore에 저장
+                print("[createUser] result.user.email: \(result.user.email)")
+                
                 self.user.id = result.user.uid
-                self.saveUserToFirestore(user: self.user, userId: result.user.uid) {
+                guard let userEmail = result.user.email else { return }
+//                self.user.email = userEmail
+                //Firestore에 저장
+                self.saveUserToFirestore(user: self.user, userEmail: userEmail) {
+                    let userRef = self.db.collection("users").document(userEmail)
                     do {
-                        try Auth.auth().signOut()
+                        try userRef.setData(from: self.user)
                         self.navigationController?.popViewController(animated: true)
                     } catch {
                         print("Error signing out: \(error.localizedDescription)")
@@ -416,8 +423,8 @@ class SignUpViewController: UIViewController {
         }
     }
     
-    func saveUserToFirestore(user: User, userId: String, completion: @escaping () -> Void) {
-        let userRef = db.collection("users").document(userId)
+    func saveUserToFirestore(user: User, userEmail: String, completion: @escaping () -> Void) {
+        let userRef = db.collection("users").document(userEmail)
         do {
             try userRef.setData(from: user)
             completion()
@@ -432,14 +439,14 @@ class SignUpViewController: UIViewController {
     //https://ios-development.tistory.com/769
     
     ///Firebase Storage에 업로드
-    func uploadImage(image: UIImage, pathRoot: String, completion: @escaping (URL?) -> Void) {
+    func uploadImage(image: UIImage, completion: @escaping (URL?) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
         let metaData = StorageMetadata()
         metaData.contentType = "image.jpeg"
         
-        let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
+        let userImageName = user.email.lowercased()
         
-        let firebaseReference = Storage.storage().reference().child("\(imageName)")
+        let firebaseReference = Storage.storage().reference().child("\(userImageName)")
         firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
             firebaseReference.downloadURL { url, _ in
                 completion(url)

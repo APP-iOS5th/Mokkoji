@@ -8,7 +8,10 @@
 import UIKit
 import KakaoSDKUser
 import FirebaseAuth
-
+import FirebaseCore
+import FirebaseFirestore
+import FirebaseStorage
+//TODO: - 고객센터 (가이드, 문의하기, 서비스정책, 앱버전 등) 뷰 연결
 extension UIImageView {
     func load(url: URL) {
         DispatchQueue.global().async { [weak self] in
@@ -23,124 +26,81 @@ extension UIImageView {
     }
 }
 
-
-class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ProfileViewController: UIViewController {
     
+    //MARK: - Properties
+    let db = Firestore.firestore()  //firestore
     var userProfileImage = UserInfo.shared.user!.profileImageUrl
+    let sectionTitle = ["가이드", "문의하기", "서비스정책", "앱버전"]
     
-    var myMail: String? {
-        didSet {
-            mailCheck.text = myMail
-        }
-    }
-    
-    var myName: String? {
-        didSet {
-            nameCheck.text = myName
-        }
-    }
-    
-    var myImage: UIImage? {
-        didSet {
-            profileImageView.image = myImage
-        }
-    }
-    
-    // MARK: - 프로필 사진
-    let profileImageView: UIImageView! = {
+    //MARK: - UIComponents
+    /// 프로필 이미지
+    private lazy var profileImageView: UIImageView! = {
         let image = UIImageView()
-        
-        image.image = UIImage(systemName: "person.circle")
+        if let profileImageUrl = UserInfo.shared.user?.profileImageUrl,
+           let url = URL(string: profileImageUrl.absoluteString) {
+            image.load(url: url)
+        }
         image.clipsToBounds = true
         image.layer.borderWidth = 2
         image.contentMode = .scaleAspectFill
         image.layer.borderColor = UIColor.white.cgColor
         image.layer.cornerRadius = 50
-        
         return image
     }()
     
-    // MARK: - 로그아웃 버튼
-    let logoutButton: UIButton = {
+    /// 로그아웃 버튼
+    private lazy var logoutButton: UIButton = {
         let button = UIButton()
-        
         button.setTitle("LOGOUT", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.backgroundColor = UIColor(named: "Primary_Color")?.cgColor
         button.layer.cornerRadius = 10
-        
         button.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
-        
         return button
     }()
     
-    // MARK: - 이름 라벨
+    /// 이름 레이블
     private lazy var nameLabel: UILabel = {
-        let nameL = UILabel()
-        nameL.text = "Name:"
-        
-        return nameL
+        let label = UILabel()
+        label.text = "Name:"
+        return label
     }()
     
     private lazy var nameCheck: UILabel! = {
-        let nameLabel = UILabel()
+        let label = UILabel()
         if let userName = UserInfo.shared.user?.name {
-            nameLabel.text = "\(userName)"
+            label.text = "\(userName)"
         } else {
-            nameLabel.text = "No Name"
+            label.text = "No Name"
         }
-        
-        nameLabel.numberOfLines = 2
-        nameLabel.lineBreakMode = .byWordWrapping
-        
-        return nameLabel
+        label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
+        return label
     }()
     
-    // MARK: - 이메일 라벨
+    /// 이메일 레이블
     private lazy var mailLabel: UILabel = {
-        let mailL = UILabel()
-        mailL.text = "E-mail:"
-        
-        return mailL
+        let label = UILabel()
+        label.text = "E-mail:"
+        return label
     }()
     
     private lazy var mailCheck: UILabel! = {
-        let mailLabel = UILabel()
+        let label = UILabel()
         if let userEmail = UserInfo.shared.user?.email {
-            mailLabel.text = "\(userEmail)"
+            label.text = "\(userEmail)"
         } else {
-            mailLabel.text = "No Email"
+            label.text = "No Email"
         }
-        
-        mailLabel.numberOfLines = 2
-        mailLabel.lineBreakMode = .byWordWrapping
-        
-        return mailLabel
+        label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
+        return label
     }()
     
-    // MARK: - 친구 삭제 버튼
-    private lazy var deleteFriendButton: UIButton = {
-        let deleteButton = UIButton()
-        
-        deleteButton.setTitle("친구삭제", for: .normal)
-        deleteButton.setTitle("완료", for: .selected)
-        
-        deleteButton.setTitleColor(UIColor(named: "Primary_Color"), for: .normal)
-        deleteButton.setTitleColor(.blue, for: [.normal, .highlighted])
-        
-        deleteButton.setTitleColor(.systemRed, for: .selected)
-        deleteButton.setTitleColor(.red, for: [.selected, .highlighted])
-        
-        deleteButton.addTarget(self, action: #selector(friendsDeleteButton), for: .touchUpInside)
-        
-        
-        return deleteButton
-    }()
-    
-    // MARK: - 친구 확인 테이블 뷰
-    private lazy var friendsTableView: UITableView = {
+    /// 친구 확인 테이블 뷰
+    private lazy var customerServiceTableView: UITableView = {
         var tableView = UITableView()
-        
         return tableView
     }()
     
@@ -148,15 +108,15 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        // MARK: - 네비게이션 바 타이틀 & 설정 버튼
+        // 네비게이션 바 타이틀 & 설정 버튼
         self.navigationItem.title = "PROFILE"
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.largeTitleDisplayMode = .always
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gearshape"), style: .plain, target: self, action: #selector(tapButtonProfileEdit))
         
-        friendsTableView.dataSource = self
-        friendsTableView.delegate = self
-        friendsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
+        customerServiceTableView.dataSource = self
+        customerServiceTableView.delegate = self
+        customerServiceTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
         view.addSubview(profileImageView)
         view.addSubview(nameLabel)
@@ -164,8 +124,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         view.addSubview(mailLabel)
         view.addSubview(mailCheck)
         view.addSubview(logoutButton)
-        view.addSubview(deleteFriendButton)
-        view.addSubview(friendsTableView)
+        view.addSubview(customerServiceTableView)
         
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
@@ -173,8 +132,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         nameCheck.translatesAutoresizingMaskIntoConstraints = false
         mailLabel.translatesAutoresizingMaskIntoConstraints = false
         mailCheck.translatesAutoresizingMaskIntoConstraints = false
-        deleteFriendButton.translatesAutoresizingMaskIntoConstraints = false
-        friendsTableView.translatesAutoresizingMaskIntoConstraints = false
+        customerServiceTableView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
@@ -200,43 +158,46 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
             logoutButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoutButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             logoutButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                        
-            deleteFriendButton.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 10),
-            deleteFriendButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             
-            friendsTableView.topAnchor.constraint(equalTo: deleteFriendButton.bottomAnchor, constant: 10),
-            friendsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            friendsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            friendsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
+            customerServiceTableView.topAnchor.constraint(equalTo: logoutButton.bottomAnchor, constant: 10),
+            customerServiceTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            customerServiceTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            customerServiceTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100)
         ])
     }
     
     override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(true)
-        profileImageView.load(url: userProfileImage)
-        if let friendList = UserInfo.shared.user?.friendList {
-            if friendList.count == 0 {
-                let emptyFriend = [User(id: "123", name: "친구목록이 비어있습니다.", email: "asd@asd.com", profileImageUrl:URL(string: "https://picsum.photos/200/300")!)]
-                UserInfo.shared.user?.friendList = emptyFriend
-            }
-        }
-        friendsTableView.reloadData()
+        
+        fetchProfileData()
     }
     
-    // TODO: - 프로필 편집 페이지로 이동 & 편집 저장된 데이터 불러오기 기능 (?) 확인 필요
+    //MARK: - Methods
+    
+    func fetchProfileData() {
+        guard let user = UserInfo.shared.user else {
+            return
+        }
+        self.fetchUserFromFirestore(userEmail: user.email) { fetchedUser in
+            guard let fetchedUser = fetchedUser else { return }
+            UserInfo.shared.user = fetchedUser
+            
+            DispatchQueue.main.async {
+                self.profileImageView.load(url: fetchedUser.profileImageUrl)
+                self.nameCheck.text = fetchedUser.name
+                self.mailCheck.text = fetchedUser.email
+            }
+        }
+    }
+    
     @objc private func tapButtonProfileEdit() {
         let profileEditViewController = ProfileEditViewController()
         let navController = UINavigationController(rootViewController: profileEditViewController)
         
-        profileEditViewController.onSave = { [weak self] text, text2, image1 in
-            self?.myName = text
-            self?.myMail = text2
-            self?.myImage = image1
-        }
         present(navController, animated: true)
     }
     
-    // MARK: - 로그아웃 버튼 기능
+    //로그아웃 버튼 기능
     @objc func logoutButtonTapped() {
         
         //firebase logout
@@ -250,7 +211,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         self.transitionToLoginView()
     }
     
-    // 로그인 화면으로 전환하는 함수
+    // 로그인 화면으로 전환
     func transitionToLoginView() {
         guard let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate else { return }
         let loginViewController = LoginViewController()
@@ -258,59 +219,78 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         sceneDelegate.changeRootViewController(navController, animated: true)
     }
     
-    // MARK: - 친구 추가 페이지 이동
+    //친구 추가 페이지 이동
     @objc func friendsPlusButton() {
         let friendsViewController = AddFriendViewController()
         self.navigationController?.pushViewController(friendsViewController, animated: true)
         
     }
+}
+
+//MARK: - UITableViewDelegate, DataSource Methods
+extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     
-    // MARK: - 친구 테이블 뷰
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        guard let friendCount = UserInfo.shared.user?.friendList?.count else { return 0 }
-//        if friendCount > 0 {
-//            return friendCount
-//        } else {
-//            return 1
-//        }
-//    }
-//    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-          return UserInfo.shared.user?.friendList?.count ?? 0
-      }
-      
-      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-          let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
-          guard let cellImage = UserInfo.shared.user?.friendList?[indexPath.row].profileImageUrl else {
-              return UITableViewCell()
-          }
-          
-          cell.textLabel?.text = UserInfo.shared.user?.friendList?[indexPath.row].name
-          cell.imageView?.image = UIImage(systemName: "person.circle")
-          cell.imageView?.load(url: cellImage)
-          
-          return cell
-      }
-      
-    
-    // MARK: - 친구 삭제
-    @objc func friendsDeleteButton() {
-        let shouldBeEdited = !friendsTableView.isEditing
-        friendsTableView.setEditing(shouldBeEdited, animated: true)
-        deleteFriendButton.isSelected = shouldBeEdited
+        return sectionTitle.count
     }
     
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return tableView.isEditing
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = sectionTitle[indexPath.row]
+        return cell
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return tableView.isEditing ? .delete : .none
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        guard editingStyle == .delete else { return }
-        UserInfo.shared.user?.friendList?.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .fade)
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .white
+        lazy var headerLabel: UILabel = {
+            let label = UILabel()
+            label.text = "고객센터"
+            label.textAlignment = .left
+            label.font = UIFont.boldSystemFont(ofSize: 12)
+            label.textColor = .lightGray
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+        
+        headerView.addSubview(headerLabel)
+        
+        NSLayoutConstraint.activate([
+            headerLabel.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            headerLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            headerLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            headerLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16)
+        ])
+        
+        return headerView
+    }
+}
+
+extension ProfileViewController {
+    func fetchUserFromFirestore(userEmail: String, completion: @escaping (User?) -> Void) {
+        let userRef = db.collection("users").document(userEmail)
+        userRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                do {
+                    let user = try document.data(as: User.self)
+                    print("loginView [FB]Firestore fetch succeed")
+                    completion(user)
+                } catch let error {
+                    print("User Decoding Error: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("loginView [FB]Firestore에 User가 존재하지 않음.")
+                completion(nil)
+            }
+        }
     }
 }

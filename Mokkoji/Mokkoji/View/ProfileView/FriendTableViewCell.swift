@@ -1,20 +1,31 @@
 import UIKit
 
 class FriendTableViewCell: UITableViewCell {
-    let userImageView = UIImageView()
-    let userNameLabel = UILabel()
+    
+    lazy var userImageView: UIImageView = {
+        let imageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        imageView.layer.cornerRadius = imageView.frame.height/2
+        imageView.clipsToBounds = true
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    lazy var userNameLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        userImageView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(userImageView)
-        
-        userNameLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(userNameLabel)
+        self.contentView.addSubview(userImageView)
+        self.contentView.addSubview(userNameLabel)
         
         NSLayoutConstraint.activate([
-            userImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            
+            userImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
             userImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             userImageView.widthAnchor.constraint(equalToConstant: 40),
             userImageView.heightAnchor.constraint(equalToConstant: 40),
@@ -23,6 +34,8 @@ class FriendTableViewCell: UITableViewCell {
             userNameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             userNameLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
         ])
+
+
         
     }
     
