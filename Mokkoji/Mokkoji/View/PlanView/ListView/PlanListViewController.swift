@@ -64,8 +64,8 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     // Firestore에서 plan 정보 가져오기
-    func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
-        let userRef = db.collection("users").document(userId)
+    func fetchPlanFromFirestore(userEmail: String, completion: @escaping (User?) -> Void) {
+        let userRef = db.collection("users").document(userEmail)
         userRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 do {
@@ -95,7 +95,8 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationItem.largeTitleDisplayMode = .always
         
-        fetchPlanFromFirestore(userId: UserInfo.shared.user!.id) { [weak self] user in
+        guard let user = UserInfo.shared.user else { return }
+        fetchPlanFromFirestore(userEmail: user.email) { [weak self] user in
             guard let self = self else { return }
             if let user = user {
                 self.plans = user.plan ?? []
@@ -179,8 +180,8 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
     
     // Firestore에서 plans 삭제
     func deletePlansFromFirestore(_ plansToDelete: [Plan]) {
-        guard let userId = UserInfo.shared.user?.id else { return }
-        let userRef = db.collection("users").document(userId)
+        guard let userEmail = UserInfo.shared.user?.email else { return }
+        let userRef = db.collection("users").document(userEmail)
         
         userRef.updateData([
             "plan": FieldValue.arrayRemove(plansToDelete.map { try! Firestore.Encoder().encode($0) })
@@ -195,8 +196,8 @@ class PlanListViewController: UIViewController, UITableViewDataSource, UITableVi
 
     // Firestore에서 sharedPlans 삭제
     func deleteSharedPlansFromFirestore(_ sharedPlansToDelete: [Plan]) {
-        guard let userId = UserInfo.shared.user?.id else { return }
-        let userRef = db.collection("users").document(userId)
+        guard let userEmail = UserInfo.shared.user?.email else { return }
+        let userRef = db.collection("users").document(userEmail)
         
         userRef.updateData([
             "sharedPlan": FieldValue.arrayRemove(sharedPlansToDelete.map { try! Firestore.Encoder().encode($0) })

@@ -438,7 +438,7 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
         
         /// User의 plan 데이터 firestore에 저장
         DispatchQueue.main.async {
-            self.saveUserToFirestore(user: user, userId: String(user.id))
+            self.saveUserToFirestore(user: user, userEmail: user.email)
         }
         self.navigationController?.popViewController(animated: true)
     }
@@ -504,11 +504,10 @@ class AddPlanViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     /// Firestore에 데이터 저장
-    func saveUserToFirestore(user: User, userId: String) {
-        let userRef = db.collection("users").document(userId)
+    func saveUserToFirestore(user: User, userEmail: String) {
+        let userRef = db.collection("users").document(userEmail)
         do {
             try userRef.setData(from: user)
-            print("Plan data saved")
         } catch let error {
             print("Firestore Writing Error: \(error)")
         }

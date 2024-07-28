@@ -99,8 +99,8 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
     }
 
     // Firestore에서 사용자의 Plan 정보를 가져오는 메서드
-    func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
-        let planRef = db.collection("users").document(userId)
+    func fetchPlanFromFirestore(userEmail: String, completion: @escaping (User?) -> Void) {
+        let planRef = db.collection("users").document(userEmail)
         planRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 do {
@@ -129,6 +129,15 @@ class PlanDetailViewController: UIViewController, UITableViewDataSource, UITable
 
         if let navigationBar = self.navigationController?.navigationBar {
             navigationBar.overrideUserInterfaceStyle = .light
+        }
+        
+        guard let user = UserInfo.shared.user else { return }
+        
+        fetchPlanFromFirestore(userEmail: user.email) { user in
+            if let user = user {
+                UserInfo.shared.user = user
+                print("PlanDetailVC FetchData")
+            }
         }
     }
 

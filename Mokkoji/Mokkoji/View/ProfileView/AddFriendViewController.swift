@@ -64,8 +64,6 @@ class AddFriendViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        //TODO: - TEST
-        friendSearchBar.text = "jjwon2149@naver.com"
     }
     
     //MARK: - Methods

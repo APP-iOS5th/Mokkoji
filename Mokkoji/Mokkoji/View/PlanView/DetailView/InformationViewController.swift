@@ -69,9 +69,22 @@ class InformationViewController: UIViewController, UITableViewDataSource,UITable
         ])
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let user = UserInfo.shared.user else { return }
+        
+        fetchPlanFromFirestore(userEmail: user.email) { user in
+            if let user = user {
+                UserInfo.shared.user = user
+                print("PlanDetailVC FetchData")
+            }
+        }
+    }
+    
     // Firestore에서 plan 정보 가져오기
-    func fetchPlanFromFirestore(userId: String, completion: @escaping (User?) -> Void) {
-        let planRef = db.collection("users").document(userId)
+    func fetchPlanFromFirestore(userEmail: String, completion: @escaping (User?) -> Void) {
+        let planRef = db.collection("users").document(userEmail)
         planRef.getDocument { (document, error) in
             if let document = document, document.exists {
                 do {

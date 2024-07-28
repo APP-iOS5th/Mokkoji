@@ -10,7 +10,7 @@ import FirebaseFirestore
 import Firebase
 
 class InfoFriendViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-
+    
     let tableView = UITableView()
     var friends: [User] = []
     var selectedPlan: Plan? // 추가된 속성
@@ -33,7 +33,7 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
-
+    
     func initializeSelectArray() {
         isSelectArray = [Bool](repeating: false, count: friends.count)
     }
@@ -45,7 +45,9 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
             navigationBar.overrideUserInterfaceStyle = .light
         }
         
-        fetchCurrentUser { [weak self] user in
+        guard let user = UserInfo.shared.user else { return }
+        
+        fetchCurrentUser(userEmail: user.email) { [weak self] user in
             guard let self = self, let user = user else { return }
             self.friends = user.friendList ?? []
             self.initializeSelectArray()
@@ -55,26 +57,6 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
         }
     }
     
-    // Firestore에서 현재 사용자 정보 가져오기
-    func fetchCurrentUser(completion: @escaping (User?) -> Void) {
-        let userId = UserInfo.shared.user!.id
-        let userRef = db.collection("users").document(userId)
-        userRef.getDocument { (document, error) in
-            if let document = document, document.exists {
-                do {
-                    let user = try document.data(as: User.self)
-                    completion(user)
-                } catch let error {
-                    print("User Decoding Error: \(error)")
-                    completion(nil)
-                }
-            } else {
-                print("Firestore에 User이 존재하지 않음.")
-                completion(nil)
-            }
-        }
-    }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return friends.count
     }
@@ -96,24 +78,43 @@ class InfoFriendViewController: UIViewController, UITableViewDataSource, UITable
             print("선택된 약속이 없습니다.")
             return
         }
-
+        
         if friend.sharedPlan == nil {
             friend.sharedPlan = []
         }
         friend.sharedPlan?.append(plan)
         
-        saveUserToFirestore(user: friend, userId: friend.id)
+        saveUserToFirestore(user: friend, userEmail: friend.email)
         
         dismiss(animated: true, completion: nil)
     }
-
+    
     // Firestore에 사용자 정보 저장
-    func saveUserToFirestore(user: User, userId: String) {
-        let userRef = db.collection("users").document(userId)
+    func saveUserToFirestore(user: User, userEmail: String) {
+        let userRef = db.collection("users").document(userEmail)
         do {
             try userRef.setData(from: user)
         } catch let error {
             print("Firestore Writing Error: \(error)")
+        }
+    }
+    
+    // Firestore에서 현재 사용자 정보 가져오기
+    func fetchCurrentUser(userEmail: String, completion: @escaping (User?) -> Void) {
+        let userRef = db.collection("users").document(userEmail)
+        userRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                do {
+                    let user = try document.data(as: User.self)
+                    completion(user)
+                } catch let error {
+                    print("User Decoding Error: \(error)")
+                    completion(nil)
+                }
+            } else {
+                print("Firestore에 User이 존재하지 않음.")
+                completion(nil)
+            }
         }
     }
 }
