@@ -15,6 +15,8 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     
     /// 검색 결과
     var results: [MapInfo] = []
+    /// 검색 debouncing 타이머
+    var searchTimer: Timer?
     
     var delegate: SearchResultsSelectionDelegate?
     
@@ -36,7 +38,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: self.view.keyboardLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor)
         ])
@@ -49,8 +51,14 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
             updateResults([])
             return
         }
+        /// 이전 타이머 취소
+        searchTimer?.invalidate()
         
-        getSearchResults(searchText: searchText)
+        /// 새로운 타이머 설정 - 0.5초 마다
+        searchTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
+            /// 검색 실행
+            self?.getSearchResults(searchText: searchText)
+        }
     }
     
     // MARK: - UITableViewDelegate
@@ -69,8 +77,17 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         var config = cell.defaultContentConfiguration()
-        config.text = results[indexPath.row].placeName
-        // TODO: - 도로명 주소 추가하기
+        
+        /// 빠르게 검색어 입력 시 index out of range 오류 방지
+        /// 도로명 주소 추가
+        if indexPath.row < results.count {
+            config.text = results[indexPath.row].placeName
+            config.secondaryText = results[indexPath.row].roadAddressName
+        } else {
+            config.text = ""
+            config.secondaryText = ""
+        }
+
         cell.contentConfiguration = config
        
         return cell
@@ -125,7 +142,7 @@ class SearchResultsViewController: UIViewController, UISearchResultsUpdating, UI
                        let documents = json["documents"] as? [[String: Any]] {
                         
                         var places: [MapInfo] = []
-                        for (index, document) in documents.enumerated() {
+                        for (_, document) in documents.enumerated() {
                             /// MapInfo에 필요한 프로퍼티 값 가져오기
                             if let id = document["id"] as? String,
                                let placeName = document["place_name"] as? String,

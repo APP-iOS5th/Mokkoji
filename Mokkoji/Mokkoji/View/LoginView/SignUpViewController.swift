@@ -80,6 +80,7 @@ class SignUpViewController: UIViewController {
         textField.layer.borderWidth = 1
         textField.keyboardType = .namePhonePad
         textField.autocorrectionType = .no //자동완성 비활성화
+        textField.autocapitalizationType = .none
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -97,6 +98,8 @@ class SignUpViewController: UIViewController {
         textField.layer.cornerRadius = 5
         textField.textContentType = .emailAddress
         textField.keyboardType = .emailAddress
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -142,8 +145,10 @@ class SignUpViewController: UIViewController {
         var button = UIButton()
         button.setTitle("가입하기", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(named: "Primary_Color")
+        button.setBackgroundColor(UIColor(named: "Primary_Color")!, for: .normal)
+        button.setBackgroundColor(.lightGray, for: .selected)
         button.layer.cornerRadius = 10
+        button.clipsToBounds = true
         button.translatesAutoresizingMaskIntoConstraints = false
         button.addTarget(self, action: #selector(signUpButtonTapped), for: .touchUpInside)
         return button
@@ -258,24 +263,26 @@ class SignUpViewController: UIViewController {
     @objc func signUpButtonTapped() {
 
         if profileImageValid == false {
-            //TODO: Alert로 프로필 이미지 설정해야한다고
-            print("프로필 이미지를 설정 해야합니다.")
+            signUpNameLabel.text = "프로필 이미지를 설정해야 합니다."
+            signUpNameLabel.textColor = .red
         } else if emailValid == false {
-            //TODO: Alert로 이메일 정규식이 맞지 않는다고
-            print("이메일 형식이 올바르지 않습니다.")
+            signUpEmailLabel.text = "이메일 형식이 올바르지 않습니다."
+            signUpEmailLabel.textColor = .red
         } else if passwordValid == false {
-            //TODO: Alert로 비밀번호 정규식이 맞지 않는다고
-            print("비밀번호 형식이 올바르지 않습니다.")
+            signUpPasswordLabel.text = "비밀번호 형식이 올바르지 않습니다."
+            signUpPasswordLabel.textColor = .red
         } else {
             guard let name = self.signUpNameTextField.text else { return }
-            guard let email = self.signUpEmailTextField.text else { return }
+            guard var email = self.signUpEmailTextField.text else { return }
             guard let password = self.signUpPasswordTextField.text else { return }
             guard let selectedImage = self.signUpProfileImage.image else { return }
+            
+            email = email.lowercased()
             self.user.name = name
             self.user.email = email
-            self.user.id = password
+            self.user.id = UUID().uuidString
             
-            self.uploadImage(image: selectedImage, pathRoot: self.user.id) { url in
+            self.uploadImage(image: selectedImage) { url in
                 if let url = url {
                     self.user.profileImageUrl = url
                     
@@ -332,50 +339,95 @@ class SignUpViewController: UIViewController {
     func checkEmailValidation() {
         if isValid(text: signUpEmailTextField.text!, pattern: emailPattern) {
             emailValid = true
+            signUpEmailLabel.text = "이메일"
+            signUpEmailLabel.textColor = .black
         } else {
             emailValid = false
+            signUpEmailLabel.text = "이메일 형식이 올바르지 않습니다."
+            signUpEmailLabel.textColor = .red
         }
     }
     
     func checkPasswordValidation() {
         if isValid(text: signUpPasswordTextField.text!, pattern: passwordPattern) {
             passwordValid = true
+            signUpPasswordLabel.text = "비밀번호"
+            signUpPasswordLabel.textColor = .black
         } else {
             passwordValid = false
+            signUpPasswordLabel.text = "비밀번호 형식이 올바르지 않습니다."
+            signUpPasswordLabel.textColor = .red
         }
     }
     
-    fileprivate func checkAllValidation() {
-        if emailValid && passwordValid {
-            print("email, password Valid Success")
+    func checkAllValidation() {
+        if emailValid && passwordValid && profileImageValid {
+            print("All fields are valid.")
             allValid = true
         } else {
-            print("email, password Valid Fail")
+            print("One or more fields are invalid.")
             allValid = false
+            
+            // 각 필드의 유효성 검사 결과에 따라 레이블 업데이트
+            if !emailValid {
+                signUpEmailLabel.text = "이메일 형식이 올바르지 않습니다."
+                signUpEmailLabel.textColor = .red
+            } else {
+                signUpEmailLabel.text = "이메일"
+                signUpEmailLabel.textColor = .black
+            }
+            
+            if !passwordValid {
+                signUpPasswordLabel.text = "비밀번호 형식이 올바르지 않습니다."
+                signUpPasswordLabel.textColor = .red
+            } else {
+                signUpPasswordLabel.text = "비밀번호"
+                signUpPasswordLabel.textColor = .black
+            }
+            
+            if !profileImageValid {
+                signUpNameLabel.text = "프로필 이미지를 설정해야 합니다."
+                signUpNameLabel.textColor = .red
+            } else {
+                signUpNameLabel.text = "이름"
+                signUpNameLabel.textColor = .black
+            }
         }
     }
     
     //MARK: - FireStore Methods
     func createUser(_ email: String, _ passwrod: String) {
-        Auth.auth().createUser(withEmail: email, password: passwrod) {result,error in
+        Auth.auth().createUser(withEmail: email, password: passwrod) { result, error in
             if let error = error {
                 print(error)
             }
             
             if let result = result {
-                print(result)
+                print("[createUser] result.user.email: \(result.user.email)")
+                
+                self.user.id = result.user.uid
+                guard let userEmail = result.user.email else { return }
+//                self.user.email = userEmail
+                //Firestore에 저장
+                self.saveUserToFirestore(user: self.user, userEmail: userEmail) {
+                    let userRef = self.db.collection("users").document(userEmail)
+                    do {
+                        try userRef.setData(from: self.user)
+                        self.navigationController?.popViewController(animated: true)
+                    } catch {
+                        print("Error signing out: \(error.localizedDescription)")
+                    }
+                }
             }
             print("FB: Success Create user \(self.user)")
         }
-        //Firestore에 저장
-        self.saveUserToFirestore(user: self.user, userId: self.user.id)
-        self.navigationController?.popViewController(animated: true)
     }
     
-    func saveUserToFirestore(user: User, userId: String) {
-        let userRef = db.collection("users").document(userId)
+    func saveUserToFirestore(user: User, userEmail: String, completion: @escaping () -> Void) {
+        let userRef = db.collection("users").document(userEmail)
         do {
             try userRef.setData(from: user)
+            completion()
         } catch let error {
             print("Firestore Writing Error: \(error)")
         }
@@ -387,14 +439,14 @@ class SignUpViewController: UIViewController {
     //https://ios-development.tistory.com/769
     
     ///Firebase Storage에 업로드
-    func uploadImage(image: UIImage, pathRoot: String, completion: @escaping (URL?) -> Void) {
+    func uploadImage(image: UIImage, completion: @escaping (URL?) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.4) else { return }
         let metaData = StorageMetadata()
         metaData.contentType = "image.jpeg"
         
-        let imageName = UUID().uuidString + String(Date().timeIntervalSince1970)
+        let userImageName = user.email.lowercased()
         
-        let firebaseReference = Storage.storage().reference().child("\(imageName)")
+        let firebaseReference = Storage.storage().reference().child("\(userImageName)")
         firebaseReference.putData(imageData, metadata: metaData) { metaData, error in
             firebaseReference.downloadURL { url, _ in
                 completion(url)
@@ -430,7 +482,7 @@ extension SignUpViewController: PHPickerViewControllerDelegate {
 
 //MARK: - UITextFieldDelegate Methods
 extension SignUpViewController: UITextFieldDelegate {
-    //TODO: UITextFieldDelegate Method 추가하기..
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         //텍스트 필드 강조
         if textField == signUpNameTextField {
@@ -448,6 +500,7 @@ extension SignUpViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.systemGray4.cgColor
+        
         switch textField {
         case signUpEmailTextField:
             checkEmailValidation()
@@ -466,14 +519,16 @@ extension SignUpViewController: UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        if textField == self.signUpNameTextField {
+            self.signUpEmailTextField.becomeFirstResponder()
+        } else if textField == self.signUpEmailTextField {
+            self.signUpPasswordTextField.becomeFirstResponder()
+        }
+        
         textField.resignFirstResponder()
         
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         return true
     }
-}
-
-#Preview {
-    let viewController = SignUpViewController()
-    return viewController
 }

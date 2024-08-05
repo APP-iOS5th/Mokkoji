@@ -1,41 +1,15 @@
 //
-//  MapViewController.swift
+//  PreviewMapViewController.swift
 //  Mokkoji
 //
-//  Created by 박지혜 on 6/11/24.
+//  Created by 박지혜 on 7/2/24.
 //
 
 import UIKit
 import KakaoMapsSDK
 import CoreLocation
 
-extension Bundle {
-    var nativeAppKey: String? {
-        return infoDictionary?["KAKAO_NATIVE_APP_KEY"] as? String
-    }
-    
-    var restApiKey: String? {
-        return infoDictionary?["KAKAO_REST_API_KEY"] as? String
-    }
-}
-
-/// 16진수 값을 입력받기 위함
-extension UIColor {
-    convenience init(hex: UInt32) {
-        let red = CGFloat((hex & 0xFF000000) >> 24) / 255.0
-        let green = CGFloat((hex & 0x00FF0000) >> 16) / 255.0
-        let blue = CGFloat((hex & 0x0000FF00) >> 8) / 255.0
-        let alpha = CGFloat(hex & 0x000000FF) / 255.0
-
-        self.init(red: red, green: green, blue: blue, alpha: alpha)
-    }
-}
-
-protocol SelectedPlaceListDelegate {
-    func didAppendPlace(places: [MapInfo])
-}
-
-class MapViewController: UIViewController, MapControllerDelegate, CLLocationManagerDelegate, SearchResultsSelectionDelegate {
+class PreviewMapViewController: UIViewController, MapControllerDelegate, CLLocationManagerDelegate {
 
     /// 카카오 지도 불러오기
     var mapContainer: KMViewContainer?
@@ -49,21 +23,16 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     let locationManager = CLLocationManager()
     
     /// 핀 꼽기
-    var selectedPlaces: [MapInfo] = []
-    
-    /// 검색창 만들기
-    var searchController: UISearchController!
-    let searchResultsViewController = SearchResultsViewController()
-    
-    var delegate: SelectedPlaceListDelegate?
+    var selectedPlaces: [MapInfo]
     
     let POI_LAYER_ID = "PoiLayer"
     let ROUTE_LAYER_ID = "RouteLayer"
     
-    init() {
+    init(selectedPlaces: [MapInfo]) {
         _observerAdded = false
         _auth = false
         _appear = false
+        self.selectedPlaces = selectedPlaces
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -82,8 +51,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
         
         /// 카카오 지도 API 연결
         guard let nativeAppKey = Bundle.main.nativeAppKey else {
@@ -113,22 +80,16 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
         
-        /// 검색창에 입력 시 검색 결과 뷰로 이동
-        searchController = UISearchController(searchResultsController: searchResultsViewController)
-        searchController.searchResultsUpdater = searchResultsViewController
-        
-        searchResultsViewController.delegate = self
-        
-        searchController.searchBar.placeholder = "장소를 입력하세요."
-        searchController.searchBar.tintColor = .black /// 글씨색
-        searchController.searchBar.searchTextField.backgroundColor = .white /// 배경색
-        searchController.searchBar.searchTextField.layer.shadowColor = UIColor.black.cgColor /// 배경 그림자
-        searchController.searchBar.searchTextField.layer.shadowOffset = CGSize(width: 2, height: 2)
-        searchController.searchBar.searchTextField.layer.shadowOpacity = 0.25
-        searchController.searchBar.searchTextField.layer.shadowRadius = 2
-        
-        self.navigationItem.searchController = searchController
-        
+        /// Poi 생성
+        createPoiStyle()
+        let placeCount = selectedPlaces.count
+        for place in selectedPlaces {
+            createPois(poiNum: placeCount, place: place)
+        }
+
+        /// Route 생성
+        createRouteStyleSet()
+        createRouteline()
     }
     
     
@@ -225,16 +186,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         mapController?.addView(mapviewInfo)
     }
     
-    /// addView 성공 이벤트 delegate - 추가적으로 수행할 작업을 진행
-    func addViewSucceeded(_ viewName: String, viewInfoName: String) {
-        print("addViewSucceeded")
-    }
-
-    /// addView 실패 이벤트 delegate - 실패에 대한 오류 처리를 진행
-    func addViewFailed(_ viewName: String, viewInfoName: String) {
-        print("addViewFailed")
-    }
-
     /// Container 뷰가 리사이즈 되었을때 호출 - 변경된 크기에 맞게 ViewBase들의 크기를 조절할 필요가 있는 경우 여기에서 수행
     func containerDidResized(_ size: CGSize) {
         print("containerDidResized")
@@ -243,33 +194,10 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         /// 지도뷰의 크기를 리사이즈된 크기로 지정
         mapView?.viewRect = CGRect(origin: CGPoint(x: 0.0, y: 0.0), size: size)
     }
-
-    func viewWillDestroyed(_ view: ViewBase) {
-        print("viewWillDestroyed")
-    }
     
     // MARK: - CLLocationManagerDelegate
     func locationManager(_ manager: CLLocationManager, didFailWithError error: any Error) {
         print("Failed to find user's location: \(error.localizedDescription)")
-    }
-    
-    // MARK: - SearchResultsSelectionDelegate
-    func didSelectPlace(place: MapInfo) {
-        print("didSelectPlace")
-        
-        /// 선택 장소 중복 방지
-        if !selectedPlaces.contains(place) {
-            selectedPlaces.append(place)
-        }
-        
-        /// Poi 생성
-        createPoiStyle()
-        let placeCount = selectedPlaces.count
-        createPois(poiNum: placeCount, place: place)
-
-        /// Route 생성
-        createRouteStyleSet()
-        createRouteline()
     }
     
     // MARK: - Methods
@@ -338,13 +266,6 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         }
         mapviewInfo = MapviewInfo(viewName: "mapview", viewInfoName: "map", defaultPosition: position, defaultLevel: 15)
         mapController?.addView(mapviewInfo)
-    }
-    
-    /// Done 버튼 눌렀을 때
-    @objc func doneTapped() {
-        /// 선택한 장소 부모 뷰에 데이터 전달
-        delegate?.didAppendPlace(places: selectedPlaces)
-        self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Poi Methods
@@ -435,16 +356,19 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
     /// RouteSegment마다 RouteStyleSet에 있는 다른 RouteStyle을 적용할 수 있음
     func createRouteStyleSet() {
         /// RouteLines을 표시할 Layer를 생성
-        let mapView = mapController?.getView("mapview") as? KakaoMap
-        let manager = mapView?.getRouteManager()
+        guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
+            print("Failed to get map view")
+            return
+        }
+        let manager = mapView.getRouteManager()
         
         /// Route layer가 존재할 때
-        if let _: RouteLayer = manager?.getRouteLayer(layerID: ROUTE_LAYER_ID) {
+        if let _: RouteLayer = manager.getRouteLayer(layerID: ROUTE_LAYER_ID) {
             print("기존 Route layer 존재 / 로드")
             
         } else {
             print("새로운 Route layer 생성")
-            let _ = manager?.addRouteLayer(layerID: ROUTE_LAYER_ID, zOrder: 1)
+            let _ = manager.addRouteLayer(layerID: ROUTE_LAYER_ID, zOrder: 1)
         }
         
         /// Route Pattern 종류
@@ -461,12 +385,15 @@ class MapViewController: UIViewController, MapControllerDelegate, CLLocationMana
         ])
         styleSet.addStyle(routeStyle)
         
-        manager?.addRouteStyleSet(styleSet)
+        manager.addRouteStyleSet(styleSet)
     }
     
     /// Routeline 생성
     func createRouteline() {
-        let mapView = mapController?.getView("mapview") as! KakaoMap
+        guard let mapView = mapController?.getView("mapview") as? KakaoMap else {
+            print("Failed to get map view")
+            return
+        }
         let manager = mapView.getRouteManager()
         
         /// Route layer는 이전 route style set을 생성할 때 이미 생성됨

@@ -13,11 +13,9 @@ struct Plan: Codable {
     var order: Int?
     var title: String
     var body: String
-    var date: String? /// 옵셔널 없애기
-    var time: Date? /// 제거
-    var mapTimeInfo: [Date]? /// 옵셔널 없애기
+    var date: String
+    var mapTimeInfo: [Date?]
+    var detailTextInfo: [String]
     var mapInfo: [MapInfo]
-    var currentLatitude: Double? /// 제거
-    var currentLongitude: Double? /// 제거
     var participant: [User]?
 }
